@@ -1,5 +1,7 @@
 # RBKweb Chrome Extension
 
+[![Join the chat at https://gitter.im/RBKweb-ext/Lobby](https://badges.gitter.im/RBKweb-ext/Lobby.svg)](https://gitter.im/RBKweb-ext/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Dette er en Chrome-utvidelse som legger til funksjonalitet og diverse digg til RBKweb-forumet. Det er basert på Chrome Extension TypeScript Starter herfra:
 
 https://github.com/chibat/chrome-extension-typescript-starter
