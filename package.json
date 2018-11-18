@@ -1,0 +1,29 @@
+{
+  "name": "rbkweb-chrome-ext",
+  "version": "0.0.0",
+  "description": "Utvidelse som samler opp en rekke forbedringer til RBKweb",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "build": "webpack --config webpack/webpack.prod.js"
+  },
+  "author": "RosenborgSupporterSoftware",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RosenborgSupporterSoftware/RBKweb-ext.git"
+  },
+  "dependencies": {
+    "jquery": "~3.3.1",
+    "moment": "~2.22.2"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.75",
+    "@types/jquery": "^3.3.22",
+    "ts-loader": "~5.0.0",
+    "typescript": "~3.0.3",
+    "webpack": "^4.17.3",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "~4.1.4"
+  }
+}
