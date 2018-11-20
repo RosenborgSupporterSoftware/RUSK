@@ -13,27 +13,27 @@
   "icons": {
     "16": "rbkweb_icon_16.png",
     "32": "rbkweb_icon_32.png",
+    "48": "rbkweb_icon_48.png",
     "128": "rbkweb_icon_128.png"
   },
 
-  "browser_action": {
-    "default_icon": "rbkweb_icon_grey_32.png",
+  "page_action": {
+    "default_icon": "rbkweb_icon_32.png",
     "default_popup": "popup.html"
   },
 
   "content_scripts": [
       {
-          "matches": ["<all_urls>"],
-          "js": ["js/vendor.js", "js/content_script.js"]
+          "matches": ["http://*.rbkweb.no/*", "http://rbkweb.no/*"],
+          "js": ["js/vendor.js", "js/content_script.js"],
+          "run_at": "document_start"
       }
   ],
 
+  "permissions": ["storage", "tabs"],
+
   "background": {
     "scripts": ["js/vendor.js", "js/background.js"]
-  },
-
-  "permissions": [
-    "storage",
-    "<all_urls>"
-  ]
+  }
 }
+
