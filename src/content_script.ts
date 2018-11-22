@@ -1,5 +1,5 @@
 import moduleLoader from './ExtensionModules/ExtensionModuleLoader';
-import { ExtensionModule } from './ExtensionModules/extensionmodule';
+import { ExtensionModule } from './ExtensionModules/ExtensionModule';
 
 var modules = moduleLoader("notyet");
 

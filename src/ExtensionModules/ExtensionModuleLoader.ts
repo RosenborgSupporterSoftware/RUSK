@@ -1,4 +1,4 @@
-import { ExtensionModule } from "./extensionmodule";
+import { ExtensionModule } from "./ExtensionModule";
 import { Brukertips } from "./EM_Brukertips";
 
 /**

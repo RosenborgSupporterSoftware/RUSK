@@ -1,6 +1,6 @@
-import { ExtensionModule } from "./extensionmodule";
-import { ConfigOptions } from "../Configuration/configoptions";
-import { SettingType } from "../Configuration/settingtype";
+import { ExtensionModule } from "./ExtensionModule";
+import { ConfigOptions } from "../Configuration/ConfigOptions";
+import { SettingType } from "../Configuration/SettingType";
 
 /**
  * EM_Brukertips - Extension module for displaying "tooltips" on RBKweb.
