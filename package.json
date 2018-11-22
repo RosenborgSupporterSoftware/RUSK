@@ -20,8 +20,8 @@
   "devDependencies": {
     "@types/chrome": "0.0.75",
     "@types/jquery": "^3.3.22",
-    "ts-loader": "~5.0.0",
-    "typescript": "~3.0.3",
+    "ts-loader": "~5.3.0",
+    "typescript": "~3.1.6",
     "webpack": "^4.17.3",
     "webpack-cli": "^3.1.2",
     "webpack-merge": "~4.1.4"
