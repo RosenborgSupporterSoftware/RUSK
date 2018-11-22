@@ -26,7 +26,7 @@
       {
           "matches": ["*://*.rbkweb.no/*", "*://rbkweb.no/*", "*://rbkweb.com/*", "*://*.rbkweb.com/*"],
           "js": ["js/vendor.js", "js/content_script.js"],
-          "run_at": "document_start"
+          "run_at": "document_end"
       }
   ],
 
