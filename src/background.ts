@@ -7,13 +7,15 @@ function polling() {
 polling();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.logMessage) {
+        console.log("from tab " + sender.tab.id + ": " + request.logMessage);
+    }
     if (request.onRBKweb) {
         chrome.pageAction.show(sender.tab.id);
         chrome.pageAction.setPopup({
             tabId: sender.tab.id,
             popup: "popup.html"
         });
-
     }
 });
 
