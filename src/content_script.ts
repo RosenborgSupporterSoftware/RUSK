@@ -1,3 +1,5 @@
+import moduleLoader from './ExtensionModules/ExtensionModuleLoader';
+
 // following is not triggered if not on rbkweb (manifest config), so always true
 chrome.runtime.sendMessage({ onRBKweb: true });
 
@@ -10,4 +12,3 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         sendResponse('Color message is none.');
     }
 });
-
