@@ -10,14 +10,13 @@ import { SettingType } from "../Configuration/settingtype";
 
 export class Brukertips implements ExtensionModule {
 
-    name: "Brukertips";
+    readonly name : string = "Brukertips";
+    urlsToRunOn: Array<RegExp> = [/./];
 
-    urlsToRunOn: [];
+    runBefore: Array<string> = ['late-extmod'];
+    runAfter: Array<string> = ['early-extmod'];
 
-    runBefore: ['lame-o-matic'];
-    runAfter: [];
-
-    getConfigOptions = () : ConfigOptions => {
+    getConfigOptions = (): ConfigOptions => {
         return {
             displayName: "Vis brukertips",
             options: [
@@ -30,7 +29,21 @@ export class Brukertips implements ExtensionModule {
         }
     };
 
-    execute: () => {
-        // TODO: Sett inn brukertips i DOM
+    execute = () => {
+        let tabell = document.querySelectorAll('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(6) > font > table:nth-child(2) > tbody')[0] as HTMLTableElement;
+
+        // Header
+        var headerrow = tabell.insertRow(-1);
+        var headercell = headerrow.insertCell(0);
+        headercell.setAttribute("bgcolor", "#f1f1f1");
+        headercell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\"><strong>BRUKERTIPS</strong></font>";
+
+        // Spacer
+        tabell.appendChild(tabell.firstChild.cloneNode(true));
+
+        // Innhold
+        var contentrow = tabell.insertRow(-1);
+        var contentcell = contentrow.insertCell(0);
+        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">Dette er ett tips til hvordan du bruker Chrome ext.</font>";
     }
 }
