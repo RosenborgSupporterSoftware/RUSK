@@ -1,0 +1,11 @@
+td.win {
+    background-color: green;
+}
+
+td.draw {
+    background-color: yellow;
+}
+
+td.loss {
+    background-color: red;
+}
