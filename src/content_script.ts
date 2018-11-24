@@ -7,7 +7,7 @@ var modules = moduleLoader("notyet");
 
 modules.forEach(mod => {
     try {
-        console.log('ExtMod: ' + mod.name);
+        //chrome.runtime.sendMessage({ logMessage: "ExtMod: " + mod.name });
         // TODO: Bestem om tom urlsToRunOn-array betyr alle eller ingen
         // TODO: Sjekk om vi er på en side som matcher urlsToRunOn for å bestemme om vi kjører
         mod.execute();
@@ -21,7 +21,7 @@ chrome.runtime.sendMessage({ onRBKweb: true });
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     if (msg.color) {
-        console.log('Receive color = ' + msg.color);
+        chrome.runtime.sendMessage({ logMessage: 'Receive color = ' + msg.color });
         document.body.style.backgroundColor = msg.color;
         sendResponse('Change color to ' + msg.color);
     } else {

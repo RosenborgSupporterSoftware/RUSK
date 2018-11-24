@@ -6,16 +6,25 @@
 //
 //polling();
 
+// debug logging
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.logMessage) {
+        console.log(request.logMessage);
+        return;
+    }
+});
+
+// exception debugging/logging
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.exception) {
         console.log("from " + request.module + " (tab[" + sender.tab.id + "@" + sender.tab.index + "]): " +
                     request.message);
         (console.error || console.log).call(console, request.exception.stack || request.exception);
-
         return;
     }
 });
 
+// rbkweb toolbar icon toggling
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.onRBKweb) {
         chrome.pageAction.show(sender.tab.id);
@@ -23,9 +32,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             tabId: sender.tab.id,
             popup: "popup.html"
         });
+        return;
     }
 });
 
+// rbkweb toolbar icon toggling
 chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
     if (info.status === "loading") {
         chrome.pageAction.hide(tabId);
