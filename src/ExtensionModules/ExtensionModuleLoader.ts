@@ -2,6 +2,7 @@ import { ExtensionModule } from "./ExtensionModule";
 import { Brukertips } from "./EM_Brukertips";
 import { TabTitles } from "./EM_TabTitles";
 import { SeasonViews } from "./EM_SeasonViews";
+import { SignatureFilter } from "./EM_SignatureFilter";
 
 /**
  * ExtensionModuleLoader
@@ -14,6 +15,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
     return [
         new Brukertips(),
         new SeasonViews(),
-        new TabTitles()
+        new TabTitles(),
+        new SignatureFilter()
     ];
 }
