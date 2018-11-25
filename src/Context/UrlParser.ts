@@ -35,7 +35,7 @@ export class UrlParser {
     }
 
     parseForumUrl(url: string): RBKwebPageType {
-        if (url == 'forum/index.php') {
+        if (url == 'forum/index.php' || url == 'forum/') {
             return RBKwebPageType.RBKweb_FORUM_FORUMLIST;
         }
 
