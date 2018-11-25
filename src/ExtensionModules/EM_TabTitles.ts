@@ -31,7 +31,6 @@ export class TabTitles implements ExtensionModule {
     };
 
     execute = () => {
-        chrome.runtime.sendMessage({logMessage: "kampoversikt execute()"});
         var elt = document.querySelector('head title');
         if (elt != null) {
             var title = elt.textContent;
@@ -44,10 +43,9 @@ export class TabTitles implements ExtensionModule {
                 newtitle = "Index";
             else if (title.indexOf("RBKweb - Search") == 0)
                 newtitle = "Search";
-            //else
-            //    chrome.runtime.sendMessage({logMessage: "unchanged title '" + title + "'."});
+            else if (title.indexOf("RBKweb - Kamper sesongen ") != -1)
+                newtitle = title.substring(title.indexOf(" - ")+3);
             if (newtitle != "") {
-                chrome.runtime.sendMessage({logMessage: "changing title from '" + title + "' to '" + newtitle + "'."});
                 elt.textContent = newtitle;
             }
         }
