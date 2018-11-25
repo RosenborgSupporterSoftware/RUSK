@@ -90,6 +90,10 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_PM_POST;
         }
 
+        if (url.match(/folder=inbox&mode=read&p=\d{1,10}/)) {
+            return RBKwebPageType.RBKweb_FORUM_PM_READINBOX;
+        }
+
         console.error('UrlParser could not parse forum privmsg url ' + url);
     }
 
