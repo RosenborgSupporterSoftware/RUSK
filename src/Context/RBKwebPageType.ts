@@ -12,6 +12,7 @@
 
     RBKweb_FORUM_POSTNEWTOPIC,  // http://www.rbkweb.no/forum/posting.php?mode=newtopic&f=1
     RBKweb_FORUM_REPLYTOTOPIC,  // http://www.rbkweb.no/forum/posting.php?mode=reply&t=2186
+    RBKweb_FORUM_EDITPOST,      // http://www.rbkweb.no/forum/posting.php?mode=editpost&p=1013975
 
     RBKweb_FORUM_PMINBOX,       // http://www.rbkweb.no/forum/privmsg.php?folder=inbox
     RBKweb_FORUM_PMSENTBOX,     // http://www.rbkweb.no/forum/privmsg.php?folder=sentbox
