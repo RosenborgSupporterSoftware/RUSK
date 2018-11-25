@@ -25,6 +25,9 @@ export class UrlParser {
         }
 
         // TODO: Resten av RBKweb
+        if (restUrl.match(/^kamper\d{4}(\.php|\.shtml)$/)) {
+            return RBKwebPageType.RBKweb_MATCH_OVERVIEW;
+        }
 
         // Dette må fjernes når denne klassen begynner å bli noenlunde moden
         console.error('UrlParser could not parse url ' + url);
