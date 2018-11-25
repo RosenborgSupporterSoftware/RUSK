@@ -1,3 +1,6 @@
+import { RBKwebPageType } from "./RBKwebPageType";
+import { UrlParser } from "./UrlParser";
+
 /**
  * PageContext - Object that gets passed to each plugin at execution time
  */
@@ -7,8 +10,16 @@ export class PageContext {
     /** Gets the username of the logged in user, or undefined if user is not logged in or unknown */
     public readonly username: string;
 
+    /** Gets the web page type we're on */
+    public readonly pageType: RBKwebPageType;
+
     constructor() {
         this.username = this.tryGetUsername();
+        this.pageType = this.getPageType(document.URL);
+    }
+
+    getPageType(url: string): RBKwebPageType {
+        return new UrlParser().ParsePageType(url);
     }
 
     tryGetUsername(): string {
@@ -17,7 +28,7 @@ export class PageContext {
         var linkElement = document.querySelectorAll(selector)[0] as HTMLAnchorElement;
 
         var content = linkElement.innerText;
-        // Log out [ OrionPax ]
+
         var match = content.match(/Log out \[ (.*) \]$/);
         if (match == null) {
             return undefined;
