@@ -36,16 +36,12 @@ export class SeasonViews implements ExtensionModule {
     };
 
     execute = () => {
-
         var dag = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
         var maaned = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
-
         var urlmatch = document.URL.match(/\/kamper([0-9]{4})(.php|.shtml|\/)$/);
         if (urlmatch) {
             var year = parseInt(urlmatch[1]);
-
             var tbody = document.body.querySelector("center table tbody");
-            chrome.runtime.sendMessage({logMessage: "kamper: <" + tbody.childNodes.length});
             if (true /* weekday */) {
                 tbody.childNodes.forEach(function(node, idx, parent) {
                     if (node.hasChildNodes && node.firstChild && node.firstChild.textContent) {
@@ -55,11 +51,8 @@ export class SeasonViews implements ExtensionModule {
                             var month = parseInt(matchdate[2])-1;
                             var date = new Date(year, month, day);
                             var datestring = dag[date.getDay()] + "&nbsp;" + date.getDate() + ".&nbsp;" + maaned[date.getMonth()];
-                            var td = document.createElement("td");
-                            td.setAttribute("class", "kamp");
+                            var td = node.firstChild as HTMLTableCellElement
                             td.innerHTML = datestring;
-                            node.removeChild(node.firstChild);
-                            node.insertBefore(td, node.firstChild);
                         }
                     }
                 });
@@ -76,15 +69,11 @@ export class SeasonViews implements ExtensionModule {
                         var goals = result.match(/^([0-9]*)-([0-9]*)(\*| eeo)?$/);
                         if (goals) {
                             var goaldiff = (homegame ? 1 : -1) * (parseInt(goals[1]) - parseInt(goals[2]));
-                            chrome.runtime.sendMessage({logMessage: "game: " + match + ", is " + (homegame ? "home" : "away") + ", goaldiff " + goaldiff});
-                            var win = goaldiff > 0;
-                            var draw = goaldiff == 0;
-                            var loss = goaldiff < 0;
-                            if (win)
+                            if (goaldiff > 0)
                                 resultnode.setAttribute("class", resultnode.getAttribute("class") + " win");
-                            else if (draw)
+                            else if (goaldiff == 0)
                                 resultnode.setAttribute("class", resultnode.getAttribute("class") + " draw");
-                            else if (loss)
+                            else if (goaldiff < 0)
                                 resultnode.setAttribute("class", resultnode.getAttribute("class") + " loss");
                         }
                     }
