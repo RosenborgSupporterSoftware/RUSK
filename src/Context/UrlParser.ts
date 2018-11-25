@@ -45,27 +45,68 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_POSTLIST;
         }
 
-        // forum/posting.php?mode=reply&t=1466
-        if (url.match(/forum\/posting\.php\?mode=reply&t=\d{1,6}/)) {
-            return RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC;
+        if (url.startsWith('forum/posting.php?')) {
+            return this.parseForumPostingUrl(url.substr(18));
         }
 
-        // forum/posting.php?mode=editpost&p=1013975
-        if (url.match(/forum\/posting\.php\?mode=editpost&p=\d{1,7}/)) {
-            return RBKwebPageType.RBKweb_FORUM_EDITPOST;
+        if (url.startsWith('forum/privmsg.php?')) {
+            return this.parseForumPrivmsgUrl(url.substr(18));
         }
 
-        // forum/posting.php?mode=newtopic&f=1
-        if (url.match(/forum\/posting\.php\?mode=newtopic&f=\d{1,2}/)) {
-            return RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC;
+        if (url.startsWith('forum/search.php?')) {
+            return this.parseForumSearchUrl(url.substr(17));
         }
 
-        // forum/privmsg.php?folder=inbox
-        if (url.match(/forum\/privmsg\.php\?folder=inbox/)) {
-            return RBKwebPageType.RBKweb_FORUM_PMINBOX;
+        if (url.match(/forum\/profile\.php\?mode=viewprofile&u=\d{1,6}/)) {
+            return RBKwebPageType.RBKweb_FORUM_USERPROFILE;
         }
 
         console.error('UrlParser could not parse forum url ' + url);
+        return RBKwebPageType.RBKweb_UNKNOWN_URL;
+    }
+
+    parseForumSearchUrl(url: string): RBKwebPageType {
+        // search_author=LeMond
+        if (url.match(/search_author=.+/)) {
+            return RBKwebPageType.RBKweb_FORUM_SEARCH_BYAUTHOR;
+        }
+    }
+
+    parseForumPrivmsgUrl(url: string): RBKwebPageType {
+
+        if (url == 'folder=inbox') {
+            return RBKwebPageType.RBKweb_FORUM_PM_INBOX;
+        }
+        if (url == 'folder=sentbox') {
+            return RBKwebPageType.RBKweb_FORUM_PM_SENTBOX;
+        }
+        if (url == 'folder=outbox') {
+            return RBKwebPageType.RBKweb_FORUM_PM_OUTBOX;
+        }
+        if (url == 'folder=savebox') {
+            return RBKwebPageType.RBKweb_FORUM_PM_SAVEBOX;
+        }
+        if (url.match(/mode=post&u=\d{1,6}/)) {
+            return RBKwebPageType.RBKweb_FORUM_PM_POST;
+        }
+
+        console.error('UrlParser could not parse forum privmsg url ' + url);
+    }
+
+    parseForumPostingUrl(url: string): RBKwebPageType {
+        if (url.match(/mode=reply&t=\d{1,6}/)) {
+            return RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC;
+        }
+
+        if (url.match(/mode=editpost&p=\d{1,7}/)) {
+            return RBKwebPageType.RBKweb_FORUM_EDITPOST;
+        }
+
+        if (url.match(/mode=newtopic&f=\d{1,2}/)) {
+            return RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC;
+        }
+
+        console.error('UrlParser could not parse forum posting url ' + url);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 }
