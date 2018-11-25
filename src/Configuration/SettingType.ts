@@ -7,5 +7,8 @@ export enum SettingType {
     list = "ST_LIST",
 
     /** Setting is a boolean value */
-    bool = "ST_BOOL"
+    bool = "ST_BOOL",
+
+    /** Setting is a color value */
+    color = "ST_COLOR"
 }
