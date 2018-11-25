@@ -11,7 +11,7 @@ import { PageContext } from "../Context/PageContext";
 
 export class Usertips implements ExtensionModule {
 
-    readonly name : string = "Usertips";
+    readonly name : string = "Brukertips";
     urlsToRunOn: Array<RegExp> = [/./];
 
     runBefore: Array<string> = ['late-extmod'];
