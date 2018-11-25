@@ -16,7 +16,11 @@ try {
         // TODO: Bestem om tom urlsToRunOn-array betyr alle eller ingen
         // TODO: Sjekk om vi er på en side som matcher urlsToRunOn for å bestemme om vi kjører
         modname = mod.name;
-        mod.execute(context);
+        try {
+            mod.execute(context);
+        } catch (e) {
+            chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+        }
     });
 } catch (e) {
     chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
@@ -25,6 +29,7 @@ try {
 // following is not triggered if not on rbkweb (manifest config), so always true
 chrome.runtime.sendMessage({ onRBKweb: true });
 
+// I'm sure we're approaching the point where we no longer need the below
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg.color) {
         chrome.runtime.sendMessage({ logMessage: 'Receive color = ' + msg.color });
