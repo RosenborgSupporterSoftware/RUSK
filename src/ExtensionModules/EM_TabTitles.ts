@@ -1,6 +1,7 @@
 import { ExtensionModule } from "./ExtensionModule";
 import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
+import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 /**
  * EM_TabTitle - Extension module for RBKweb.
@@ -9,7 +10,9 @@ import { SettingType } from "../Configuration/SettingType";
 export class TabTitles implements ExtensionModule {
     readonly name : string = "Fanetittel";
 
-    urlsToRunOn: Array<RegExp> = [/./];
+    pageTypesToRunOn: Array<RBKwebPageType> = [
+        RBKwebPageType.RBKweb_ALL
+    ];
 
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];

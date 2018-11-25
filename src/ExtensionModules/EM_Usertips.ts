@@ -2,6 +2,7 @@ import { ExtensionModule } from "./ExtensionModule";
 import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
 import { PageContext } from "../Context/PageContext";
+import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 /**
  * EM_Brukertips - Extension module for displaying "tooltips" on RBKweb.
@@ -12,7 +13,9 @@ import { PageContext } from "../Context/PageContext";
 export class Usertips implements ExtensionModule {
 
     readonly name : string = "Brukertips";
-    urlsToRunOn: Array<RegExp> = [/./];
+    pageTypesToRunOn: Array<RBKwebPageType> = [
+        RBKwebPageType.RBKweb_ALL
+    ];
 
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
@@ -33,7 +36,9 @@ export class Usertips implements ExtensionModule {
     execute = (context: PageContext) => {
 
         let tabell = document.querySelectorAll('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(6) > font > table:nth-child(2) > tbody')[0] as HTMLTableElement;
-
+        if (tabell == undefined) {
+            return; // Nothing to do here.
+        }
         // Header
         var headerrow = tabell.insertRow(-1);
         var headercell = headerrow.insertCell(0);

@@ -1,5 +1,6 @@
 import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { PageContext } from "../Context/PageContext";
+import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 /**
  * Represents a module that adds some kind of functionality to RBKweb.
@@ -15,11 +16,11 @@ export interface ExtensionModule {
     readonly name: string;
 
     /**
-     * Gets a collection of regular expressions.
-     * If the current URL matches any of the RegExp objects in the list, the ExtensionModule
-     * will be run on the current page.
+     * Gets an array of RBKwebPageType enum instances.
+     * These instances informs the extension which RBKweb pages the ExtensionModule needs to run on.
+     * Plain and simple - if the current page type is in this array, the ExtensionModule will be executed.
      */
-    readonly urlsToRunOn: Array<RegExp>;
+    readonly pageTypesToRunOn: Array<RBKwebPageType>;
 
     /**
      * Indicate the names of other ExtensionModule objects we would prefer to run before.

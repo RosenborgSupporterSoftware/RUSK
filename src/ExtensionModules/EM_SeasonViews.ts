@@ -1,6 +1,7 @@
 import { ExtensionModule } from "./ExtensionModule";
 import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
+import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 /**
  * EM_MatchView - Extension module for RBKweb.
@@ -9,7 +10,9 @@ import { SettingType } from "../Configuration/SettingType";
 export class SeasonViews implements ExtensionModule {
     readonly name : string = "Kampoversikt";
 
-    urlsToRunOn: Array<RegExp> = [/kamper[0-9]{4}(.php|\/|.shtml)$/];
+    pageTypesToRunOn: Array<RBKwebPageType> = [
+        RBKwebPageType.RBKweb_MATCH_OVERVIEW
+    ];
 
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
@@ -33,6 +36,7 @@ export class SeasonViews implements ExtensionModule {
     };
 
     execute = () => {
+
         var dag = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
         var maaned = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
 
