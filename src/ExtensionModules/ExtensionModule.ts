@@ -1,4 +1,5 @@
 import { ConfigOptions } from "../Configuration/ConfigOptions";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * Represents a module that adds some kind of functionality to RBKweb.
@@ -40,7 +41,7 @@ export interface ExtensionModule {
     /**
      * Called when the ExtensionModule should execute its' functionality.
      */
-    execute(): void;
+    execute(context: PageContext): void;
 
     // TODO: Mekanisme for å ta imot config fra rammeverket
     // TODO: Metode for å gi fra seg config til rammeverket

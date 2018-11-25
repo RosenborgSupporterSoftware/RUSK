@@ -1,6 +1,7 @@
 import { ExtensionModule } from "./ExtensionModule";
 import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_Brukertips - Extension module for displaying "tooltips" on RBKweb.
@@ -29,7 +30,8 @@ export class Brukertips implements ExtensionModule {
         }
     };
 
-    execute = () => {
+    execute = (context: PageContext) => {
+
         let tabell = document.querySelectorAll('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(6) > font > table:nth-child(2) > tbody')[0] as HTMLTableElement;
 
         // Header
