@@ -25,7 +25,11 @@ export class PageContext {
     tryGetUsername(): string {
 
         let selector = "body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(4) > table > tbody > tr > td > font > p:nth-child(3) > table:nth-child(1) > tbody > tr:nth-child(2) > td > span > a:nth-child(3)";
-        var linkElement = document.querySelectorAll(selector)[0] as HTMLAnchorElement;
+        var linkElement = document.querySelector(selector) as HTMLAnchorElement;
+
+        if (linkElement == undefined) {
+            return undefined;
+        }
 
         var content = linkElement.innerText;
 
