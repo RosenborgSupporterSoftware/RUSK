@@ -4,6 +4,7 @@ import { SettingType } from "../Configuration/SettingType";
 import { PageContext } from "../Context/PageContext";
 import { ThreadInfo } from "../Utility/ThreadInfo";
 import { ThreadType } from "../Context/ThreadType";
+import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 /**
  * EM_ColorizeThreads - Extension module for colorizing threads on RBKweb.
@@ -17,7 +18,10 @@ import { ThreadType } from "../Context/ThreadType";
 export class ColorizeThreads implements ExtensionModule {
 
     readonly name: string = "Fargelegging av tråder";
-    urlsToRunOn: Array<RegExp> = [/\/forum\/viewforum\.php\?f=\d+/];
+
+    pageTypesToRunOn: Array<RBKwebPageType> = [
+        RBKwebPageType.RBKweb_FORUM_POSTLIST
+    ];
 
     runBefore: Array<string> = [];
     runAfter: Array<string> = [];
