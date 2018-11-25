@@ -9,9 +9,9 @@ import { PageContext } from "../Context/PageContext";
  * Should evolve to an actual tooltips module eventually.
  */
 
-export class Brukertips implements ExtensionModule {
+export class Usertips implements ExtensionModule {
 
-    readonly name : string = "Brukertips";
+    readonly name : string = "Usertips";
     urlsToRunOn: Array<RegExp> = [/./];
 
     runBefore: Array<string> = ['late-extmod'];

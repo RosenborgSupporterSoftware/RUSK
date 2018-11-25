@@ -1,5 +1,5 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { Brukertips } from "./EM_Brukertips";
+import { Usertips } from "./EM_Usertips";
 import { TabTitles } from "./EM_TabTitles";
 import { SeasonViews } from "./EM_SeasonViews";
 import { SignatureFilter } from "./EM_SignatureFilter";
@@ -13,7 +13,7 @@ import { SignatureFilter } from "./EM_SignatureFilter";
 // TODO: Mat inn config fra sync storage til den enkelte modulen
 export default function loadModules(path: string): Array<ExtensionModule> {
     return [
-        new Brukertips(),
+        new Usertips(),
         new SeasonViews(),
         new TabTitles(),
         new SignatureFilter()
