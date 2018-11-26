@@ -1,6 +1,7 @@
 import moduleLoader from './ExtensionModules/ExtensionModuleLoader';
 import { ExtensionModule } from './ExtensionModules/ExtensionModule';
 import { PageContext } from './Context/PageContext';
+import { PageTypeClassifier } from './Context/PageTypeClassifier';
 
 var modules = moduleLoader("notyet");
 
@@ -13,13 +14,14 @@ try {
     modules.forEach(mod => {
         console.log('ExtMod: ' + mod.name);
 
-        // TODO: Bestem om tom urlsToRunOn-array betyr alle eller ingen
-        // TODO: Sjekk om vi er på en side som matcher urlsToRunOn for å bestemme om vi kjører
-        modname = mod.name;
-        try {
-            mod.execute(context);
-        } catch (e) {
-            chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+        if(PageTypeClassifier.ShouldRunOnPage(mod, context.pageType)) {
+
+            modname = mod.name;
+            try {
+                mod.execute(context);
+            } catch (e) {
+                chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+            }
         }
     });
 } catch (e) {
