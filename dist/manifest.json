@@ -32,6 +32,9 @@
   ],
 
   "permissions": ["storage", "tabs"],
+  "web_accessible_resources": [
+    "img/*"
+  ],
 
   "background": {
     "scripts": ["js/vendor.js", "js/background.js"]
