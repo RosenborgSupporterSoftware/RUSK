@@ -44,7 +44,28 @@ export class ImageCache implements ExtensionModule {
             'icon_mini_profile.gif',
             'icon_mini_search.gif',
             'icon_mini_statistics.png',
-            'whosonline.gif'
+            'whosonline.gif',
+            'folder.gif',
+            'folder_announce.gif',
+            'folder_hot.gif',
+            'folder_sticky.gif',
+            'msg_inbox.gif',
+            'msg_outbox.gif',
+            'msg_savebox.gif',
+            'msg_sentbox.gif',
+            'voting_bar.gif',
+            'norwegian/icon_pm.gif',
+            'norwegian/icon_profile.gif',
+            'norwegian/icon_quote.gif',
+            'norwegian/msg_newpost.gif',
+            'norwegian/post.gif',
+            'norwegian/reply.gif',
+            'english/icon_pm.gif',
+            'english/icon_profile.gif',
+            'english/icon_quote.gif',
+            'english/msg_newpost.gif',
+            'english/post.gif',
+            'english/reply.gif',
         ];
 
         var imgs = document.body.querySelectorAll("img");
@@ -53,9 +74,13 @@ export class ImageCache implements ExtensionModule {
                 var img = imgs.item(c) as HTMLImageElement;
                 var file = img.src;
                 if (file) {
-                    var match = file.match(/.*\/([^/]*)$/);
+                    var match = file.match(/.*\/([^/]*)\/([^/]*)$/);
                     if (match) {
-                        var filename = match[1];
+                        var language = match[1];
+                        var filename = match[2];
+                        if (language.startsWith("lang_"))
+                            filename = language.substring(5) + "/" + filename;
+                        //chrome.runtime.sendMessage({logMessage: "lang " + language + ", file " + filename});
                         if (cached.findIndex(function(val, idex, arr) { return filename == val; }) != -1) {
                             // chrome.runtime.sendMessage({logMessage: "fetching " + filename + " from extension cache"});
                             img.src = chrome.runtime.getURL("img/" + filename);
