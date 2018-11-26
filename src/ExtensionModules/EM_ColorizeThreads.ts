@@ -20,7 +20,7 @@ export class ColorizeThreads implements ExtensionModule {
     readonly name: string = "Fargelegging av tråder";
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_FORUM_POSTLIST
+        RBKwebPageType.RBKweb_FORUM_TOPICLIST
     ];
 
     runBefore: Array<string> = [];
