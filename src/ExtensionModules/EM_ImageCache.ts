@@ -19,12 +19,12 @@ export class ImageCache implements ExtensionModule {
 
     getConfigOptions = (): ConfigOptions => {
         return {
-            displayName: "Kampoversikt",
+            displayName: "ImageCache",
             options: [
                 {
-                    setting: "displayWeekday",
+                    setting: "cacheIcons",
                     type: SettingType.bool,
-                    label: "Vis ukedag for kampdato"
+                    label: "Bruk lokalt cachede ikoner"
                 }
             ]
         };
