@@ -14,14 +14,21 @@ try {
     modules.forEach(mod => {
         console.log('ExtMod: ' + mod.name);
 
-        if(PageTypeClassifier.ShouldRunOnPage(mod, context.pageType)) {
+        if (PageTypeClassifier.ShouldRunOnPage(mod, context.pageType)) {
 
+            let starttime = performance.now();
             modname = mod.name;
             try {
                 mod.execute(context);
             } catch (e) {
                 chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
             }
+            let endtime = performance.now();
+            chrome.runtime.sendMessage({
+                module: modname,
+                executiontime: endtime - starttime,
+                url: document.URL
+            });
         }
     });
 } catch (e) {
