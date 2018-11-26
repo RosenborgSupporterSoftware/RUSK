@@ -14,8 +14,6 @@ export class PageTypeClassifier {
      */
     public static ShouldRunOnPage(module: ExtensionModule, pageType: RBKwebPageType): boolean {
 
-        debugger;
-
         if(module.pageTypesToRunOn.indexOf(RBKwebPageType.RBKweb_ALL) >= 0) {
             // Vi er happy på alle sider
             return true;
