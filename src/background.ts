@@ -41,8 +41,19 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
     if (info.status === "loading") {
         chrome.pageAction.hide(tabId);
         chrome.pageAction.setPopup({
-            tabId: tabId, 
+            tabId: tabId,
             popup: ""
         });
+    }
+});
+
+// performance data for ExtensionModules
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.module && request.executiontime && request.url) {
+        let performanceHistory = JSON.parse(localStorage.getItem('RBKweb-Survival-Kit-PerformanceHistory')) || [];
+
+        performanceHistory.push(request);
+        localStorage.setItem('RBKweb-Survival-Kit-PerformanceHistory', JSON.stringify(performanceHistory));
     }
 });
