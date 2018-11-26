@@ -11,7 +11,7 @@ export class SignatureFilter implements ExtensionModule {
     readonly name : string = "Signaturfilter";
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_ALL
+        RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
 
     runBefore: Array<string> = ['late-extmod'];

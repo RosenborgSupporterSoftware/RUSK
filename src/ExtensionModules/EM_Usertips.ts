@@ -14,7 +14,7 @@ export class Usertips implements ExtensionModule {
 
     readonly name : string = "Brukertips";
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_ALL
+        RBKwebPageType.RBKweb_FORUM_ALL
     ];
 
     runBefore: Array<string> = ['late-extmod'];
