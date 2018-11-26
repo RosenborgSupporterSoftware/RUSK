@@ -39,16 +39,13 @@ export class InboxAlert implements ExtensionModule {
     };
 
     execute = () => {
-        chrome.runtime.sendMessage({logMessage: "inbox check"});
-
         var icon = document.body.querySelector('img[src$="icon_mini_message.gif"]') as HTMLImageElement;
         if (icon) {
-            chrome.runtime.sendMessage({logMessage: "icon found"});
             var alt = icon.alt;
             if (!(alt == "You have no new messages" ||
                   alt == "Du har ingen nye meldinger" ||
-                  alt == "Du hast keine neuen Nachrichten.")) {
-                chrome.runtime.sendMessage({logMessage: "adding alert"});
+                  alt == "Du hast keine neuen Nachrichten." ||
+                  alt == "Log in to check your private messages")) {
                 var table = icon.closest("table") as HTMLTableElement;
                 var parent = table.parentElement;
                 // FIXME: HORRIBLE HORRIBLE HTML, which should be replaced with somthing CSS-stylable
@@ -64,6 +61,3 @@ export class InboxAlert implements ExtensionModule {
 
     };
 };
-
-
-

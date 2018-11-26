@@ -24,7 +24,9 @@
 
   "content_scripts": [
       {
-          "matches": ["*://*.rbkweb.no/*", "*://rbkweb.no/*", "*://rbkweb.com/*", "*://*.rbkweb.com/*"],
+          "matches": ["*://*.rbkweb.no/*", "*://rbkweb.no/*",
+                      "*://rbkweb.com/*", "*://*.rbkweb.com/*",
+                      "*://rosenborg.info/*", "*://*.rosenborg.info/*"],
           "js": ["js/vendor.js", "js/content_script.js"],
           "css": ["css/rbkwebext.css"],
           "run_at": "document_end"
@@ -32,9 +34,7 @@
   ],
 
   "permissions": ["storage", "tabs"],
-  "web_accessible_resources": [
-    "img/*"
-  ],
+  "web_accessible_resources": [ "img/*" ],
 
   "background": {
     "scripts": ["js/vendor.js", "js/background.js"]
