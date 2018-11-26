@@ -5,6 +5,7 @@ import { SeasonViews } from "./EM_SeasonViews";
 import { SignatureFilter } from "./EM_SignatureFilter";
 import { ColorizeThreads } from "./EM_ColorizeThreads";
 import { ImageCache } from "./EM_ImageCache";
+import { InboxAlert } from "./EM_InboxAlert";
 
 /**
  * ExtensionModuleLoader
@@ -21,5 +22,6 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new SignatureFilter(),
         new ColorizeThreads(),
         new ImageCache(),
+        new InboxAlert(),
     ];
 }

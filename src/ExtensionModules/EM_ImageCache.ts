@@ -7,6 +7,8 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
  * EM_ImageCache - Extension module for RBKweb.
  */
 
+ // FIXME: cache emojis
+
 export class ImageCache implements ExtensionModule {
     readonly name : string = "ImageCache";
 

@@ -19,10 +19,14 @@ export class UrlParser {
         }
         var restUrl = rbkwebMatch[rbkwebMatch.length - 1];
 
+        try {
         if (restUrl.startsWith('forum/')) {
             // We're at the forum, yay!
             return this.parseForumUrl(restUrl);
         }
+    } catch (e) {
+        chrome.runtime.sendMessage({ module: "UrlParser", message: e.message, exception: e });
+    }
 
         // TODO: Resten av RBKweb
         if (restUrl.match(/^kamper\d{4}(\.php|\.shtml)$/)) {
@@ -40,6 +44,9 @@ export class UrlParser {
         }
 
         if (url.match(/forum\/viewforum\.php\?f=\d{1,2}/)) {
+            return RBKwebPageType.RBKweb_FORUM_TOPICLIST;
+        }
+        if (url.match(/forum\/search.php\?search_id=newposts/)) {
             return RBKwebPageType.RBKweb_FORUM_TOPICLIST;
         }
 
