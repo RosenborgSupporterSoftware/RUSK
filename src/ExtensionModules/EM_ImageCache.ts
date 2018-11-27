@@ -7,8 +7,6 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
  * EM_ImageCache - Extension module for RBKweb.
  */
 
- // FIXME: cache emojis
-
 export class ImageCache implements ExtensionModule {
     readonly name : string = "ImageCache";
 
@@ -71,6 +69,35 @@ export class ImageCache implements ExtensionModule {
             'english/msg_newpost.gif',
             'english/post.gif',
             'english/reply.gif',
+            'smiles/icon_arrow.gif',
+            'smiles/icon_beer.gif',
+            'smiles/icon_biggrin.gif',
+            'smiles/icon_confused.gif',
+            'smiles/icon_cool.gif',
+            'smiles/icon_cry.gif',
+            'smiles/icon_eek.gif',
+            'smiles/icon_engel.gif',
+            'smiles/icon_evil.gif',
+            'smiles/icon_exclaim.gif',
+            'smiles/icon_idea.gif',
+            'smiles/icon_lol.gif',
+            'smiles/icon_love.gif',
+            'smiles/icon_mad.gif',
+            'smiles/icon_mrgreen.gif',
+            'smiles/icon_neutral.gif',
+            'smiles/icon_question.gif',
+            'smiles/icon_razz.gif',
+            'smiles/icon_redface.gif',
+            'smiles/icon_rolleyes.gif',
+            'smiles/icon_sad.gif',
+            'smiles/icon_smile.gif',
+            'smiles/icon_surprised.gif',
+            'smiles/icon_tommel.gif',
+            'smiles/icon_tommel_ned.gif',
+            'smiles/icon_twisted.gif',
+            'smiles/icon_wink.gif',
+            'smiles/rbk.gif',
+            'smiles/rbk3.gif',
         ];
 
         var imgs = document.body.querySelectorAll("img");
@@ -85,9 +112,9 @@ export class ImageCache implements ExtensionModule {
                         var filename = match[2];
                         if (language.startsWith("lang_"))
                             filename = language.substring(5) + "/" + filename;
-                        //chrome.runtime.sendMessage({logMessage: "lang " + language + ", file " + filename});
+                        else if (language == "smiles")
+                            filename = "smiles/" + filename;
                         if (cached.findIndex(function(val, idex, arr) { return filename == val; }) != -1) {
-                            // chrome.runtime.sendMessage({logMessage: "fetching " + filename + " from extension cache"});
                             img.src = chrome.runtime.getURL("img/" + filename);
                         }
                     }
