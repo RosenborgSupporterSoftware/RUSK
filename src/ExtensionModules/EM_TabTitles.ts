@@ -19,7 +19,7 @@ export class TabTitles implements ExtensionModule {
 
     getConfigOptions = (): ConfigOptions => {
         return {
-            displayName: "Fanetittel",
+            displayName: "TabTitles",
             options: [
                 {
                     setting: "shortenTitles",
@@ -31,24 +31,25 @@ export class TabTitles implements ExtensionModule {
     };
 
     execute = () => {
-        var elt = document.querySelector('head title');
-        if (elt != null) {
-            var title = elt.textContent;
-            var newtitle = "";
-            if (title.indexOf("RBKweb - View topic - ") == 0)
-                newtitle = title.substr(22);
-            else if (title.indexOf("RBKweb - View Forum - ") == 0)
-                newtitle = title.substr(22);
-            else if (title.indexOf("RBKweb - Index") == 0)
-                newtitle = "Index";
-            else if (title.indexOf("RBKweb - Search") == 0)
-                newtitle = "Search";
+        var titleelt = document.querySelector('head title');
+        if (titleelt != null) {
+            var title = titleelt.textContent;
+            if (title.startsWith("RBKweb - View topic - "))
+                titleelt.textContent = title.substr(22);
+            else if (title.startsWith("RBKweb - View Forum - "))
+                titleelt.textContent = title.substr(22);
+            else if (title.startsWith("RBKweb - Index"))
+                titleelt.textContent = "Index";
+            else if (title.startsWith("RBKweb - Search"))
+                titleelt.textContent = "Search";
+            else if (title.startsWith("RBKweb - Private Messaging"))
+                titleelt.textContent = "Private Messaging";
+            else if (title.startsWith("RBKweb - Send private message"))
+                titleelt.textContent = "Send private message";
+            else if (title.startsWith("RBKweb - Read message"))
+                titleelt.textContent = "Read message";
             else if (title.indexOf("RBKweb - Kamper sesongen ") != -1)
-                newtitle = title.substring(title.indexOf(" - ")+3);
-            if (newtitle != "") {
-                elt.textContent = newtitle;
-            }
+                titleelt.textContent = title.substring(title.indexOf(" - ")+3);
         }
-
     }
 };
