@@ -42,6 +42,9 @@ export class UrlParser {
         if (url == 'forum/index.php' || url == 'forum/') {
             return RBKwebPageType.RBKweb_FORUM_FORUMLIST;
         }
+        if (url.match(/forum\/index.php\?.*$/)) {
+            return RBKwebPageType.RBKweb_FORUM_FORUMLIST;
+        }
 
         if (url.match(/forum\/viewforum\.php\?f=\d{1,2}/)) {
             return RBKwebPageType.RBKweb_FORUM_TOPICLIST;
