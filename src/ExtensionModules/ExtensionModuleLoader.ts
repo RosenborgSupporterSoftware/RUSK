@@ -6,6 +6,7 @@ import { SignatureFilter } from "./EM_SignatureFilter";
 import { ColorizeThreads } from "./EM_ColorizeThreads";
 import { ImageCache } from "./EM_ImageCache";
 import { InboxAlert } from "./EM_InboxAlert";
+import { HighlightColor } from "./EM_HighlightColor";
 
 /**
  * ExtensionModuleLoader
@@ -23,5 +24,6 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizeThreads(),
         new ImageCache(),
         new InboxAlert(),
+        new HighlightColor(),
     ];
 }
