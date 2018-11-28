@@ -7,6 +7,7 @@ import { ColorizeThreads } from "./EM_ColorizeThreads";
 import { ImageCache } from "./EM_ImageCache";
 import { InboxAlert } from "./EM_InboxAlert";
 import { HighlightColor } from "./EM_HighlightColor";
+import { UsernameTracker } from "./EM_UsernameTracker";
 
 /**
  * ExtensionModuleLoader
@@ -25,5 +26,6 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ImageCache(),
         new InboxAlert(),
         new HighlightColor(),
+        new UsernameTracker()
     ];
 }
