@@ -48,14 +48,10 @@ export class InboxAlert implements ExtensionModule {
                   alt == "Log in to check your private messages")) {
                 var table = icon.closest("table") as HTMLTableElement;
                 var parent = table.parentElement;
-                // FIXME: HORRIBLE HORRIBLE HTML, which should be replaced with somthing CSS-stylable
-                // (and multi-language).
                 table.insertAdjacentHTML("afterend",
-                    '<table width="100%"><tr><td bgcolor="red">' +
-                    '<div align="center">' +
+                    '<div class="pmalert" width="100%" align="center">' +
                     '<br><a href="privmsg.php?folder=inbox">DU HAR ULESTE PRIVATE MELDINGER</a><br><br>' +
-                    '</div>' +
-                    '</td></tr></table>');
+                    '</div>');
             }
         }
 

@@ -13,3 +13,10 @@ td.loss {
 b.highlighted {
     color: #ff6666;
 }
+
+div.pmalert {
+    background-color: #ff6666;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
