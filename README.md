@@ -1,12 +1,18 @@
-# RBKweb Chrome Extension
+# RUSK - RBKweb Ultimate Survival Kit (A Chrome Extension)
 
 [![Join the chat at https://gitter.im/RBKweb-ext/Lobby](https://badges.gitter.im/RBKweb-ext/Lobby.svg)](https://gitter.im/RBKweb-ext/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Dette er en Chrome-utvidelse som legger til funksjonalitet og diverse digg til RBKweb-forumet. Det er basert på Chrome Extension TypeScript Starter herfra:
+Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til RBKweb-forumet.
 
-https://github.com/chibat/chrome-extension-typescript-starter
+## Features
 
-Her vil det sannsynligvis med tid og stunder komme litt mer spennende ting, dette er bare en stub av en readme så lenge.
+- Fjerner redundante deler av side-titlene så en kompakt rekke med tabs lettere identifiseres.
+- Endrer highlight-farge ved forum-søk.
+- Gir mer tydelig varsel om man har uleste private meldinger.
+- Legger på ukedag i kampoversiktene.
+- Fargelegger resultatene (seier/uavgjort/tap) i kampoversiktene.
+- Optimaliserer browserens sidelasting.
+- Legger til en rute for brukertips.
 
 ## Viktige punkter for å bruke/utvikle utvidelsen
 
