@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "RBKweb Chrome Extension",
+  "name": "RBKweb Ultimate Survival Kit",
   "description": "Utvidet funksjonalitet for RBKweb.no",
   "version": "0.0",
 
@@ -40,4 +40,3 @@
     "scripts": ["js/vendor.js", "js/background.js"]
   }
 }
-
