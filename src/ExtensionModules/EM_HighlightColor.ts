@@ -36,7 +36,8 @@ export class HighlightColor implements ExtensionModule {
             for (var c = 0; c < highlights.length; ++c) {
                 var highlight = highlights.item(c) as HTMLElement;
                 var style = highlight.style;
-                style.color = "#ff6666";
+                style.color = "";
+                highlight.setAttribute("class", highlight.getAttribute("class") + " highlighted");
             }
         }
     };

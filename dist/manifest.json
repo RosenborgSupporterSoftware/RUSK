@@ -28,7 +28,7 @@
                       "*://rbkweb.com/*", "*://*.rbkweb.com/*",
                       "*://rosenborg.info/*", "*://*.rosenborg.info/*"],
           "js": ["js/vendor.js", "js/content_script.js"],
-          "css": ["css/rbkwebext.css"],
+          "css": ["css/rusk.css"],
           "run_at": "document_end"
       }
   ],

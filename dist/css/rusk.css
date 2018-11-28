@@ -9,3 +9,7 @@ td.draw {
 td.loss {
     background-color: red;
 }
+
+b.highlighted {
+    color: #ff6666;
+}
