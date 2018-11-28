@@ -11,6 +11,7 @@
     RBKweb_FORUM_ALL,               // Meta page that matches all forum pages
     RBKweb_FORUM_START,             // Not a page - the start of the forum related values
 
+    RBKweb_FORUM_LOGIN,             // http://www.rbkweb.no/forum/login.php
     RBKweb_FORUM_FORUMLIST,         // http://www.rbkweb.no/forum/index.php
     RBKweb_FORUM_TOPICLIST,         // http://www.rbkweb.no/forum/viewforum.php?f=1 +
                                     // http://www.rbkweb.no/forum/search.php?search_id=newposts

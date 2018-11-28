@@ -14,19 +14,23 @@ export class UrlParser {
 
         // Check if we're even at RBKweb - extension should not run otherwise, but just for making sure we're catching everything
         let rbkwebMatch = url.match(/https?:\/\/(www\.)?rbkweb\.(no|com)\/(.*)/);
+        // FIXME: also rosenborg.info/
         if (!rbkwebMatch) {
             return RBKwebPageType.RBKweb_NON_RBKWEB_URL;
         }
         var restUrl = rbkwebMatch[rbkwebMatch.length - 1];
 
+        if (restUrl == "") // FIXME: proper enum
+            return RBKwebPageType.RBKweb_UNKNOWN_URL;
+
         try {
-        if (restUrl.startsWith('forum/')) {
-            // We're at the forum, yay!
-            return this.parseForumUrl(restUrl);
+            if (restUrl.startsWith('forum/')) {
+                // We're at the forum, yay!
+                return this.parseForumUrl(restUrl);
+            }
+        } catch (e) {
+            chrome.runtime.sendMessage({ module: "UrlParser", message: e.message, exception: e });
         }
-    } catch (e) {
-        chrome.runtime.sendMessage({ module: "UrlParser", message: e.message, exception: e });
-    }
 
         // TODO: Resten av RBKweb
         if (restUrl.match(/^kamper\d{4}(\.php|\.shtml)$/)) {
@@ -39,6 +43,9 @@ export class UrlParser {
     }
 
     parseForumUrl(url: string): RBKwebPageType {
+        if (url == 'forum/login.php') {
+            return RBKwebPageType.RBKweb_FORUM_LOGIN;
+        }
         if (url == 'forum/index.php' || url == 'forum/') {
             return RBKwebPageType.RBKweb_FORUM_FORUMLIST;
         }
@@ -54,7 +61,8 @@ export class UrlParser {
         }
 
         // TODO: Flere query params vi må ta høyde for?
-        if (url.match(/forum\/viewtopic.php\?t=\d{1,6}(&start=\d{1,6})?/)) {
+        if (url.match(/forum\/viewtopic.php\?t=\d{1,6}(&start=\d{1,6})?/) ||
+            url.match(/forum\/viewtopic.php\?p=\d{1,7}(#\d{1,7})?/)) {
             return RBKwebPageType.RBKweb_FORUM_POSTLIST;
         }
 
