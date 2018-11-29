@@ -2,26 +2,89 @@ import moduleLoader from './ExtensionModules/ExtensionModuleLoader';
 import { ExtensionModule } from './ExtensionModules/ExtensionModule';
 import { PageContext } from './Context/PageContext';
 import { PageTypeClassifier } from './Context/PageTypeClassifier';
+import { ChromeSyncStorage } from './Configuration/ChromeSyncStorage';
+import { IConfigurationStorage } from './Configuration/IConfigurationStorage';
+import { RUSKConfig } from './Configuration/RUSKConfig';
+import { ModuleError } from './Errors/ModuleError';
 
-var modules = moduleLoader("notyet");
+var allModules = moduleLoader("notyet");
+
+let storage = new ChromeSyncStorage() as IConfigurationStorage;
+
+storage.GetConfiguration(config => {
+    if (config == null) {
+        // Lag ny config med default ting
+        let ruskConfig = new RUSKConfig();
+        ruskConfig.AddModuleConfigurations(allModules);
+
+        storage.StoreConfiguration(ruskConfig);
+        config = ruskConfig;
+    }
+    let context = new PageContext();
+    let filteredModules = filterModules(allModules, context);
+
+    initModules(filteredModules, config);
+    preprocessModules(filteredModules);
+    executeModules(filteredModules, context);
+});
 
 // TODO: Sortér moduler basert på deres runBefore og runAfter-properties
 
-var modname = "";
-try {
-    var context = new PageContext();
+/**
+ * Run the init step on the given modules
+ * @param modules - The modules to initialize
+ * @param config - The RUSKConfig to use for initializing the modules
+ */
+function initModules(modules: Array<ExtensionModule>, config: RUSKConfig) {
 
-    modules.forEach(mod => {
-        console.log('ExtMod: ' + mod.name);
-
-        if (PageTypeClassifier.ShouldRunOnPage(mod, context.pageType)) {
-
-            let starttime = performance.now();
+    let modname = "";
+    try {
+        modules.forEach(mod => {
             modname = mod.name;
+            mod.init(config.GetModuleConfiguration(modname));
+        });
+    } catch (e) {
+        chrome.runtime.sendMessage(new ModuleError(modname, "init", e.message, e));
+    }
+}
+
+/**
+ * Run the preprocess step on the given modules
+ * @param modules - The modules to run preprocess() on
+ */
+function preprocessModules(modules: Array<ExtensionModule>) {
+
+    let modname = "";
+    try {
+        modules.forEach(mod => {
+            modname = mod.name;
+            mod.preprocess();
+        });
+    } catch (e) {
+        chrome.runtime.sendMessage(new ModuleError(modname, "preprocess", e.message, e));
+    }
+}
+
+/**
+ * Run the execute step on the given modules
+ * @param modules - The modules to run execute() on
+ * @param context - The PageContext to run the modules with
+ */
+function executeModules(modules: Array<ExtensionModule>, context: PageContext) {
+
+    var modname = "";
+    try {
+
+        modules.forEach(mod => {
+            console.log('ExtMod: ' + mod.name);
+
+            modname = mod.name;
+            let starttime = performance.now();
             try {
                 mod.execute(context);
             } catch (e) {
-                chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+                //chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+                chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
             }
             let endtime = performance.now();
             chrome.runtime.sendMessage({
@@ -29,10 +92,25 @@ try {
                 executiontime: endtime - starttime,
                 url: document.URL
             });
+        });
+    } catch (e) {
+        chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+    }
+}
+
+/**
+ * Filters a list of modules, returning only those that should run in the current PageContext
+ * @param modules - The list of modules to filter
+ * @param context - The PageContext object to use as the basis for the filtering
+ */
+function filterModules(modules: Array<ExtensionModule>, context: PageContext): Array<ExtensionModule> {
+    let filteredModules = new Array<ExtensionModule>();
+    for (let i = 0; i < modules.length; i++) {
+        if (PageTypeClassifier.ShouldRunOnPage(modules[i], context.pageType)) {
+            filteredModules.push(modules[i]);
         }
-    });
-} catch (e) {
-    chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
+    }
+    return filteredModules;
 }
 
 // following is not triggered if not on rbkweb (manifest config), so always true

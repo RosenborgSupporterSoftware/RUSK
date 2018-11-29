@@ -1,3 +1,8 @@
+import { ConfigUpdatedMessage } from "./Messages/ConfigUpdatedMessage";
+import { ChromeSyncStorage } from "./Configuration/ChromeSyncStorage";
+import { IConfigurationStorage } from "./Configuration/IConfigurationStorage";
+
+let configStorage = new ChromeSyncStorage() as IConfigurationStorage;
 
 //function polling() {
 //    console.log('polling');
@@ -56,4 +61,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         performanceHistory.push(request);
         localStorage.setItem('RBKweb-Survival-Kit-PerformanceHistory', JSON.stringify(performanceHistory));
     }
+});
+
+// Configuration update
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (!message.isinstanceof(ConfigUpdatedMessage))
+        return;
+    let msg = message as ConfigUpdatedMessage;
+
+    configStorage.StoreConfiguration(msg.Config);
+    chrome.runtime.sendMessage({ logMessage: 'Stored configuration to sync storage' });
 });

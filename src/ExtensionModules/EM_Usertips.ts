@@ -1,8 +1,8 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
-import { SettingType } from "../Configuration/SettingType";
 import { PageContext } from "../Context/PageContext";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ConfigBuilder } from "../Configuration/ConfigBuilder";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * EM_Brukertips - Extension module for displaying "tooltips" on RBKweb.
@@ -12,7 +12,9 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 export class Usertips implements ExtensionModule {
 
-    readonly name : string = "Brukertips";
+    readonly name: string = "Brukertips";
+    cfg: ModuleConfiguration;
+
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_ALL
     ];
@@ -20,18 +22,20 @@ export class Usertips implements ExtensionModule {
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
 
-    getConfigOptions = (): ConfigOptions => {
-        return {
-            displayName: "Vis brukertips",
-            options: [
-                {
-                    setting: "displayTooltips",
-                    type: SettingType.bool,
-                    label: "Vis brukertips under sitater på RBKweb"
-                }
-            ]
-        }
-    };
+    configSpec = () =>
+        ConfigBuilder
+            .Define()
+            .EnabledByDefault()
+            .WithExtensionModuleName("Brukertips")
+            .WithDescription("Denne modulen viser enkle brukertips oppe til høyre på RBKweb-siden, rett under sitatene.")
+            .Build();
+
+    init = (config: ModuleConfiguration) => {
+        this.cfg = config;
+    }
+
+    preprocess = () => {
+    }
 
     execute = (context: PageContext) => {
 
@@ -39,6 +43,10 @@ export class Usertips implements ExtensionModule {
         if (tabell == undefined) {
             return; // Nothing to do here.
         }
+
+        // Spacer
+        tabell.appendChild(tabell.firstChild.cloneNode(true));
+
         // Header
         var headerrow = tabell.insertRow(-1);
         var headercell = headerrow.insertCell(0);
@@ -51,6 +59,6 @@ export class Usertips implements ExtensionModule {
         // Innhold
         var contentrow = tabell.insertRow(-1);
         var contentcell = contentrow.insertCell(0);
-        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">Dette er ett tips til hvordan du bruker Chrome ext.</font>";
+        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">Dette er ett tips til hvordan du bruker RUSK.</font>";
     }
 }

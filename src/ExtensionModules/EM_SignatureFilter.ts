@@ -1,14 +1,15 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
-import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ConfigBuilder } from "../Configuration/ConfigBuilder";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * EM_SignatureFilter - Extension module for RBKweb.
  */
 
 export class SignatureFilter implements ExtensionModule {
-    readonly name : string = "Signaturfilter";
+    readonly name: string = "Signaturfilter";
+    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST
@@ -17,29 +18,32 @@ export class SignatureFilter implements ExtensionModule {
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
 
-    getConfigOptions = (): ConfigOptions => {
-        return {
-            displayName: "SignatureFilter",
-            options: [
-                {
-                    setting: "signatureFilterUsers",
-                    type: SettingType.text,
-                    label: "Fjern signatur for brukere"
-                }
-            ]
-        }
-    };
+    configSpec = () =>
+        ConfigBuilder
+            .Define()
+            .EnabledByDefault()
+            .WithExtensionModuleName(this.name)
+            .WithDisplayName(this.name)
+            .WithDescription("En modul som lar deg fjerne signaturer fra brukerinnlegg.")
+            .Build();
+
+    init = (config: ModuleConfiguration) => {
+        this.cfg = config;
+    }
+
+    preprocess = () => {
+    }
 
     execute = () => {
         //chrome.runtime.sendMessage({logMessage: "SignatureFilter"});
         var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
-        elts.forEach(function(elt, key, parent) {
+        elts.forEach(function (elt, key, parent) {
             try {
                 var sub = elt as HTMLTableCellElement;
                 var index = sub.textContent.indexOf("_________________");
                 if (index != -1) {
                     var remove = false;
-                    sub.childNodes.forEach(function(node, key, parent) {
+                    sub.childNodes.forEach(function (node, key, parent) {
                         var n = node as HTMLElement;
                         var idx = n.innerHTML.indexOf("_________________");
                         if (idx != -1) {
@@ -62,7 +66,7 @@ export class SignatureFilter implements ExtensionModule {
                     });
                 }
             } catch (e) {
-                chrome.runtime.sendMessage({message: e.message, exception: e});
+                chrome.runtime.sendMessage({ message: e.message, exception: e });
             }
         });
     };

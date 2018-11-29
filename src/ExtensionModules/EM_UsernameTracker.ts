@@ -1,7 +1,9 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ConfigBuilder } from "../Configuration/ConfigBuilder";
+import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * EM_UsernameTracker - Extension module for RBKweb.
@@ -11,6 +13,7 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 
 export class UsernameTracker implements ExtensionModule {
     readonly name : string = "UsernameTracker";
+    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_ALL // FIXME: only post views
@@ -19,25 +22,30 @@ export class UsernameTracker implements ExtensionModule {
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
 
-    getConfigOptions = (): ConfigOptions => {
-        return {
-            displayName: "UsernameTracker",
-            options: [
-                {
-                    setting: "trackUsernames",
-                    type: SettingType.bool,
-                    label: "Varsle endrede brukernavn"
-                },
-                { // this is a config the users probably shouldn't see or know about.
-                    setting: "knownUsernames",
-                    type: SettingType.text,
-                    label: "Kjente brukernavn"
-                }
-            ]
-        }
-    };
+    configSpec = () =>
+        ConfigBuilder
+            .Define()
+            .EnabledByDefault()
+            .WithExtensionModuleName(this.name)
+            .WithDescription('Varsle endrede brukernavn')
+            .WithDisplayName(this.name)
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("knownUsernames")
+                    .WithSettingType(SettingType.text)
+                    .WithVisibility(ConfigurationOptionVisibility.Never)
+                    .WithDefaultValue('')
+            )
+            .Build();
 
     names: Map<number, string> = new Map<number, string>();
+
+    init = (config: ModuleConfiguration) => {
+        this.cfg = config;
+    }
+
+    preprocess = () => {
+    }
 
     execute = () => {
         var users = document.body.querySelectorAll('tr td span.name b')

@@ -1,6 +1,7 @@
 import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { PageContext } from "../Context/PageContext";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * Represents a module that adds some kind of functionality to RBKweb.
@@ -37,13 +38,23 @@ export interface ExtensionModule {
     /**
      * Gets a collection of options objects that represent the settings available for this module.
      */
-    getConfigOptions(): ConfigOptions;
+    configSpec(): ModuleConfiguration;
 
     /**
      * Called when the ExtensionModule should execute its' functionality.
      */
     execute(context: PageContext): void;
 
-    // TODO: Mekanisme for å ta imot config fra rammeverket
+    /**
+     * Called when RUSK wants an ExtensionModule to initialize itself with a new configuration
+     * @param config - The ModuleConfiguration for this ExtensionModule
+     */
+    init(config: ModuleConfiguration): void;
+
+    /**
+     * Called when RUSK wants the module to preprocess the current page
+     */
+    preprocess(): void;
+
     // TODO: Metode for å gi fra seg config til rammeverket
 }

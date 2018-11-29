@@ -1,14 +1,15 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
-import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ConfigBuilder } from "../Configuration/ConfigBuilder";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * EM_Empowerment - Extension module for RBKweb.
  */
 
 export class Empowerment implements ExtensionModule {
-    readonly name : string = "Empowerment";
+    readonly name: string = "Empowerment";
+    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
@@ -17,13 +18,21 @@ export class Empowerment implements ExtensionModule {
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
 
-    getConfigOptions = (): ConfigOptions => {
-        return {
-            displayName: "Empowerment",
-            options: [
-            ]
-        };
-    };
+    configSpec = () =>
+        ConfigBuilder
+            .Define()
+            .WithExtensionModuleName(this.name)
+            .EnabledByDefault()
+            .WithDisplayName(this.name)
+            .WithDescription('Denne modulen viser på RBKweb at RUSK er aktiv')
+            .Build();
+
+    init = (config: ModuleConfiguration) => {
+        this.cfg = config;
+    }
+
+    preprocess = () => {
+    }
 
     execute = () => {
         var copyright = document.body.querySelector('a[href="http://www.rbkweb.no/copyright.shtml"]') as HTMLAnchorElement;
@@ -48,9 +57,9 @@ export class Empowerment implements ExtensionModule {
             var diffuse = brighten(color, 14);
             tablecell.setAttribute("width", "");
             if (span > 3) {
-                tablecell.setAttribute("colspan", "" + (span-2));
-                var html = 
-                    '<td colspan="2" align="right" bgcolor="'+color+'">' +
+                tablecell.setAttribute("colspan", "" + (span - 2));
+                var html =
+                    '<td colspan="2" align="right" bgcolor="' + color + '">' +
                     '<font face="verdana,arial,helvtica" size="1">' +
                     '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:' + diffuse + ';">Empowered by </a>' +
                     '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:#000;">RUSK</a> 👊' +

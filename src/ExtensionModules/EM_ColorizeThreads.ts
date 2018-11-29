@@ -1,10 +1,11 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
 import { PageContext } from "../Context/PageContext";
 import { ThreadInfo } from "../Utility/ThreadInfo";
 import { ThreadType } from "../Context/ThreadType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ConfigBuilder } from "../Configuration/ConfigBuilder";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * EM_ColorizeThreads - Extension module for colorizing threads on RBKweb.
@@ -18,6 +19,7 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 export class ColorizeThreads implements ExtensionModule {
 
     readonly name: string = "Fargelegging av tråder";
+    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_TOPICLIST
@@ -26,23 +28,61 @@ export class ColorizeThreads implements ExtensionModule {
     runBefore: Array<string> = [];
     runAfter: Array<string> = [];
 
-    getConfigOptions = (): ConfigOptions => {
-        return {
-            displayName: "Fargelegging av tråder",
-            options: [
-                {
-                    setting: "unreadColor",
-                    type: SettingType.color,
-                    label: "Farge for uleste tråder"
-                },
-                {
-                    setting: "selectedItemColor",
-                    type: SettingType.color,
-                    label: "Farge for valgt tråd"
-                }
-            ]
-        }
-    };
+    configSpec = () =>
+        ConfigBuilder
+            .Define()
+            .EnabledByDefault()
+            .WithExtensionModuleName(this.name)
+            .WithDisplayName("Fargelegging av tråder")
+            .WithDescription("Denne modulen fargelegger tråder på RBKweb i henhold til status.")
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("UnreadColorEven")
+                    .WithLabel("Farge for uleste tråder (liketallslinjer)")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('lightgreen')
+                    .AsSharedSetting()
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("UnreadColorOdd")
+                    .WithLabel("Farge for uleste tråder (oddetallslinjer)")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('lightgreen')
+                    .AsSharedSetting()
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("ReadColorEven")
+                    .WithLabel("Farge for leste tråder (liketallslinjer)")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('white')
+                    .AsSharedSetting()
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("ReadColorOdd")
+                    .WithLabel("Farge for leste tråder (oddetallslinjer)")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('white')
+                    .AsSharedSetting()
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("SelectedItemColor")
+                    .WithLabel("Farge for valgt tråd")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('DDE7C7')
+                    .AsSharedSetting()
+            )
+            .Build();
+
+    init = (config: ModuleConfiguration) => {
+        this.cfg = config;
+    }
+
+    preprocess = () => {
+    }
 
     execute = (context: PageContext) => {
         let threads = ThreadInfo.GetThreadsFromDocument(document);

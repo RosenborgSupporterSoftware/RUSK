@@ -1,14 +1,15 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
-import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { ConfigBuilder } from "../Configuration/ConfigBuilder";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
 /**
  * EM_ImageCache - Extension module for RBKweb.
  */
 
 export class ImageCache implements ExtensionModule {
-    readonly name : string = "ImageCache";
+    readonly name: string = "ImageCache";
+    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
@@ -17,18 +18,21 @@ export class ImageCache implements ExtensionModule {
     runBefore: Array<string> = ['late-extmod'];
     runAfter: Array<string> = ['early-extmod'];
 
-    getConfigOptions = (): ConfigOptions => {
-        return {
-            displayName: "ImageCache",
-            options: [
-                {
-                    setting: "cacheIcons",
-                    type: SettingType.bool,
-                    label: "Bruk lokalt cachede ikoner"
-                }
-            ]
-        };
-    };
+    configSpec = () =>
+        ConfigBuilder
+            .Define()
+            .EnabledByDefault()
+            .WithExtensionModuleName(this.name)
+            .WithDisplayName(this.name)
+            .WithDescription("Denne modulen bruker lokalt cachede ikoner for RBKweb.")
+            .Build();
+
+    init = (config: ModuleConfiguration) => {
+        this.cfg = config;
+    }
+
+    preprocess = () => {
+    }
 
     execute = () => {
         var cached = [
@@ -126,7 +130,7 @@ export class ImageCache implements ExtensionModule {
                             filename = language.substring(5) + "/" + filename;
                         else if (language == "smiles")
                             filename = "smiles/" + filename;
-                        if (cached.findIndex(function(val, idex, arr) { return filename == val; }) != -1) {
+                        if (cached.findIndex(function (val, idex, arr) { return filename == val; }) != -1) {
                             img.src = chrome.runtime.getURL("img/" + filename);
                         }
                     }
