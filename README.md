@@ -11,6 +11,7 @@ Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til R
 - Gir mer tydelig varsel om man har uleste private meldinger.
 - Legger på ukedag i kampoversiktene.
 - Fargelegger resultatene (seier/uavgjort/tap) i kampoversiktene.
+- Tracker og varsler om brukere endrer brukernavn.
 - Optimaliserer browserens sidelasting.
 - Legger til en rute for brukertips.
 
