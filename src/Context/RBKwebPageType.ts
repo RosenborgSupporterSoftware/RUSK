@@ -29,6 +29,8 @@
     RBKweb_FORUM_PM_READINBOX,      // http://www.rbkweb.no/forum/privmsg.php?folder=inbox&mode=read&p=26672
 
     RBKweb_FORUM_USERPROFILE,       // http://www.rbkweb.no/forum/profile.php?mode=viewprofile&u=6500
+    RBKweb_FORUM_USERPROFILE_FORM,  // http://www.rbkweb.no/forum/profile.php?mode=editprofile&u=6500
+    RBKweb_FORUM_SEARCH_FORM,       // http://www.rbkweb.no/forum/search.php
     RBKweb_FORUM_SEARCH_BYAUTHOR,   // http://www.rbkweb.no/forum/search.php?search_author=OrionPax
 
     RBKweb_FORUM_END,               // Not a page - the end of the forum related values
