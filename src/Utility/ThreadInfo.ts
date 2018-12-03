@@ -98,7 +98,7 @@ export class ThreadInfo {
         var subPages = row.querySelectorAll('td > span.gensmall > a');
         if (subPages.length > 0) {
             // Vi har undersider
-            return (subPages[subPages.length-1] as HTMLAnchorElement).href;
+            return (subPages[subPages.length - 1] as HTMLAnchorElement).href;
         }
         return this.getBaseUrl(row);
     }
@@ -140,7 +140,7 @@ export class ThreadInfo {
         var subPages = row.querySelectorAll('td > span.gensmall > a');
         if (subPages.length > 0) {
             // Vi har undersider
-            return +(subPages[subPages.length-1] as HTMLAnchorElement).innerText;
+            return +(subPages[subPages.length - 1] as HTMLAnchorElement).innerText;
         }
         return 1;
     }
@@ -149,7 +149,7 @@ export class ThreadInfo {
         var date = ((row.querySelector('td.row3Right span.postdetails') as HTMLSpanElement).childNodes[0]).textContent;
         var match = date.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4}) (\d{1,2}):(\d{1,2})/);
         if (match) {
-            return new Date(+match[3], +match[2]-1, +match[1], +match[4], +match[5]);
+            return new Date(+match[3], +match[2] - 1, +match[1], +match[4], +match[5]);
         }
         return new Date();
     }
@@ -205,6 +205,8 @@ export class ThreadInfo {
                 return ThreadAttributes.isStickyThread;
             case 'folder_sticky_new':
                 return ThreadAttributes.isStickyThread | ThreadAttributes.isUnread;
+            case 'folder_lock':
+                return ThreadAttributes.isLocked | ThreadAttributes.isNormalThread;
             default:
                 return ThreadAttributes.None;
         }
