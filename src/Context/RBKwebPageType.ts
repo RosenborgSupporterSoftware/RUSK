@@ -42,7 +42,7 @@
     RBKweb_MATCH_OVERVIEW,          // http://www.rbkweb.no/kamper2018.php
     RBKweb_MATCH_OVERVIEW_INDEX,    // http://www.rbkweb.no/arkiv/kamper.shtml
     RBKweb_COPYRIGHT,               // http://www.rbkweb.no/copyright.shtml
-    RBKweb_ARTICLE_OVRVIEW,         // http://www.rbkweb.no/nyheter.shtml
+    RBKweb_ARTICLE_OVERVIEW,        // http://www.rbkweb.no/nyheter.shtml
     RBKweb_ARTICLE,                 // http://www.rbkweb.no/vis/12345
 
     // Errors
