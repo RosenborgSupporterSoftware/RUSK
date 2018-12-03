@@ -42,6 +42,12 @@ export class UrlParser {
         if (restUrl.match(/^kamper\d{4}(\.php|\.shtml)$/)) {
             return RBKwebPageType.RBKweb_MATCH_OVERVIEW;
         }
+        if (restUrl == 'arkiv/kamper.shtml') {
+            return RBKwebPageType.RBKweb_MATCH_OVERVIEW_INDEX;
+        }
+        if (restUrl == 'copyright.shtml') {
+            return RBKwebPageType.RBKweb_COPYRIGHT;
+        }
 
         // Dette må fjernes når denne klassen begynner å bli noenlunde moden
         console.error('UrlParser could not parse url ' + url);
@@ -112,10 +118,16 @@ export class UrlParser {
     parseForumPostingUrl(url: string, query: string): RBKwebPageType {
         if (query.match(/mode=reply/))
             return RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC;
+        if (query.match(/mode=quote/))
+            return RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC;
         if (query.match(/mode=editpost/))
             return RBKwebPageType.RBKweb_FORUM_EDITPOST;
         if (query.match(/mode=newtopic/))
             return RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC;
+        if (query.match(/mode=vote/))
+            return RBKwebPageType.RBKweb_FORUM_VOTEONTOPIC;
+        //if (query == "")
+        //    return RBKwebPageType.RBKweb_???;
 
         console.error('UrlParser could not parse forum posting url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;

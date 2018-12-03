@@ -20,6 +20,7 @@
     RBKweb_FORUM_POSTNEWTOPIC,      // http://www.rbkweb.no/forum/posting.php?mode=newtopic&f=1
     RBKweb_FORUM_REPLYTOTOPIC,      // http://www.rbkweb.no/forum/posting.php?mode=reply&t=2186
     RBKweb_FORUM_EDITPOST,          // http://www.rbkweb.no/forum/posting.php?mode=editpost&p=1013975
+    RBKweb_FORUM_VOTEONTOPIC,       // http://www.rbkweb.no/forum/posting.php?mode=vote&t=1
 
     RBKweb_FORUM_PM_INBOX,          // http://www.rbkweb.no/forum/privmsg.php?folder=inbox
     RBKweb_FORUM_PM_SENTBOX,        // http://www.rbkweb.no/forum/privmsg.php?folder=sentbox
@@ -38,6 +39,8 @@
    // Regular RBKweb pages
 
     RBKweb_MATCH_OVERVIEW,          // http://www.rbkweb.no/kamper2018.php
+    RBKweb_MATCH_OVERVIEW_INDEX,    // http://www.rbkweb.no/arkiv/kamper.shtml
+    RBKweb_COPYRIGHT,               // http://www.rbkweb.no/copyright.shtml
 
     // Errors
 
