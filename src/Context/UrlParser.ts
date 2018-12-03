@@ -39,6 +39,11 @@ export class UrlParser {
         }
 
         // TODO: Resten av RBKweb
+        if (restUrl == "nyheter.shtml")
+            return RBKwebPageType.RBKweb_ARTICLE_OVERVIEW;
+        if (restUrl.startsWith('vis/'))
+            return RBKwebPageType.RBKweb_ARTICLE;
+
         if (restUrl.match(/^kamper\d{4}(\.php|\.shtml)$/)) {
             return RBKwebPageType.RBKweb_MATCH_OVERVIEW;
         }
@@ -126,8 +131,8 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC;
         if (query.match(/mode=vote/))
             return RBKwebPageType.RBKweb_FORUM_VOTEONTOPIC;
-        //if (query == "")
-        //    return RBKwebPageType.RBKweb_???;
+        if (query == "")
+            return RBKwebPageType.RBKweb_FORUM_POSTINGLANDINGPAGE;
 
         console.error('UrlParser could not parse forum posting url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
