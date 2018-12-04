@@ -34,6 +34,6 @@ npm run build
 npm run watch
 ```
 eller `Ctrl + Shift + B` i VS Code.
-- Laste inn extension i Chrome: last inn `dist`-directoriet som en upakket utvidelse.
-- Laste inn extension i Firefox: cd inn i dist tter bygging og kjør `web-ext run`.
+- Laste inn extension i Chrome: last inn `dist/` som en upakket utvidelse.
+- Laste inn extension i Firefox: cd inn i `dist/` etter bygging og kjør `web-ext run`.
 
