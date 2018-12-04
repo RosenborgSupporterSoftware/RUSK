@@ -19,6 +19,8 @@ storage.GetConfiguration(config => {
 
         storage.StoreConfiguration(ruskConfig);
         config = ruskConfig;
+    } else {
+        config = RUSKConfig.FromStoredConfiguration(config);
     }
     let context = new PageContext();
     let filteredModules = filterModules(allModules, context);

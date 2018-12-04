@@ -22,6 +22,21 @@ export class RUSKConfig {
     }
 
     /**
+     * Create a real RUSKConfig object from a stored RUSKConfig
+     * @param config - The stored POJO configuration object
+     */
+    public static FromStoredConfiguration(config: any): RUSKConfig {
+        let moduleSettings = config.moduleSettings || [];
+        let sharedSettings = config.sharedSettings || [];
+
+        let ruskConfig = new RUSKConfig();
+        ruskConfig.moduleSettings = moduleSettings;
+        ruskConfig.sharedSettings = sharedSettings;
+
+        return ruskConfig;
+    }
+
+    /**
      * Report a change in settings to the RUSKConfig object.
      * @param moduleName - The name of the module reporting the change
      * @param setting - The name of the setting that has been changed
