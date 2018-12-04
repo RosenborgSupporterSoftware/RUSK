@@ -28,16 +28,32 @@ export class Empowerment implements ExtensionModule {
     execute = () => {
         var copyright = document.body.querySelector('a[href="http://www.rbkweb.no/copyright.shtml"]') as HTMLAnchorElement;
         if (copyright) {
+            function brighten(color, amount) {
+                function print2x(num) { return ("0" + num.toString(16)).slice(-2); }
+                var r = Math.min(parseInt(color.substring(1,3), 16) + amount, 255);
+                var g = Math.min(parseInt(color.substring(3,5), 16) + amount, 255);
+                var b = Math.min(parseInt(color.substring(5,7), 16) + amount, 255);
+                return "#" + print2x(r) + print2x(g) + print2x(b);
+            }
+            function darken(color, amount) {
+                function print2x(num) { return ("0" + num.toString(16)).slice(-2); }
+                var r = Math.max(parseInt(color.substring(1,3), 16) - amount, 0);
+                var g = Math.max(parseInt(color.substring(3,5), 16) - amount, 0);
+                var b = Math.max(parseInt(color.substring(5,7), 16) - amount, 0);
+                return "#" + print2x(r) + print2x(g) + print2x(b);
+            }
             var tablecell = copyright.closest("td") as HTMLTableCellElement;
             var span = parseInt(tablecell.getAttribute("colspan") || "1");
             var color = tablecell.getAttribute("bgcolor");
+            var diffuse = brighten(color, 14);
             tablecell.setAttribute("width", "");
             if (span > 3) {
                 tablecell.setAttribute("colspan", "" + (span-2));
                 var html = 
                     '<td colspan="2" align="right" bgcolor="'+color+'">' +
                     '<font face="verdana,arial,helvtica" size="1">' +
-                    '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:#000;">Empowered by RUSK 👊</a>' +
+                    '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:' + diffuse + ';">Empowered by </a>' +
+                    '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:#000;">RUSK</a> 👊' +
                     '</font></td>';
                 tablecell.insertAdjacentHTML("afterend", html);
             }
