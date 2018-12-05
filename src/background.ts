@@ -66,7 +66,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Configuration update
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (!message.isinstanceof(ConfigUpdatedMessage))
+    if (message.isinstanceof && !message.isinstanceof(ConfigUpdatedMessage))
         return;
     let msg = message as ConfigUpdatedMessage;
 
