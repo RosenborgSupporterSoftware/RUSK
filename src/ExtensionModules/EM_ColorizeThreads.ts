@@ -11,7 +11,8 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
  * EM_ColorizeThreads - Extension module for colorizing threads on RBKweb.
  * Unread threads are colorized green.
  * Locates a "selectedItem" and colorizes it another color (beige?).
- * User can move selectedItem to next/previous with hotkeys "," and ".".
+ * User can move selectedItem to next/previous with hotkeys "j" and "k".
+ * User can move to next/previous page with hotkeys "shift+j" and "shift+k".
  * User can move into selectedItem by pressing enter.
  * User can move to forum list by pressing "o".
  */
@@ -20,6 +21,8 @@ export class ColorizeThreads implements ExtensionModule {
 
     readonly name: string = "Fargelegging av tråder";
     cfg: ModuleConfiguration;
+    currentlySelectedItem: ThreadInfo = null;
+    allThreads: Array<ThreadInfo> = null;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_TOPICLIST
@@ -81,36 +84,183 @@ export class ColorizeThreads implements ExtensionModule {
         this.cfg = config;
     }
 
-    preprocess = () => {
+    preprocess = async () => {
+        let request = await fetch(chrome.runtime.getURL("data/colorizeThreads.css"));
+        let text = await request.text();
+
+        let css = this.hydrateTemplate(text);
+        chrome.runtime.sendMessage({ css });
     }
 
     execute = (context: PageContext) => {
-        let threads = ThreadInfo.GetThreadsFromDocument(document);
+        this.allThreads = ThreadInfo.GetThreadsFromDocument(document);
 
-        threads.forEach((thread, index) => {
+        this.allThreads.forEach((thread, index) => {
             this.tagRows(thread, index);
+        });
+
+        this.determineSelectedItem(this.allThreads);
+        this.setupHotkeys();
+    }
+
+    private setupHotkeys(): void {
+        // TODO: Dette er ondskap å gjøre her. Må få inn eget hotkey-regime.
+
+        document.addEventListener("keypress", (ev) => {
+            debugger;
+            if (ev.code == "KeyJ") {
+                if (ev.shiftKey) {
+                    // Go to next page
+                    this.goToNextPage();
+                } else {
+                    this.selectNextItem();
+                }
+            }
+            if (ev.code == "KeyK") {
+                if (ev.shiftKey) {
+                    this.goToPreviousPage();
+                } else {
+                    this.selectPreviousItem();
+                }
+            }
+            if (ev.key == 'o') {
+                this.goUp();
+            }
+            if (ev.keyCode == 13) {
+                this.goToSelectedItem();
+            }
         })
+    }
+
+    private goToNextPage() {
+        let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
+        links.forEach(el => {
+            debugger;
+            if (el.textContent == 'Next' || el.textContent == 'Neste') {
+                window.location.href = el.href;
+            }
+        });
+    }
+
+    private goToPreviousPage() {
+        let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
+        links.forEach(el => {
+            debugger;
+            if (el.textContent == 'Previous' || el.textContent == 'Forrige') {
+                window.location.href = el.href;
+            }
+        });
+    }
+
+    private selectNextItem() {
+        let currentIndex = this.allThreads.indexOf(this.currentlySelectedItem);
+        let newIndex = currentIndex + 1;
+        if (newIndex >= this.allThreads.length)
+            newIndex = 0;
+        this.selectNewItem(this.allThreads[newIndex]);
+    }
+
+    private selectPreviousItem() {
+        let currentIndex = this.allThreads.indexOf(this.currentlySelectedItem);
+        let newIndex = currentIndex - 1;
+        if (newIndex < 0)
+            newIndex = this.allThreads.length - 1;
+        this.selectNewItem(this.allThreads[newIndex]);
+    }
+
+    private goToSelectedItem() {
+        // FIXME: Denne settes kun når man går inn via tastatur, ikke via musklikk. Kan vi fikse det?
+        localStorage.setItem('ruskLastEnterThreadSource', window.location.href);
+        if (this.currentlySelectedItem == null) return;
+
+        window.location.href = this.currentlySelectedItem.latestUrl;
+    }
+
+    private goUp() {
+        window.location.href = (document.querySelector('form > table > tbody > tr:nth-child(2) > td:nth-child(2) > span.nav > a.nav') as HTMLAnchorElement).href;
+    }
+
+    private determineSelectedItem(threads: Array<ThreadInfo>): void {
+        if (threads.length == 0) return;
+
+        let bestCandidate: ThreadInfo = null;
+
+        let getWinner = (first: ThreadInfo, second: ThreadInfo) => {
+            if (first == null) {
+                return second;
+            } else if (second == null) {
+                return first;
+            }
+
+            if (first.isUnread != second.isUnread) {
+                if (first.isUnread) {
+                    return first;
+                }
+                return second;
+            }
+
+            if (first.lastUpdate >= second.lastUpdate) {
+                return first;
+            }
+            return second;
+        }
+
+        for (let i = 0; i < threads.length; i++) {
+            bestCandidate = getWinner(bestCandidate, threads[i]);
+        }
+
+        this.selectNewItem(bestCandidate);
+    }
+
+    private selectNewItem(newItem: ThreadInfo) {
+        if (this.currentlySelectedItem != null) {
+            this.currentlySelectedItem.rowElement.classList.remove("RUSKSelectedItem");
+        }
+
+        newItem.rowElement.classList.add("RUSKSelectedItem");
+        this.currentlySelectedItem = newItem;
+        newItem.rowElement.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
+    }
+
+    private hydrateTemplate(template: string): string {
+        let keys = [], values = [];
+        keys.push("$RUSKUnreadItem$");
+        values.push(this.getConfigItem('UnreadColorEven'));
+
+        for (let i = 0; i < keys.length; i++) {
+            template = template.replace(keys[i], values[i]);
+        }
+
+        return template;
+    }
+
+    private getConfigItem(setting: string): string {
+        for (let i = 0; i < this.cfg.settings.length; i++) {
+            if (this.cfg.settings[i].setting == setting) {
+                return this.cfg.settings[i].value as string;
+            }
+        }
     }
 
     private tagRows(thread: ThreadInfo, index: number): void {
         let classes = new Array<string>();
 
-        classes.push('RwESItem');
+        classes.push('RUSKItem');
         if (thread.isUnread) {
-            classes.push('RwESUnreadItem');
+            classes.push('RUSKUnreadItem');
         }
         if (thread.threadType == ThreadType.Announcement) {
-            classes.push('RwESAnnouncementItem');
+            classes.push('RUSKAnnouncementItem');
         } else if (thread.threadType == ThreadType.Sticky) {
-            classes.push('RwESStickyItem');
+            classes.push('RUSKStickyItem');
         }
         if (thread.isLocked) {
-            classes.push('RwESLockedItem');
+            classes.push('RUSKLockedItem');
         }
         if (index % 2 == 0) {
-            classes.push('RwESEvenRowItem');
+            classes.push('RUSKEvenRowItem');
         } else {
-            classes.push('RwESOddRowItem');
+            classes.push('RUSKOddRowItem');
         }
         thread.rowElement.className = classes.join(" ");
     }

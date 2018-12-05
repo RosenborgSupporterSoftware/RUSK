@@ -33,8 +33,20 @@
       }
   ],
 
-  "permissions": ["storage", "tabs"],
-  "web_accessible_resources": [ "img/*" ],
+  "permissions": [
+    "storage",
+    "tabs",
+    "http://*.rbkweb.no/*",
+    "http://rbkweb.no/*",
+    "http://www.rbkweb.com/*",
+    "http://rbkweb.com/*",
+    "http://www.rosenborg.info/*",
+    "http://rosenborg.info/*"
+  ],
+  "web_accessible_resources": [
+    "img/*",
+    "data/*"
+   ],
 
   "background": {
     "scripts": ["js/vendor.js", "js/background.js"]

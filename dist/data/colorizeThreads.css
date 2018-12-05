@@ -1,0 +1,11 @@
+.RUSKUnreadItem td {
+    background-color: $RUSKUnreadItem$ !important;
+}
+
+.RUSKUnreadItem.RUSKSelectedItem td {
+    background-color: #EDEEC9 !important;
+}
+
+.RUSKSelectedItem td {
+    background-color: #DDE7C7 !important;
+}

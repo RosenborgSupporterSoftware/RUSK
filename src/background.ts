@@ -29,6 +29,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
 });
 
+// CSS insertion
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.css) {
+        chrome.tabs.insertCSS(sender.tab.id, {
+            code: request.css,
+            cssOrigin: "user"
+        }, () => {
+            //debugger;
+            console.log('Inserted CSS');
+        }); // Y U NO?!
+    }
+});
+
 // rbkweb toolbar icon toggling
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.onRBKweb) {
