@@ -37,7 +37,7 @@ export class Usertips implements ExtensionModule {
     preprocess = () => {
     }
 
-    execute = (context: PageContext) => {
+    execute = async (context: PageContext) => {
 
         let tabell = document.querySelectorAll('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(6) > font > table:nth-child(2) > tbody')[0] as HTMLTableElement;
         if (tabell == undefined) {
@@ -57,8 +57,20 @@ export class Usertips implements ExtensionModule {
         tabell.appendChild(tabell.firstChild.cloneNode(true));
 
         // Innhold
+        let userTip = await this.getUserTip();
         var contentrow = tabell.insertRow(-1);
         var contentcell = contentrow.insertCell(0);
-        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">Dette er ett tips til hvordan du bruker RUSK.</font>";
+        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">" + userTip + "</font>";
+    }
+
+    private async getUserTip(): Promise<string> {
+        let request = await fetch(chrome.runtime.getURL("data/usertips.json"));
+        let text = await request.text();
+        let data = JSON.parse(text);
+
+        let numberOfTips = data.tips.length;
+        let tipNumber = Math.floor(Math.random() * numberOfTips);
+
+        return data.tips[tipNumber];
     }
 }
