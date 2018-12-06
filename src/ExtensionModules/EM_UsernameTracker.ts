@@ -42,14 +42,20 @@ export class UsernameTracker implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+        var dictstr = this.getConfigItem("knownUsernames");
+        console.log("knownUsernames " + dictstr);
+        chrome.runtime.sendMessage({logMessage: "knownUsernames " + dictstr});
+        this.names = JSON.parse(dictstr || "{}");
     }
 
     preprocess = () => {
-    }
-
-    execute = () => {
+        // DEBUG START
+        if (!this.names[6500]) this.names[6500] = "Individual 1";
+        if (!this.names[6289]) this.names[6289] = "Individual 2";
+        // DEBUG END
         var users = document.body.querySelectorAll('tr td span.name b')
         if (!users) return;
+        var updated = false;
         users.forEach(function(elt, idx, parent) {
             var element = elt as HTMLElement;
             var username = element.textContent;
@@ -60,12 +66,27 @@ export class UsernameTracker implements ExtensionModule {
             var linkelt = links.item(1) as HTMLAnchorElement; // should be item(0)!
             var link = linkelt.href;
             var userid = parseInt(link.replace(/.*\bu=/g, ""));
-            if (!this.names[6500]) this.names[6500] = "Individual 1"; // DEBUG until stored settings
-            if (!this.names[6289]) this.names[6289] = "Individual 2"; // DEBUG until stored settings
+            element.setAttribute("data-userid", "" + userid);
             if (!this.names[userid]) {
                 this.names[userid] = username;
+                updated = true;
             }
-            else if (this.names[userid] && this.names[userid] != username) {
+        }.bind(this));
+        if (updated) {
+            this.storeKnownUsernames();
+        }
+    }
+
+    execute = () => {
+        console.log("execute()");
+        var users = document.body.querySelectorAll('tr td span.name b');
+        if (!users) return;
+        users.forEach(function(elt, idx, parent) {
+            var element = elt as HTMLElement;
+            var username = element.textContent;
+            var userid = parseInt(element.getAttribute("data-userid"));
+            if (this.names[userid] && this.names[userid] != username) {
+                console.log("- found one (" + username + ")");
                 var span = element.closest('span') as HTMLElement;
                 span.insertAdjacentHTML('afterend', '<span class="nav aka' + userid +
                                         '"><br>aka&nbsp;' + this.names[userid] +
@@ -79,12 +100,26 @@ export class UsernameTracker implements ExtensionModule {
                         var spanelt = spanelts.item(c) as HTMLSpanElement;
                         spanelt.style.display = "none";
                     }
+                    this.names[userid] = username;
+                    this.storeKnownUsernames();
                     return true;
                 }.bind(this));
             }
-            element.setAttribute("data-userid", "" + userid);
-            // chrome.runtime.sendMessage({logMessage: "user " + username +
-            //                             ", id " + userid});
         }.bind(this));
+    }
+
+    private getConfigItem(setting: string): string {
+        for (let i = 0; i < this.cfg.settings.length; i++) {
+            if (this.cfg.settings[i].setting == setting) {
+                return this.cfg.settings[i].value as string;
+            }
+        }
+    }
+
+    private storeKnownUsernames(): void {
+        var dictstr = JSON.stringify(this.names);
+        console.log("storing knownUsernames " + dictstr);
+        chrome.runtime.sendMessage({logMessage: "storing knownUsernames " + dictstr});
+        this.cfg.ChangeSetting("knownUsernames", dictstr);
     }
 };
