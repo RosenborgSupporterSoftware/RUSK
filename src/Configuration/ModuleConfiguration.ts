@@ -1,4 +1,4 @@
-import { ConfigSetting } from "./ConfigurationSetting";
+import { ConfigSetting, settingValueTypes } from "./ConfigurationSetting";
 import { RUSKConfig } from "./RUSKConfig";
 
 /**
@@ -42,5 +42,50 @@ export class ModuleConfiguration {
     /** Sets the given RUSKConfig object as the parent/owner of this ModuleConfiguration */
     public setOwner(parentConfig: RUSKConfig): void {
         this.parentConfig = parentConfig;
+    }
+
+    /**
+     * Change a setting in a ModuleConfiguration
+     * @param setting - The name of the setting that is going to be changed
+     * @param newValue - The new value of the setting that is going to be changed
+     */
+    public ChangeSetting(setting: string, newValue: settingValueTypes): void {
+        let settingObject = this.getConfigSetting(setting);
+        if (settingObject == null) {
+            chrome.runtime.sendMessage({
+                logMessage: 'ModuleConfiguration for '
+                    + this.moduleName + ' attempted changing unknown setting '
+                    + setting
+            });
+            return;
+        }
+
+        if (!this.checkValueType(settingObject, newValue)) {
+            chrome.runtime.sendMessage({
+                logMessage: 'ModuleConfiguration for '
+                    + this.moduleName + ' tried setting '
+                    + setting + ' to a value of the wrong type.'
+            });
+            return;
+        }
+
+        settingObject.value = newValue;
+        if (this.parentConfig) {
+            this.parentConfig.NotifySettingChange(this.moduleName, setting);
+        }
+    }
+
+    private checkValueType(setting: ConfigSetting, newValue: settingValueTypes): boolean {
+        return typeof setting.value === typeof newValue;
+    }
+
+    private getConfigSetting(setting: string): ConfigSetting {
+        for (let i = 0; i < this.settings.length; i++) {
+            if (this.settings[i].setting == setting) {
+                return this.settings[i];
+            }
+        }
+
+        return null;
     }
 }

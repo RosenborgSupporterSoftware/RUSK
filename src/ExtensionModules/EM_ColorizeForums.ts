@@ -103,9 +103,7 @@ export class ColorizeForums implements ExtensionModule {
 
     private setupHotkeys(): void {
         // TODO: Dette er ondskap å gjøre her. Må få inn eget hotkey-regime.
-
         document.addEventListener("keypress", (ev) => {
-            debugger;
             if (ev.code == "KeyJ") {
                 this.selectNextItem();
             }

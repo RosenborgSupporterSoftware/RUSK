@@ -93,6 +93,7 @@ export class RUSKConfig {
      */
     public AddModuleConfiguration(config: ModuleConfiguration): void {
         this.moduleSettings.push(config);
+        config.setOwner(this);
         this.isDirty = true;
     }
 
