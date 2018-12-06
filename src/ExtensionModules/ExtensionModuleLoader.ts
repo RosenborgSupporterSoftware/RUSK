@@ -9,6 +9,7 @@ import { InboxAlert } from "./EM_InboxAlert";
 import { HighlightColor } from "./EM_HighlightColor";
 import { UsernameTracker } from "./EM_UsernameTracker";
 import { Empowerment } from "./EM_Empowerment";
+import { ColorizeForums } from "./EM_ColorizeForums";
 
 /**
  * ExtensionModuleLoader
@@ -24,6 +25,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new TabTitles(),
         new SignatureFilter(),
         new ColorizeThreads(),
+        new ColorizeForums(),
         new ImageCache(),
         new InboxAlert(),
         new HighlightColor(),

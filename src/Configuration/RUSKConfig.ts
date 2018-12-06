@@ -82,17 +82,27 @@ export class RUSKConfig {
      * Adds the default configuration for an ExtensionModule to the RUSKConfig object
      * @param module - The module to add default configuration for
      */
-    public AddModuleConfiguration(module: ExtensionModule): void {
+    public AddModuleDefaultConfiguration(module: ExtensionModule): void {
         this.moduleSettings.push(module.configSpec());
+        this.isDirty = true;
+    }
+
+    /**
+     * Adds a ModuleConfiguration to a RUSKConfig object
+     * @param config - The ModuleConfiguration to add to the RUSKConfig
+     */
+    public AddModuleConfiguration(config: ModuleConfiguration): void {
+        this.moduleSettings.push(config);
+        this.isDirty = true;
     }
 
     /**
      * Adds default configurations for a collection of ExtensionModule objects to the RUSKConfig object
      * @param modules - The modules to add default configuration for
      */
-    public AddModuleConfigurations(modules: Array<ExtensionModule>) {
+    public AddModuleDefaultConfigurations(modules: Array<ExtensionModule>) {
         for (let i = 0; i < modules.length; i++) {
-            this.AddModuleConfiguration(modules[i]);
+            this.AddModuleDefaultConfiguration(modules[i]);
         }
     }
 

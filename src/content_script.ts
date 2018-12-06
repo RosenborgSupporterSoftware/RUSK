@@ -15,7 +15,7 @@ storage.GetConfiguration(config => {
     if (config == null) {
         // Lag ny config med default ting
         let ruskConfig = new RUSKConfig();
-        ruskConfig.AddModuleConfigurations(allModules);
+        ruskConfig.AddModuleDefaultConfigurations(allModules);
 
         storage.StoreConfiguration(ruskConfig);
         config = ruskConfig;
@@ -43,7 +43,12 @@ function initModules(modules: Array<ExtensionModule>, config: RUSKConfig) {
     try {
         modules.forEach(mod => {
             modname = mod.name;
-            mod.init(config.GetModuleConfiguration(modname));
+            let cfg = config.GetModuleConfiguration(modname);
+            if (cfg == null) {
+                cfg = mod.configSpec();
+                config.AddModuleConfiguration(cfg);
+            }
+            mod.init(cfg);
         });
     } catch (e) {
         chrome.runtime.sendMessage(new ModuleError(modname, "init", e.message, e));
