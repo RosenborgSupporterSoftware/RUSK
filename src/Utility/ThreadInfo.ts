@@ -121,11 +121,11 @@ export class ThreadInfo {
     }
 
     private getThreadStarter(row: HTMLTableRowElement): string {
-        return (row.querySelector('td span.name a') as HTMLAnchorElement).innerText;
+        return (row.querySelector('td span.name') as HTMLSpanElement).textContent;
     }
 
     private getLatestPoster(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row3Right span a') as HTMLAnchorElement).innerText;
+        return (row.querySelector('td.row3Right span a') as HTMLAnchorElement).textContent;
     }
 
     private getReplies(row: HTMLTableRowElement): number {
