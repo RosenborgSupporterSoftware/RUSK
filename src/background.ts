@@ -37,7 +37,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             code: request.css,
             cssOrigin: "user"
         }, () => {
-            //debugger;
             console.log('Inserted CSS');
         }); // Y U NO?!
     }
@@ -80,10 +79,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Configuration update
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.isinstanceof && !message.isinstanceof(ConfigUpdatedMessage))
+    if (!message.configUpdatedMessage)
         return;
-    let msg = message as ConfigUpdatedMessage;
+    let msg = message.configUpdatedMessage as string;
+    if (msg == null) return;
 
-    configStorage.StoreConfiguration(msg.Config);
+    configStorage.StoreConfiguration(msg);
     chrome.runtime.sendMessage({ logMessage: 'Stored configuration to sync storage' });
 });

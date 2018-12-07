@@ -110,6 +110,12 @@ export class ColorizeForums implements ExtensionModule {
             if (ev.code == "KeyK") {
                 this.selectPreviousItem();
             }
+            if (ev.code == "KeyG") {
+                this.cfg.ChangeSetting("UnreadColorEven", "lightgreen");
+            }
+            if (ev.code == "KeyB") {
+                this.cfg.ChangeSetting("UnreadColorEven", "black");
+            }
             if (ev.keyCode == 13) {
                 this.goToSelectedItem();
             }

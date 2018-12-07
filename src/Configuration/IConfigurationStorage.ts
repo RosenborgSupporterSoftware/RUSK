@@ -7,8 +7,8 @@ import { RUSKConfig } from "./RUSKConfig";
 export interface IConfigurationStorage {
 
     /** Gets configuration from storage */
-    GetConfiguration(callback: (config: RUSKConfig) => void): void;
+    GetConfiguration(callback: (config: string) => void): void;
 
     /** Stores configuration to storage */
-    StoreConfiguration(config: RUSKConfig): void;
+    StoreConfiguration(config: string): void;
 }

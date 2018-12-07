@@ -6,15 +6,15 @@ import { RUSKConfig } from "../Configuration/RUSKConfig";
 
 export class ConfigUpdatedMessage {
 
-    private readonly _config: RUSKConfig;
+    private readonly _config: string;
 
     /** Gets the updated RUSKConfig object */
-    public get Config(): RUSKConfig {
+    public get Config(): string {
         return this._config;
     }
 
     /** Creates a new instance of the ConfigUpdatedMessage class */
-    constructor(config: RUSKConfig) {
+    constructor(config: string) {
         this._config = config;
     }
 }

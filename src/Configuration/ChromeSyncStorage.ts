@@ -10,7 +10,7 @@ export class ChromeSyncStorage implements IConfigurationStorage {
 
     private moduleConfigKey: string = 'RUSKModuleConfiguration';
 
-    GetConfiguration(callback: (config: RUSKConfig) => void): void {
+    GetConfiguration(callback: (config: string) => void): void {
         chrome.storage.sync.get('RUSKModuleConfiguration', storedConfig => {
 
             callback(storedConfig['RUSKModuleConfiguration']);
@@ -19,8 +19,7 @@ export class ChromeSyncStorage implements IConfigurationStorage {
         return null;
     }
 
-    StoreConfiguration(config: RUSKConfig): void {
+    StoreConfiguration(config: string): void {
         chrome.storage.sync.set({"RUSKModuleConfiguration": config});
     }
-
  }

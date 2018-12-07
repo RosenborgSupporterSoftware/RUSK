@@ -1,4 +1,4 @@
-import { ConfigSetting, settingValueTypes } from "./ConfigurationSetting";
+import { ConfigSetting, settingValueTypes, ConfigurationSetting } from "./ConfigurationSetting";
 import { RUSKConfig } from "./RUSKConfig";
 
 /**
@@ -39,6 +39,15 @@ export class ModuleConfiguration {
         this.settings = settings;
     }
 
+    public static FromStorageObject(obj: any): ModuleConfiguration {
+        let settings = new Array<ConfigSetting>();
+        for(let i=0; i<obj.settings.length; i++) {
+            settings.push(ConfigurationSetting.FromStorageObject(obj.settings[i]));
+        }
+
+        return new ModuleConfiguration(obj.moduleName, obj.displayName, obj.moduleDescription, obj.moduleEnabled, settings);
+    }
+
     /** Sets the given RUSKConfig object as the parent/owner of this ModuleConfiguration */
     public setOwner(parentConfig: RUSKConfig): void {
         this.parentConfig = parentConfig;
@@ -73,6 +82,25 @@ export class ModuleConfiguration {
         if (this.parentConfig) {
             this.parentConfig.NotifySettingChange(this.moduleName, setting);
         }
+    }
+
+    /**
+     * Returns a POJO object ready to be put in storage
+     */
+    public ToStorageObject(): object {
+
+        let settings = [];
+        for(let i=0; i<this.settings.length; i++) {
+            settings.push(this.settings[i].ToStorageObject());
+        }
+
+        return {
+            moduleName: this.moduleName,
+            moduleDescription: this.moduleDescription,
+            displayName: this.displayName,
+            enabled: this.moduleEnabled,
+            settings
+        };
     }
 
     private checkValueType(setting: ConfigSetting, newValue: settingValueTypes): boolean {

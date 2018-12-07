@@ -23,4 +23,16 @@ export class ConfigurationSetting<T extends settingValueTypes>  {
     public Clone(): ConfigurationSetting<T> {
         return new ConfigurationSetting(this.setting, this.value, this.isShared);
     }
+
+    public ToStorageObject(): object {
+        return {
+            settingName: this.setting,
+            isShared: this.isShared,
+            value: this.value
+        };
+    }
+
+    public static FromStorageObject(obj: any): ConfigSetting {
+        return new ConfigurationSetting(obj.settingName, obj.value, obj.isShared);
+    }
 }

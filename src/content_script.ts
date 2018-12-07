@@ -12,20 +12,21 @@ var allModules = moduleLoader("notyet");
 let storage = new ChromeSyncStorage() as IConfigurationStorage;
 
 storage.GetConfiguration(config => {
+    let ruskConfig: RUSKConfig = null;
+
     if (config == null) {
         // Lag ny config med default ting
-        let ruskConfig = new RUSKConfig();
+        ruskConfig = new RUSKConfig();
         ruskConfig.AddModuleDefaultConfigurations(allModules);
 
-        storage.StoreConfiguration(ruskConfig);
-        config = ruskConfig;
+        storage.StoreConfiguration(ruskConfig.ToJSON());
     } else {
-        config = RUSKConfig.FromStoredConfiguration(config);
+        ruskConfig = RUSKConfig.FromStoredConfiguration(config);
     }
     let context = new PageContext();
     let filteredModules = filterModules(allModules, context);
 
-    initModules(filteredModules, config);
+    initModules(filteredModules, ruskConfig);
     preprocessModules(filteredModules);
     executeModules(filteredModules, context);
 });

@@ -107,7 +107,6 @@ export class ColorizeThreads implements ExtensionModule {
         // TODO: Dette er ondskap å gjøre her. Må få inn eget hotkey-regime.
 
         document.addEventListener("keypress", (ev) => {
-            debugger;
             if (ev.code == "KeyJ") {
                 if (ev.shiftKey) {
                     // Go to next page
@@ -135,7 +134,6 @@ export class ColorizeThreads implements ExtensionModule {
     private goToNextPage() {
         let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
         links.forEach(el => {
-            debugger;
             if (el.textContent == 'Next' || el.textContent == 'Neste') {
                 window.location.href = el.href;
             }
@@ -145,7 +143,6 @@ export class ColorizeThreads implements ExtensionModule {
     private goToPreviousPage() {
         let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
         links.forEach(el => {
-            debugger;
             if (el.textContent == 'Previous' || el.textContent == 'Forrige') {
                 window.location.href = el.href;
             }

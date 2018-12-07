@@ -1,5 +1,5 @@
 import { ModuleConfiguration } from "./ModuleConfiguration";
-import { ConfigSetting } from "./ConfigurationSetting";
+import { ConfigSetting, ConfigurationSetting } from "./ConfigurationSetting";
 import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
 import { ConfigUpdatedMessage } from "../Messages/ConfigUpdatedMessage";
 
@@ -25,11 +25,20 @@ export class RUSKConfig {
      * Create a real RUSKConfig object from a stored RUSKConfig
      * @param config - The stored POJO configuration object
      */
-    public static FromStoredConfiguration(config: any): RUSKConfig {
-        let moduleSettings = config.moduleSettings || [];
-        let sharedSettings = config.sharedSettings || [];
-
+    public static FromStoredConfiguration(cfg: string): RUSKConfig {
         let ruskConfig = new RUSKConfig();
+
+        let config = JSON.parse(cfg);
+        let moduleSettings = new Array<ModuleConfiguration>();
+        for(let i=0; i<config.moduleSettings.length; i++) {
+            moduleSettings.push(ModuleConfiguration.FromStorageObject(config.moduleSettings[i]));
+            moduleSettings[moduleSettings.length - 1].setOwner(ruskConfig);
+        }
+        let sharedSettings = new Array<ConfigSetting>();
+        for(let i=0; i<config.sharedSettings.length; i++) {
+            sharedSettings.push(ConfigurationSetting.FromStorageObject(config.sharedSettings[i]));
+        }
+
         ruskConfig.moduleSettings = moduleSettings;
         ruskConfig.sharedSettings = sharedSettings;
 
@@ -75,7 +84,31 @@ export class RUSKConfig {
         }
 
         // This is currently how we store configuration. Feels bad, man.
-        chrome.runtime.sendMessage(new ConfigUpdatedMessage(this));
+        chrome.runtime.sendMessage({
+            configUpdatedMessage: this.ToJSON()
+        });
+    }
+
+    /**
+     * Returns a POJO object ready to put in storage
+     */
+    public ToJSON(): string {
+        let moduleSettings = [], sharedSettings = [];
+
+        for(let i=0; i<this.moduleSettings.length; i++) {
+            let mod = this.moduleSettings[i];
+            moduleSettings.push(mod.ToStorageObject());
+        }
+        for(let i=0; i<this.sharedSettings.length; i++) {
+            let setting = this.sharedSettings[i];
+            sharedSettings.push(setting.ToStorageObject());
+        }
+
+        return JSON.stringify({
+            timestamp: new Date(),
+            moduleSettings,
+            sharedSettings
+        });
     }
 
     /**
