@@ -4,25 +4,25 @@ import { PageContext } from "../Context/PageContext";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
-import { ForumInfo } from "../Utility/ForumInfo";
+import { PostInfo } from "../Utility/PostInfo";
 
 /**
- * EM_ColorizeForums - Extension module for colorizing forums on RBKweb.
- * Unread forums are colorized green.
+ * EM_ColorizePosts - Extension module for colorizing posts on RBKweb.
+ * Unread posts are colorized green.
  * Locates a "selectedItem" and colorizes it another color (beige?).
  * User can move selectedItem to next/previous with hotkeys "j" and "k".
- * User can move into selectedItem by pressing enter.
+ * When landing on a page or moving to next/previous selectedItem, it is scrolled into view
  */
 
-export class ColorizeForums implements ExtensionModule {
+export class ColorizePosts implements ExtensionModule {
 
-    readonly name: string = "Fargelegging av forum";
+    readonly name: string = "Fargelegging av innlegg";
     cfg: ModuleConfiguration;
-    currentlySelectedItem: ForumInfo = null;
-    allForums: Array<ForumInfo> = null;
+    currentlySelectedItem: PostInfo = null;
+    allPosts: Array<PostInfo> = null;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_FORUM_FORUMLIST
+        RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
 
     runBefore: Array<string> = [];
@@ -33,8 +33,8 @@ export class ColorizeForums implements ExtensionModule {
             .Define()
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
-            .WithDisplayName("Fargelegging av forum")
-            .WithDescription("Denne modulen fargelegger forum på RBKweb i henhold til status.")
+            .WithDisplayName(this.name)
+            .WithDescription("Denne modulen fargelegger innlegg på RBKweb i henhold til status.")
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName("UnreadColorEven")
@@ -90,13 +90,12 @@ export class ColorizeForums implements ExtensionModule {
     }
 
     execute = (context: PageContext) => {
-        this.allForums = ForumInfo.GetForumsFromDocument(document);
-
-        this.allForums.forEach((thread, index) => {
-            this.tagRows(thread, index);
+        this.allPosts = PostInfo.GetPostsFromDocument(document);
+        this.allPosts.forEach((post, index) => {
+            this.tagRows(post, index);
         });
 
-        this.determineSelectedItem(this.allForums);
+        this.determineSelectedItem(this.allPosts);
         this.setupHotkeys();
     }
 
@@ -115,74 +114,58 @@ export class ColorizeForums implements ExtensionModule {
             if (ev.code == "KeyB") {
                 this.cfg.ChangeSetting("UnreadColorEven", "black");
             }
-            if (ev.keyCode == 13) {
-                this.goToSelectedItem();
+            if (ev.code == "KeyO") {
+                this.goUp();
             }
         })
     }
 
     private selectNextItem() {
-        let currentIndex = this.allForums.indexOf(this.currentlySelectedItem);
+        let currentIndex = this.allPosts.indexOf(this.currentlySelectedItem);
         let newIndex = currentIndex + 1;
-        if (newIndex >= this.allForums.length)
+        if (newIndex >= this.allPosts.length)
             newIndex = 0;
-        this.selectNewItem(this.allForums[newIndex]);
+        this.selectNewItem(this.allPosts[newIndex]);
     }
 
     private selectPreviousItem() {
-        let currentIndex = this.allForums.indexOf(this.currentlySelectedItem);
+        let currentIndex = this.allPosts.indexOf(this.currentlySelectedItem);
         let newIndex = currentIndex - 1;
         if (newIndex < 0)
-            newIndex = this.allForums.length - 1;
-        this.selectNewItem(this.allForums[newIndex]);
+            newIndex = this.allPosts.length - 1;
+        this.selectNewItem(this.allPosts[newIndex]);
     }
 
-    private goToSelectedItem() {
-        if (this.currentlySelectedItem == null) return;
-
-        window.location.href = this.currentlySelectedItem.baseUrl;
+    private goUp() {
+        window.location.href = (document
+            .querySelector(
+                'body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(4) > table > tbody > tr > td > font > p:nth-child(3) > table:nth-child(3) > tbody > tr > td:nth-child(2) > span > a:nth-child(2)'
+            ) as HTMLAnchorElement).href;
     }
 
-    private determineSelectedItem(threads: Array<ForumInfo>): void {
-        if (threads.length == 0) return;
+    private determineSelectedItem(posts: Array<PostInfo>): void {
+        if (posts.length == 0) return;
 
-        let bestCandidate: ForumInfo = null;
-
-        let getWinner = (first: ForumInfo, second: ForumInfo) => {
-            if (first == null) {
-                return second;
-            } else if (second == null) {
-                return first;
+        for (let i = 0; i < posts.length; i++) {
+            if (posts[i].isUnread) {
+                this.selectNewItem(posts[i]);
+                return;
             }
-
-            if (first.isUnread != second.isUnread) {
-                if (first.isUnread) {
-                    return first;
-                }
-                return second;
-            }
-
-            if (first.lastUpdate >= second.lastUpdate) {
-                return first;
-            }
-            return second;
         }
 
-        for (let i = 0; i < threads.length; i++) {
-            bestCandidate = getWinner(bestCandidate, threads[i]);
-        }
-
-        this.selectNewItem(bestCandidate);
+        this.selectNewItem(posts[posts.length-1]);
     }
 
-    private selectNewItem(newItem: ForumInfo) {
+    private selectNewItem(newItem: PostInfo) {
         if (this.currentlySelectedItem != null) {
             this.currentlySelectedItem.rowElement.classList.remove("RUSKSelectedItem");
         }
 
         newItem.rowElement.classList.add("RUSKSelectedItem");
         this.currentlySelectedItem = newItem;
-        newItem.rowElement.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
+        (newItem.rowElement.previousElementSibling as HTMLTableRowElement).scrollIntoView();
+        (newItem.rowElement.nextElementSibling as HTMLTableRowElement).scrollIntoView();
+        newItem.rowElement.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
     }
 
     private hydrateTemplate(template: string): string {
@@ -205,18 +188,18 @@ export class ColorizeForums implements ExtensionModule {
         }
     }
 
-    private tagRows(forum: ForumInfo, index: number): void {
-        let classes = new Array<string>();
+    private tagRows(post: PostInfo, index: number): void {
+        let row = post.rowElement;
 
-        classes.push('RUSKItem');
-        if (forum.isUnread) {
-            classes.push('RUSKUnreadItem');
+        row.classList.add('RUSKItem');
+
+        if (post.isUnread) {
+            row.classList.add('RUSKUnreadItem');
         }
         if (index % 2 == 0) {
-            classes.push('RUSKEvenRowItem');
+            row.classList.add('RUSKEvenRowItem');
         } else {
-            classes.push('RUSKOddRowItem');
+            row.classList.add('RUSKOddRowItem');
         }
-        forum.rowElement.className = classes.join(" ");
     }
 }
