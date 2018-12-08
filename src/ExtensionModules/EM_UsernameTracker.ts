@@ -16,7 +16,7 @@ export class UsernameTracker implements ExtensionModule {
     cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_FORUM_ALL // FIXME: only post views
+        RBKwebPageType.RBKweb_FORUM_POSTLIST // FIXME: only post views
     ];
 
     runBefore: Array<string> = ['late-extmod'];
