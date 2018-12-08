@@ -88,7 +88,6 @@ export class UsernameTracker implements ExtensionModule {
             var username = element.textContent;
             var userid = parseInt(element.getAttribute("data-userid"));
             if (this.names[userid] && this.names[userid] != username) {
-                console.log("- found one (" + username + ")");
                 var span = element.closest('span') as HTMLElement;
                 span.insertAdjacentHTML('afterend', '<span class="nav aka' + userid +
                                         '"><br>aka&nbsp;' + this.names[userid] +
