@@ -9,7 +9,7 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
  * EM_UsernameTracker - Extension module for RBKweb.
  */
 
-// FIXME: common preprocessing step with TrollFilter (marking userid on username DOM objects)
+// FIXME: switch to use PostInfo extraction
 
 export class UsernameTracker implements ExtensionModule {
     readonly name : string = "UsernameTracker";

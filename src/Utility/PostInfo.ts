@@ -22,6 +22,9 @@ export class PostInfo {
     /** The row element from the DOM */
     readonly rowElement: HTMLTableRowElement;
 
+    /** The subsequent rown with buttons/actions from the DOM */
+    readonly buttonRowElement: HTMLTableRowElement;
+
     /** The title of the post (if any) */
     readonly postTitle: string;
 
@@ -38,6 +41,8 @@ export class PostInfo {
     readonly deleteUrl: string;
 
     readonly ipInfoUrl: string;
+
+    readonly postid: number;
 
     readonly postedDate: Date;
 
@@ -60,6 +65,7 @@ export class PostInfo {
     /** Create a new PostInfo object based on parsing of a passed HTMLTableRowElement */
     constructor(row: HTMLTableRowElement) {
         this.rowElement = row;
+        this.buttonRowElement = row.nextElementSibling as HTMLTableRowElement;
 
         try {
 
@@ -70,6 +76,7 @@ export class PostInfo {
             this.editUrl = this.getEditUrl(row);
             this.deleteUrl = this.getDeleteUrl(row);
             this.ipInfoUrl = this.getIpInfoUrl(row);
+            this.postid = this.getPostId(row);
             this.postedDate = this.getPostedDate(row);
             this.posterNickname = this.getPosterNickname(row);
             this.posterid = this.getPosterId(row);
@@ -129,6 +136,11 @@ export class PostInfo {
         return link.href;
     }
 
+    private getPostId(row: HTMLTableRowElement): number {
+        let bnode = row.querySelector('td span.name a');
+        return +bnode.getAttribute("name");
+    }
+
     private getPostedDate(row: HTMLTableRowElement): Date {
         let text = row.querySelector('td > table > tbody > tr > td > span.postdetails').textContent;
         let dateInfo = text.match(/Posted|Skrevet: (\d{2})\.(\d{2}).(\d{4}) (\d{2}):(\d{2})/);
@@ -141,7 +153,7 @@ export class PostInfo {
 
     private getPosterId(row: HTMLTableRowElement): number {
         let bnode = row.querySelector('td span.name b');
-        return +bnode.getAttribute("data-userid");
+        return +bnode.getAttribute("data-userid"); // FIXME: this is written by UsernameTracker module
     }
 
     private getPosterLevel(row: HTMLTableRowElement): string {
