@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require('path');
-const chromeExtensionReloader = require('webpack-chrome-extension-reloader');
 
 module.exports = {
     entry: {
@@ -34,8 +33,5 @@ module.exports = {
     plugins: [
         // exclude locale files in moment
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new chromeExtensionReloader({
-            reloadPage: true
-        })
     ]
 };
