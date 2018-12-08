@@ -41,18 +41,21 @@ export class UsernameTracker implements ExtensionModule {
     names: Map<number, string> = new Map<number, string>();
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        var dictstr = this.getConfigItem("knownUsernames");
-        console.log("knownUsernames " + dictstr);
-        chrome.runtime.sendMessage({logMessage: "knownUsernames " + dictstr});
-        this.names = JSON.parse(dictstr || "{}");
+        try {
+            this.cfg = config;
+            var dictstr = this.getConfigItem("knownUsernames");
+            this.names = JSON.parse(dictstr || "{}");
+            var count = 0;
+            for (var key in this.names) { count += 1; }
+            var logmsg = this.name + ": tracking " + count + " account names";
+            console.log(logmsg);
+            chrome.runtime.sendMessage({logMessage: logmsg, level: "debug"});
+        } catch (e) {
+            console.error(this.name + " init failed: " + e.message);
+        }
     }
 
     preprocess = () => {
-        // DEBUG START
-        if (!this.names[6500]) this.names[6500] = "Individual 1";
-        if (!this.names[6289]) this.names[6289] = "Individual 2";
-        // DEBUG END
         var users = document.body.querySelectorAll('tr td span.name b')
         if (!users) return;
         var updated = false;
@@ -78,7 +81,6 @@ export class UsernameTracker implements ExtensionModule {
     }
 
     execute = () => {
-        console.log("execute()");
         var users = document.body.querySelectorAll('tr td span.name b');
         if (!users) return;
         users.forEach(function(elt, idx, parent) {
@@ -118,8 +120,6 @@ export class UsernameTracker implements ExtensionModule {
 
     private storeKnownUsernames(): void {
         var dictstr = JSON.stringify(this.names);
-        console.log("storing knownUsernames " + dictstr);
-        chrome.runtime.sendMessage({logMessage: "storing knownUsernames " + dictstr});
         this.cfg.ChangeSetting("knownUsernames", dictstr);
     }
 };
