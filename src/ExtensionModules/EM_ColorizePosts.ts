@@ -103,10 +103,19 @@ export class ColorizePosts implements ExtensionModule {
         // TODO: Dette er ondskap å gjøre her. Må få inn eget hotkey-regime.
         document.addEventListener("keypress", (ev) => {
             if (ev.code == "KeyJ") {
-                this.selectNextItem();
+                if (ev.shiftKey) {
+                    // Go to next page
+                    this.goToNextPage();
+                } else {
+                    this.selectNextItem();
+                }
             }
             if (ev.code == "KeyK") {
-                this.selectPreviousItem();
+                if (ev.shiftKey) {
+                    this.goToPreviousPage();
+                } else {
+                    this.selectPreviousItem();
+                }
             }
             if (ev.code == "KeyG") {
                 this.cfg.ChangeSetting("UnreadColorEven", "lightgreen");
@@ -114,10 +123,31 @@ export class ColorizePosts implements ExtensionModule {
             if (ev.code == "KeyB") {
                 this.cfg.ChangeSetting("UnreadColorEven", "black");
             }
-            if (ev.code == "KeyO") {
+            if (ev.code == "KeyO" || ev.code == "KeyH") {
                 this.goUp();
             }
-        })
+            if (ev.code == "KeyR") {
+                this.replyToSelected();
+            }
+            if (ev.code == "KeyN") {
+                this.newTopic();
+            }
+            if (ev.code == "KeyE") {
+                this.editSelected();
+            }
+            if (ev.code == "KeyQ") {
+                this.quoteSelected();
+            }
+            if (ev.code == "KeyI") {
+                this.getIpInformation();
+            }
+        });
+        document.addEventListener("keyup", (ev) => {
+            // Captures lower level, "unprintable" keys unlike keypress above
+            if (ev.code == "Delete") {
+                this.deleteSelected();
+            }
+        });
     }
 
     private selectNextItem() {
@@ -136,11 +166,69 @@ export class ColorizePosts implements ExtensionModule {
         this.selectNewItem(this.allPosts[newIndex]);
     }
 
+    private goToNextPage() {
+        let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
+        links.forEach(el => {
+            if (el.textContent == 'Next' || el.textContent == 'Neste') {
+                window.location.href = el.href;
+            }
+        });
+    }
+
+    private goToPreviousPage() {
+        let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
+        links.forEach(el => {
+            if (el.textContent == 'Previous' || el.textContent == 'Forrige') {
+                window.location.href = el.href;
+            }
+        });
+    }
+
     private goUp() {
         window.location.href = (document
             .querySelector(
                 'body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(4) > table > tbody > tr > td > font > p:nth-child(3) > table:nth-child(3) > tbody > tr > td:nth-child(2) > span > a:nth-child(2)'
             ) as HTMLAnchorElement).href;
+    }
+
+    private replyToSelected() {
+        if (this.currentlySelectedItem) {
+            // Lagre hva vi skal svare på! Dette plukkes etterhvert opp av plugin for posting-side.
+            var replyObject = {
+                date: this.currentlySelectedItem.postedDate,
+                text: this.currentlySelectedItem.postTextBody,
+                author: this.currentlySelectedItem.posterNickname
+            };
+            localStorage.setItem('ruskReplyObject', JSON.stringify(replyObject));
+        }
+        let image = document.querySelector('img[src$="reply.gif"]') as HTMLImageElement;
+        let anchor = image.parentNode as HTMLAnchorElement;
+        window.location.href = anchor.href;
+    }
+
+    private newTopic() {
+        let image = document.querySelector('img[src$="post.gif"]') as HTMLImageElement;
+        let anchor = image.parentNode as HTMLAnchorElement;
+        window.location.href = anchor.href;
+    }
+
+    private editSelected() {
+        if (!this.currentlySelectedItem.editUrl || this.currentlySelectedItem.editUrl.length == 0) return;
+        window.location.href = this.currentlySelectedItem.editUrl;
+    }
+
+    private quoteSelected() {
+        if (!this.currentlySelectedItem.quoteUrl || this.currentlySelectedItem.quoteUrl.length == 0) return;
+        window.location.href = this.currentlySelectedItem.quoteUrl;
+    }
+
+    private getIpInformation() {
+        if (!this.currentlySelectedItem.ipInfoUrl || this.currentlySelectedItem.ipInfoUrl.length == 0) return;
+        window.location.href = this.currentlySelectedItem.ipInfoUrl;
+    }
+    private deleteSelected() {
+        if (!this.currentlySelectedItem.deleteUrl || this.currentlySelectedItem.deleteUrl.length == 0) return;
+        window.location.href = this.currentlySelectedItem.deleteUrl;
     }
 
     private determineSelectedItem(posts: Array<PostInfo>): void {
@@ -153,7 +241,7 @@ export class ColorizePosts implements ExtensionModule {
             }
         }
 
-        this.selectNewItem(posts[posts.length-1]);
+        this.selectNewItem(posts[posts.length - 1]);
     }
 
     private selectNewItem(newItem: PostInfo) {

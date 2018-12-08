@@ -122,10 +122,10 @@ export class ColorizeThreads implements ExtensionModule {
                     this.selectPreviousItem();
                 }
             }
-            if (ev.key == 'o') {
+            if (ev.key == 'o' || ev.code == "KeyH") {
                 this.goUp();
             }
-            if (ev.keyCode == 13) {
+            if (ev.keyCode == 13 || ev.code == "KeyL") {
                 this.goToSelectedItem();
             }
         })

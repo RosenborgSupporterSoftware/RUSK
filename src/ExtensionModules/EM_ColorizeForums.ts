@@ -115,7 +115,7 @@ export class ColorizeForums implements ExtensionModule {
             if (ev.code == "KeyB") {
                 this.cfg.ChangeSetting("UnreadColorEven", "black");
             }
-            if (ev.keyCode == 13) {
+            if (ev.keyCode == 13 || ev.code == "KeyL") {
                 this.goToSelectedItem();
             }
         })

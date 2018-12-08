@@ -109,13 +109,17 @@ export class PostInfo {
     }
 
     private getQuoteUrl(row: HTMLTableRowElement): string {
-        let link = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a:nth-child(1)') as HTMLAnchorElement;
+        let image = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_quote.gif"]') as HTMLImageElement;
+        if (image == null) return "";
+        let link = image.parentElement as HTMLAnchorElement;
         if (link == null) return "";
         return link.href;
     }
 
     private getEditUrl(row: HTMLTableRowElement): string {
-        let link = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a:nth-child(2)') as HTMLAnchorElement;
+        let image = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_edit.gif"]') as HTMLImageElement;
+        if (image == null) return "";
+        let link = image.parentElement as HTMLAnchorElement;
         if (link == null) return "";
         return link.href;
     }
@@ -152,8 +156,9 @@ export class PostInfo {
     }
 
     private getPosterId(row: HTMLTableRowElement): number {
-        let bnode = row.querySelector('td span.name b');
-        return +bnode.getAttribute("data-userid"); // FIXME: this is written by UsernameTracker module
+        let profileLink = (this.buttonRowElement.querySelector('td > table > tbody > tr > td > a:first-child') as HTMLAnchorElement).href;
+        let match = profileLink.match(/.*\/profile\.php\?mode=viewprofile&u=(\d+)$/);
+        return match ? +match[1] : -1;
     }
 
     private getPosterLevel(row: HTMLTableRowElement): string {
