@@ -49,17 +49,17 @@ export class UserFilter implements ExtensionModule {
             .Build();
 
     posts: Array<PostInfo> = new Array<PostInfo>();
-    trolls: Set<number> = new Set<number>();
+    forumTrolls: Set<number> = new Set<number>();
     threadTrolls: Map<number, Set<number>> = new Map<number, Set<number>>();
 
     init = (config: ModuleConfiguration) => {
         try {
             this.cfg = config;
-            this.trolls = this.getTrollConfig();
+            this.forumTrolls = this.getForumTrollConfig();
             //this.threadTrolls = this.getThreadTrollConfig();
             // BEGIN DEBUG
-            //this.trolls.add(7212); // SHJINNJWÆST
-            //this.trolls.add(1978); // Konesseur
+            //this.forumTrolls.add(7212); // SHJINNJWÆST
+            //this.forumTrolls.add(1978); // Konesseur
             // END DEBUG
         } catch (e) {
             console.log("init exception: " + e.message);
@@ -85,7 +85,7 @@ export class UserFilter implements ExtensionModule {
 
     execute = (context: PageContext) => {
         // mark each username with red/orange/green
-        this.posts.forEach(function(post, idx, posts) {
+        this.posts.forEach(function(post: PostInfo, idx: number, posts: PostInfo[]) {
             try {
                 var row = post.rowElement;
                 var nameelt = row.querySelector("span.name") as Element;
@@ -95,35 +95,63 @@ export class UserFilter implements ExtensionModule {
                     '<img src="' + chrome.runtime.getURL('/img/green.png') + '" valign="middle" width="12" height="12" border="0"/>' +
                     '</a>' +
                     ' ' +
-                    '<a class="nav" id="' + post.posterid + 'orange" title="Thread Block">' +
-                    '<img src="' + chrome.runtime.getURL('/img/orange.png') + '" valign="middle" width="12" height="12" border="0"/>' +
-                    '</a>' +
-                    ' ' +
+                    //'<a class="nav" id="' + post.posterid + 'orange" title="Thread Block">' +
+                    //'<img src="' + chrome.runtime.getURL('/img/orange.png') + '" valign="middle" width="12" height="12" border="0"/>' +
+                    //'</a>' +
+                    //' ' +
                     '<a class="nav" id="' + post.posterid + 'red" title="Block">' +
                     '<img src="' + chrome.runtime.getURL('/img/red.png') + '" valign="middle" width="12" height="12" border="0"/>' +
                     '</a>');
                 var green = row.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
-                var orange = row.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
+                //var orange = row.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
                 var red = row.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
-                if (this.trolls.has(post.posterid)) {
-                    orange.style.display = "none";
-                    red.style.display = "none";
-                    green.addEventListener("click", function() {
-                        console.log("Unblocking " + post.posterNickname);
-                        this.trolls.delete(post.posterid);
-                        this.storeTrolls();
+                green.addEventListener("click", function(ev) {
+                    console.log("Unblocking " + post.posterNickname);
+                    this.forumTrolls.delete(post.posterid);
+                    this.storeForumTrolls();
+                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
+                        if (other.posterid == post.posterid) {
+                            if (other.postid != post.postid) {
+                                other.rowElement.style.display = "";
+                                other.buttonRowElement.style.display = "";
+                                (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "none";
+                            }
+                            var r = other.rowElement.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
+                            //var o = other.rowElement.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
+                            var g = other.rowElement.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
+                            r.style.display = "";
+                            //o.style.display = "";
+                            g.style.display = "none";
+                        }
                     }.bind(this));
+                }.bind(this));
+                //orange.addEventListener("click", function() {
+                //    console.log("Thread-blocking " + post.posterNickname);
+                //}.bind(this));
+                red.addEventListener("click", function() {
+                    console.log("Blocking " + post.posterNickname);
+                    this.forumTrolls.add(post.posterid);
+                    this.storeForumTrolls();
+                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
+                        if (other.posterid == post.posterid) {
+                            other.rowElement.style.display = "none";
+                            other.buttonRowElement.style.display = "none";
+                            (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "";
+                            var r = other.rowElement.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
+                            //var o = other.rowElement.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
+                            var g = other.rowElement.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
+                            r.style.display = "none";
+                            //o.style.display = "none";
+                            g.style.display = "";
+                        }
+                    }.bind(this));
+                }.bind(this));
+                if (this.forumTrolls.has(post.posterid)) {
+                    //orange.style.display = "none";
+                    red.style.display = "none";
                 }
                 else {
                     green.style.display = "none";
-                    orange.addEventListener("click", function() {
-                        console.log("Thread-blocking " + post.posterNickname);
-                    }.bind(this));
-                    red.addEventListener("click", function() {
-                        console.log("Blocking " + post.posterNickname);
-                        this.trolls.add(post.posterid);
-                        this.storeTrolls();
-                    }.bind(this));
                 }
             } catch (e) {
                 console.error("exception: " + e.message);
@@ -135,32 +163,23 @@ export class UserFilter implements ExtensionModule {
             try {
                 //console.log("poster id: '" + post.posterid + "'");
                 var posterid = post.posterid;
-                if (this.trolls.has(posterid)) {
-                    //console.log("hiding user " + post.posterNickname);
-                    var row = post.rowElement;
-                    var buttons = post.buttonRowElement as HTMLTableRowElement;
-                    row.style.display = buttons.style.display = "none";
-                    buttons.insertAdjacentHTML('afterend', '<tr>' +
-                        '<td class="row2" colspan="2">' +
-                        '<a class="nav trollbutton" name="showpost-'+post.postId+'">' + post.posterNickname + '</a>' +
-                        '</td></tr>');
-                    var addition = buttons.nextElementSibling as HTMLTableRowElement;
-                    var button = addition.querySelector("a") as HTMLAnchorElement;
-                    button.addEventListener("click", function(ev) {
-                        row.style.display = "";
-                        buttons.style.display = "";
-                        addition.style.display = "none";
-                    }.bind(this));
-                }
-                else {
-                    var buttons = post.buttonRowElement as HTMLTableRowElement;
-                    buttons.insertAdjacentHTML('afterend', '<tr class="trollbutton'+posterid+'">' +
-                        '<td class="row2" colspan="2">' +
-                        '<a class="nav trollbutton" name="showpost-'+post.postId+'">' + post.posterNickname + '</a>' +
-                        '</td></tr>');
-                    var addition = buttons.nextElementSibling as HTMLTableRowElement;
+                var row = post.rowElement;
+                var buttons = post.buttonRowElement as HTMLTableRowElement;
+                buttons.insertAdjacentHTML('afterend', '<tr>' +
+                    '<td class="row2" colspan="2">' +
+                    '<a class="nav trollbutton" name="showpost-'+post.postId+'">' + post.posterNickname + '</a>' +
+                    '</td></tr>');
+                var addition = buttons.nextElementSibling as HTMLTableRowElement;
+                var button = addition.querySelector("a") as HTMLAnchorElement;
+                button.addEventListener("click", function(ev) {
+                    row.style.display = "";
+                    buttons.style.display = "";
                     addition.style.display = "none";
-                }
+                }.bind(this));
+                if (this.forumTrolls.has(posterid))
+                    row.style.display = buttons.style.display = "none";
+                else
+                    addition.style.display = "none";
             } catch (e) {
                 console.log("UserFilter: " + e.message);
             }
@@ -183,7 +202,7 @@ export class UserFilter implements ExtensionModule {
         }
     }
 
-    private getTrollConfig(): Set<number> {
+    private getForumTrollConfig(): Set<number> {
         var trolls = new Set<number>();
         try {
             var settings = this.getConfigItem("forumTrolls");
@@ -193,16 +212,16 @@ export class UserFilter implements ExtensionModule {
                 trolls.add(+troll);
             }.bind(this));
         } catch (e) {
-            console.error("getTrollConfig exception: " + e.message);
+            console.error("getForumTrollConfig exception: " + e.message);
         }
         console.log("returning forumTrolls = " + JSON.stringify(trolls));
         return trolls;
     }
 
-    private storeTrolls(): void {
+    private storeForumTrolls(): void {
         var items = [];
-        this.trolls.forEach(function(troll, idx, trolls) {
-            console.log("troll: '" + troll + "'");
+        this.forumTrolls.forEach(function(troll, idx, forumTrolls) {
+            //console.log("troll: '" + troll + "'");
             items.push(+troll);
         }.bind(this));
         var settings = JSON.stringify(items);
