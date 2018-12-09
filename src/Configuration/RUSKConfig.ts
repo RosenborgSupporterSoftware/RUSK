@@ -24,14 +24,18 @@ export class RUSKConfig {
     /**
      * Create a real RUSKConfig object from a stored RUSKConfig
      * @param config - The stored POJO configuration object
+     * @param modules - A list of ExtensionModule objects available
      */
-    public static FromStoredConfiguration(cfg: string): RUSKConfig {
+    public static FromStoredConfiguration(cfg: string, modules: Array<ExtensionModule>): RUSKConfig {
+        debugger;
+
         let ruskConfig = new RUSKConfig();
 
         let config = JSON.parse(cfg);
         let moduleSettings = new Array<ModuleConfiguration>();
-        for(let i=0; i<config.moduleSettings.length; i++) {
-            moduleSettings.push(ModuleConfiguration.FromStorageObject(config.moduleSettings[i]));
+        for (let i = 0; i < config.moduleSettings.length; i++) {
+            let module = this.findModule(config.moduleSettings[i].moduleName, modules);
+            moduleSettings.push(ModuleConfiguration.FromStorageObject(config.moduleSettings[i], module));
             moduleSettings[moduleSettings.length - 1].setOwner(ruskConfig);
         }
         let sharedSettings = new Array<ConfigSetting>();
@@ -156,6 +160,14 @@ export class RUSKConfig {
         }
         let configSetting = this.findConfigSetting(mod, setting);
         return configSetting;
+    }
+
+    private static findModule(module: string, allModules: Array<ExtensionModule>): ExtensionModule {
+        if (!allModules || allModules.length == 0) return null;
+        for (let i = 0; i < allModules.length; i++) {
+            if (allModules[i].name == module) return allModules[i];
+        }
+        return null;
     }
 
     private findModuleConfig(module: string): ModuleConfiguration {

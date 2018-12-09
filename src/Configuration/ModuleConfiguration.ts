@@ -1,5 +1,6 @@
 import { ConfigSetting, settingValueTypes, ConfigurationSetting } from "./ConfigurationSetting";
 import { RUSKConfig } from "./RUSKConfig";
+import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
 
 /**
  * ModuleConfiguration contains configuration for a single ExtensionModule
@@ -39,13 +40,22 @@ export class ModuleConfiguration {
         this.settings = settings;
     }
 
-    public static FromStorageObject(obj: any): ModuleConfiguration {
-        let settings = new Array<ConfigSetting>();
-        for(let i=0; i<obj.settings.length; i++) {
-            settings.push(ConfigurationSetting.FromStorageObject(obj.settings[i]));
+    public static FromStorageObject(obj: any, module: ExtensionModule): ModuleConfiguration {
+        let modConf = module.configSpec();
+        for (let i = 0; i < obj.settings.length; i++) {
+            if (modConf.doesSettingExist(obj.settings[i].settingName)) {
+                modConf.ChangeSetting(obj.settings[i].settingName, obj.settings[i].value);
+            }
         }
 
-        return new ModuleConfiguration(obj.moduleName, obj.displayName, obj.moduleDescription, obj.moduleEnabled, settings);
+        return modConf;
+    }
+
+    private doesSettingExist(settingName: string): boolean {
+        for (let i = 0; i < this.settings.length; i++) {
+            if (this.settings[i].setting == settingName) return true;
+        }
+        return false;
     }
 
     /** Sets the given RUSKConfig object as the parent/owner of this ModuleConfiguration */
