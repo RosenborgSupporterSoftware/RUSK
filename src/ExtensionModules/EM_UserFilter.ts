@@ -34,17 +34,17 @@ export class UserFilter implements ExtensionModule {
             .WithDescription("Denne modulen filtrerer forumbrukere")
             .WithConfigOption(opt =>
                 opt
-                    .WithSettingName("trolls")
+                    .WithSettingName("forumTrolls")
                     .WithSettingType(SettingType.text)
                     .WithVisibility(ConfigurationOptionVisibility.Never)
-                    .WithDefaultValue('')
+                    .WithDefaultValue('[]')
             )
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName("threadTrolls")
                     .WithSettingType(SettingType.text)
                     .WithVisibility(ConfigurationOptionVisibility.Never)
-                    .WithDefaultValue('')
+                    .WithDefaultValue('{}')
             )
             .Build();
 
@@ -64,15 +64,6 @@ export class UserFilter implements ExtensionModule {
         } catch (e) {
             console.log("init exception: " + e.message);
         }
-    }
-
-    private getTrollConfig(): Set<number> {
-        var trollstr = this.getConfigItem("trolls");
-        var trolls = new Set<number>();
-        //for (var userid in JSON.parse(trollstr)) {
-        //    trolls.add(userid);
-        //}
-        return trolls;
     }
 
     private getThreadTrollConfig(): Map<number, Set<number>> {
@@ -95,7 +86,48 @@ export class UserFilter implements ExtensionModule {
     execute = (context: PageContext) => {
         // mark each username with red/orange/green
         this.posts.forEach(function(post, idx, posts) {
-            // FIXME
+            try {
+                var row = post.rowElement;
+                var nameelt = row.querySelector("span.name") as Element;
+                nameelt.insertAdjacentHTML('afterend',
+                    ' ' +
+                    '<a class="nav" id="' + post.posterid + 'green" title="Unblock">' +
+                    '<img src="' + chrome.runtime.getURL('/img/green.png') + '" valign="middle" width="12" height="12" border="0"/>' +
+                    '</a>' +
+                    ' ' +
+                    '<a class="nav" id="' + post.posterid + 'orange" title="Thread Block">' +
+                    '<img src="' + chrome.runtime.getURL('/img/orange.png') + '" valign="middle" width="12" height="12" border="0"/>' +
+                    '</a>' +
+                    ' ' +
+                    '<a class="nav" id="' + post.posterid + 'red" title="Block">' +
+                    '<img src="' + chrome.runtime.getURL('/img/red.png') + '" valign="middle" width="12" height="12" border="0"/>' +
+                    '</a>');
+                var green = row.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
+                var orange = row.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
+                var red = row.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
+                if (this.trolls.has(post.posterid)) {
+                    orange.style.display = "none";
+                    red.style.display = "none";
+                    green.addEventListener("click", function() {
+                        console.log("Unblocking " + post.posterNickname);
+                        this.trolls.delete(post.posterid);
+                        this.storeTrolls();
+                    }.bind(this));
+                }
+                else {
+                    green.style.display = "none";
+                    orange.addEventListener("click", function() {
+                        console.log("Thread-blocking " + post.posterNickname);
+                    }.bind(this));
+                    red.addEventListener("click", function() {
+                        console.log("Blocking " + post.posterNickname);
+                        this.trolls.add(post.posterid);
+                        this.storeTrolls();
+                    }.bind(this));
+                }
+            } catch (e) {
+                console.error("exception: " + e.message);
+            }
         }.bind(this));
 
         // hide all troll posts, and insert troll buttons
@@ -120,6 +152,15 @@ export class UserFilter implements ExtensionModule {
                         addition.style.display = "none";
                     }.bind(this));
                 }
+                else {
+                    var buttons = post.buttonRowElement as HTMLTableRowElement;
+                    buttons.insertAdjacentHTML('afterend', '<tr class="trollbutton'+posterid+'">' +
+                        '<td class="row2" colspan="2">' +
+                        '<a class="nav trollbutton" name="showpost-'+post.postId+'">' + post.posterNickname + '</a>' +
+                        '</td></tr>');
+                    var addition = buttons.nextElementSibling as HTMLTableRowElement;
+                    addition.style.display = "none";
+                }
             } catch (e) {
                 console.log("UserFilter: " + e.message);
             }
@@ -129,16 +170,44 @@ export class UserFilter implements ExtensionModule {
     }
 
     private getConfigItem(setting: string): string {
-        for (let i = 0; i < this.cfg.settings.length; i++) {
-            if (this.cfg.settings[i].setting == setting) {
-                return this.cfg.settings[i].value as string;
+        try {
+            for (let i = 0; i < this.cfg.settings.length; i++) {
+                if (this.cfg.settings[i].setting == setting) {
+                    console.log("found setting '" + setting);
+                    return this.cfg.settings[i].value as string;
+                }
             }
+            console.log("did not find setting '" + setting);
+        } catch (e) {
+            console.error("getConfigItem exception: " + e.message);
         }
     }
 
+    private getTrollConfig(): Set<number> {
+        var trolls = new Set<number>();
+        try {
+            var settings = this.getConfigItem("forumTrolls");
+            console.log("loaded forumTrolls: " + settings);
+            var trollids = JSON.parse(settings || "[]");
+            trollids.forEach(function(troll, idx, trollids) {
+                trolls.add(+troll);
+            }.bind(this));
+        } catch (e) {
+            console.error("getTrollConfig exception: " + e.message);
+        }
+        console.log("returning forumTrolls = " + JSON.stringify(trolls));
+        return trolls;
+    }
+
     private storeTrolls(): void {
-        var dictstr = JSON.stringify(this.trolls);
-        this.cfg.ChangeSetting("trolls", dictstr);
+        var items = [];
+        this.trolls.forEach(function(troll, idx, trolls) {
+            console.log("troll: '" + troll + "'");
+            items.push(+troll);
+        }.bind(this));
+        var settings = JSON.stringify(items);
+        console.log("storing forumTrolls: '" + settings + "'");
+        this.cfg.ChangeSetting("forumTrolls", settings);
     }
 
     private storeThreadTrolls(): void {
@@ -152,11 +221,6 @@ var trolls = [];       // trolls we don't want to read
 var threads = [];      // threads we dont want to see
 var threadblocks = {}; // blocking specific users in specific threads for two days
 var usernames = {};    // tracking changing usernames
-
-var green = "https://i.imgur.com/RQTGsQo.png";
-var orange = "https://i.imgur.com/Hkown9E.png";
-var red = "https://i.imgur.com/azmNSfu.png";
-var checkmark = "https://i.imgur.com/L5ONPvY.png";
 
 // TODO/IDEAS:
 // - colorize cool people's posts?
