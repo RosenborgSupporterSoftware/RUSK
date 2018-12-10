@@ -27,8 +27,6 @@ export class RUSKConfig {
      * @param modules - A list of ExtensionModule objects available
      */
     public static FromStoredConfiguration(cfg: string, modules: Array<ExtensionModule>): RUSKConfig {
-        debugger;
-
         let ruskConfig = new RUSKConfig();
 
         let config = JSON.parse(cfg);
