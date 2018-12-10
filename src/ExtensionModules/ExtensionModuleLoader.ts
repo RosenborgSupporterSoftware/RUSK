@@ -12,6 +12,7 @@ import { Empowerment } from "./EM_Empowerment";
 import { ColorizeForums } from "./EM_ColorizeForums";
 import { ColorizePosts } from "./EM_ColorizePosts";
 import { UserFilter } from "./EM_UserFilter";
+import { EnhancePosting } from "./EM_EnhancePosting";
 
 /**
  * ExtensionModuleLoader
@@ -35,5 +36,6 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new UsernameTracker(),
         new Empowerment(),
         new UserFilter(),
+        new EnhancePosting()
     ];
 }
