@@ -222,21 +222,13 @@ export class ColorizeThreads implements ExtensionModule {
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];
         keys.push("$RUSKUnreadItem$");
-        values.push(this.getConfigItem('UnreadColorEven'));
+        values.push(this.cfg.GetSetting('UnreadColorEven'));
 
         for (let i = 0; i < keys.length; i++) {
             template = template.replace(keys[i], values[i]);
         }
 
         return template;
-    }
-
-    private getConfigItem(setting: string): string {
-        for (let i = 0; i < this.cfg.settings.length; i++) {
-            if (this.cfg.settings[i].setting == setting) {
-                return this.cfg.settings[i].value as string;
-            }
-        }
     }
 
     private tagRows(thread: ThreadInfo, index: number): void {

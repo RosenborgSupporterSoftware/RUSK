@@ -1,8 +1,11 @@
 import { ConfigUpdatedMessage } from "./Messages/ConfigUpdatedMessage";
 import { ChromeSyncStorage } from "./Configuration/ChromeSyncStorage";
 import { IConfigurationStorage } from "./Configuration/IConfigurationStorage";
+import { ConfigManager } from "./Configuration/ConfigManager";
 
 let configStorage = new ChromeSyncStorage() as IConfigurationStorage;
+
+let configManager = ConfigManager.Instance;
 
 //function polling() {
 //    console.log('polling');
@@ -26,6 +29,27 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     request.message);
         (console.error || console.log).call(console, request.exception.stack || request.exception);
         return;
+    }
+});
+
+// Config management
+chrome.runtime.onMessage.addListener(async (req, sender, reply) => {
+    if (req.getConfigFor) {
+        if (typeof req.getConfigFor == "string") {
+            let cfg = ConfigManager.Instance.GetConfigForModule(req.getConfigFor);
+            reply([cfg]);
+        }
+        if (Array.isArray(req.getConfigFor)) {
+            // Do array things
+            let cfgs = [];
+            for (let i = 0; i < req.getConfigFor.length; i++) {
+                cfgs.push(ConfigManager.Instance.GetConfigForModule(req.getConfigFor[i]));
+            }
+            reply(cfgs);
+        }
+    }
+    if (req.storeConfigFor) {
+        ConfigManager.Instance.SetConfigForModule(req.storeConfigFor, req.config);
     }
 });
 

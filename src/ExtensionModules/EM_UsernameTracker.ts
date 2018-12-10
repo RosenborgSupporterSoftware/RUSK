@@ -83,7 +83,7 @@ export class UsernameTracker implements ExtensionModule {
     execute = () => {
         var users = document.body.querySelectorAll('tr td span.name b');
         if (!users) return;
-        users.forEach(function(elt, idx, parent) {
+        users.forEach(function (elt, idx, parent) {
             var element = elt as HTMLElement;
             var username = element.textContent;
             var userid = parseInt(element.getAttribute("data-userid"));

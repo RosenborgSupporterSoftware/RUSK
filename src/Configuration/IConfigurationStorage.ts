@@ -11,4 +11,8 @@ export interface IConfigurationStorage {
 
     /** Stores configuration to storage */
     StoreConfiguration(config: string): void;
+
+    GetModuleConfiguration(moduleName: Array<string>): Promise<object>;
+
+    StoreModuleConfiguration(moduleName: string, config: object): Promise<boolean>;
 }

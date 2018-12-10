@@ -13,8 +13,8 @@ export class ConfigurationSetting<T extends settingValueTypes>  {
     value: T;
     readonly isShared: boolean;
 
-    constructor(settingName: string, value: T, isShared: boolean = false) {
-        this.setting = settingName;
+    constructor(setting: string, value: T, isShared: boolean = false) {
+        this.setting = setting;
         this.value = value;
         this.isShared = isShared;
     }
@@ -26,13 +26,13 @@ export class ConfigurationSetting<T extends settingValueTypes>  {
 
     public ToStorageObject(): object {
         return {
-            settingName: this.setting,
+            setting: this.setting,
             isShared: this.isShared,
             value: this.value
         };
     }
 
     public static FromStorageObject(obj: any): ConfigSetting {
-        return new ConfigurationSetting(obj.settingName, obj.value, obj.isShared);
+        return new ConfigurationSetting(obj.setting, obj.value, obj.isShared);
     }
 }

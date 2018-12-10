@@ -89,6 +89,18 @@ export class RUSKConfig {
         chrome.runtime.sendMessage({
             configUpdatedMessage: this.ToJSON()
         });
+
+        // New regime
+        let moduleConfig = this.findModuleConfig(moduleName);
+        if (moduleConfig) {
+            chrome.runtime.sendMessage({
+                setConfigFor: moduleName,
+                config: moduleConfig.ToStorageObject()
+            }, res => {
+                //debugger;
+                console.log(res);
+            });
+        }
     }
 
     /**

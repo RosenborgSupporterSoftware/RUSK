@@ -6,6 +6,7 @@ import { ChromeSyncStorage } from './Configuration/ChromeSyncStorage';
 import { IConfigurationStorage } from './Configuration/IConfigurationStorage';
 import { RUSKConfig } from './Configuration/RUSKConfig';
 import { ModuleError } from './Errors/ModuleError';
+import { ModuleConfiguration } from './Configuration/ModuleConfiguration';
 
 var allModules = moduleLoader("notyet");
 
@@ -16,60 +17,77 @@ storage.GetConfiguration(config => {
 
     if (config == null) {
         // Lag ny config med default ting
-        ruskConfig = new RUSKConfig();
-        ruskConfig.AddModuleDefaultConfigurations(allModules);
+        // ruskConfig = new RUSKConfig();
+        // ruskConfig.AddModuleDefaultConfigurations(allModules);
 
-        storage.StoreConfiguration(ruskConfig.ToJSON());
+        //storage.StoreConfiguration(ruskConfig.ToJSON());
     } else {
-        ruskConfig = RUSKConfig.FromStoredConfiguration(config, allModules);
+        //ruskConfig = RUSKConfig.FromStoredConfiguration(config, allModules);
     }
     let context = new PageContext();
     let filteredModules = filterModules(allModules, context);
 
-    initModules(filteredModules, ruskConfig);
-    preprocessModules(filteredModules);
-    executeModules(filteredModules, context);
+    processPage(filteredModules, context);
+    // preprocessModules(filteredModules);
+    // executeModules(filteredModules, context);
 });
 
 // TODO: Sortér moduler basert på deres runBefore og runAfter-properties
 
-/**
- * Run the init step on the given modules
- * @param modules - The modules to initialize
- * @param config - The RUSKConfig to use for initializing the modules
- */
-function initModules(modules: Array<ExtensionModule>, config: RUSKConfig) {
-
+async function processPage(modules: Array<ExtensionModule>, context: PageContext) {
     let modname = "";
+
     try {
-        modules.forEach(mod => {
-            modname = mod.name;
-            let cfg = config.GetModuleConfiguration(modname);
-            if (cfg == null) {
-                cfg = mod.configSpec();
-                config.AddModuleConfiguration(cfg);
+        let modulenames = [];
+        for (let i = 0; i < modules.length; i++) {
+            modulenames.push(modules[i].name);
+        }
+        chrome.runtime.sendMessage({ getConfigFor: modulenames }, configs => {
+
+            // Init modules
+            for (let i = 0; i < modules.length; i++) {
+                modname = modules[i].name;
+                for (let j = 0; j < configs.length; j++) {
+                    if (configs[j].moduleName == modules[i].name) {
+                        try {
+                            let realConf = ModuleConfiguration.FromStorageObject(configs[j], modules[i]);
+                            modules[i].init(realConf);
+                        } catch (e) {
+                            chrome.runtime.sendMessage(new ModuleError(modname, "init", e.message, e));
+                        }
+                        break;
+                    }
+                }
             }
-            mod.init(cfg);
+            // Preprocess modules
+            for (let i = 0; i < modules.length; i++) {
+                modname = modules[i].name;
+                try {
+                    modules[i].preprocess();
+                } catch (e) {
+                    chrome.runtime.sendMessage(new ModuleError(modules[i].name, "preprocess", e.message, e));
+                }
+            }
+            // Execute modules
+            for (let i = 0; i < modules.length; i++) {
+                modname = modules[i].name;
+
+                let starttime = performance.now();
+                try {
+                    modules[i].execute(context);
+                } catch (e) {
+                    chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
+                }
+                let endtime = performance.now();
+                chrome.runtime.sendMessage({
+                    module: modname,
+                    executiontime: endtime - starttime,
+                    url: document.URL
+                });
+            }
         });
     } catch (e) {
-        chrome.runtime.sendMessage(new ModuleError(modname, "init", e.message, e));
-    }
-}
-
-/**
- * Run the preprocess step on the given modules
- * @param modules - The modules to run preprocess() on
- */
-function preprocessModules(modules: Array<ExtensionModule>) {
-
-    let modname = "";
-    try {
-        modules.forEach(mod => {
-            modname = mod.name;
-            mod.preprocess();
-        });
-    } catch (e) {
-        chrome.runtime.sendMessage(new ModuleError(modname, "preprocess", e.message, e));
+        chrome.runtime.sendMessage(new ModuleError(modname, "processPage", e.message, e));
     }
 }
 

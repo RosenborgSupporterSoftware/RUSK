@@ -77,6 +77,18 @@ export class ThreadInfo {
     /** Create a new ThreadInfo object based on parsing of a passed HTMLTableRowElement */
     constructor(row: HTMLTableRowElement, alt: boolean) {
         this.rowElement = row;
+        if (!alt) {
+            // FIXME: make these work on the alternative topic list views (some might work already)
+            this.threadAttributes = this.getThreadAttributes(row);
+            this.threadStarter = this.getThreadStarter(row);
+            this.latestPoster = this.getLatestPoster(row);
+            this.replies = this.getReplies(row);
+            this.views = this.getViews(row);
+
+            this.numberOfPages = this.getNumberOfPages(row);
+            this.lastUpdate = this.getLastUpdate(row);
+            this.hasPoll = this.determinePollState(row);
+        }
         this.threadid = this.getThreadId(row);
         this.title = this.getTitle(row);
         this.baseUrl = this.getBaseUrl(row);
@@ -85,18 +97,6 @@ export class ThreadInfo {
         this.threadType = this.determineThreadType(row);
         this.isLocked = this.determineLockedState(row);
 
-        if (!alt) {
-            // FIXME: make these work on the alternative topic list views (some might work already)
-            this.threadAttributes = this.getThreadAttributes(row);
-            this.threadStarter = this.getThreadStarter(row);
-            this.latestPoster = this.getLatestPoster(row);
-            this.replies = this.getReplies(row);
-            this.views = this.getViews(row);
-    
-            this.numberOfPages = this.getNumberOfPages(row);
-            this.lastUpdate = this.getLastUpdate(row);
-            this.hasPoll = this.determinePollState(row);
-        }
     }
 
     private getThreadId(row: HTMLTableRowElement): number {
@@ -185,8 +185,7 @@ export class ThreadInfo {
 
     private getThreadAttributes(row: HTMLTableRowElement): ThreadAttributes {
 
-        let td = row.children[0] as HTMLTableCellElement;
-        let img = td.children[0] as HTMLImageElement;
+        let img = row.querySelector('td > img') as HTMLImageElement;
         let imageName = img.src.match(/templates\/subSilver\/images\/([\w_]+)\.gif/)[1];
         //console.log(imageName + this.getTitle(row));
         let fileAttrs = this.getAttributesFromFilename(imageName);

@@ -42,18 +42,21 @@ export class ModuleConfiguration {
 
     public static FromStorageObject(obj: any, module: ExtensionModule): ModuleConfiguration {
         let modConf = module.configSpec();
-        for (let i = 0; i < obj.settings.length; i++) {
-            if (modConf.doesSettingExist(obj.settings[i].settingName)) {
-                modConf.ChangeSetting(obj.settings[i].settingName, obj.settings[i].value);
+        if (obj && obj.settings) {
+            for (let i = 0; i < obj.settings.length; i++) {
+                let setting = obj.settings[i].setting;
+                if (modConf.doesSettingExist(setting)) {
+                    modConf.changeSetting(setting, obj.settings[i].value);
+                }
             }
         }
 
         return modConf;
     }
 
-    private doesSettingExist(settingName: string): boolean {
+    private doesSettingExist(setting: string): boolean {
         for (let i = 0; i < this.settings.length; i++) {
-            if (this.settings[i].setting == settingName) return true;
+            if (this.settings[i].setting == setting) return true;
         }
         return false;
     }
@@ -69,6 +72,16 @@ export class ModuleConfiguration {
      * @param newValue - The new value of the setting that is going to be changed
      */
     public ChangeSetting(setting: string, newValue: settingValueTypes): void {
+        this.changeSetting(setting, newValue);
+
+        chrome.runtime.sendMessage({
+            storeConfigFor: this.moduleName,
+            config: this.ToStorageObject()
+        });
+    }
+
+    // This exists so we can hydrate objects without causing a notify to store changes
+    private changeSetting(setting: string, newValue: settingValueTypes): void {
         let settingObject = this.getConfigSetting(setting);
         if (settingObject == null) {
             chrome.runtime.sendMessage({
@@ -89,9 +102,21 @@ export class ModuleConfiguration {
         }
 
         settingObject.value = newValue;
-        if (this.parentConfig) {
-            this.parentConfig.NotifySettingChange(this.moduleName, setting);
+    }
+
+    /**
+     * Get the value of a configuration setting
+     * @param setting - The name of the setting to return the value for
+     */
+    public GetSetting(setting: string): settingValueTypes {
+        let settingObject = this.getConfigSetting(setting);
+        if (settingObject == null) {
+            chrome.runtime.sendMessage({
+                logMessage: 'ModuleConfiguration for ' + this.moduleName + ' attempted reading unknown setting ' + setting
+            });
+            return null;
         }
+        return settingObject.value;
     }
 
     /**
