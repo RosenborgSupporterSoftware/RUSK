@@ -210,11 +210,8 @@ export class PostInfo {
 
     private getThreadId(row: HTMLTableRowElement): number {
         var link = row.parentElement.parentElement.parentElement.querySelector('a[href*="posting.php?mode=reply"]') as HTMLAnchorElement;
-        var url = link.href;
-        var topicmatch = url.match(/.*&t=([0-9]+)/);
-        if (topicmatch) {
-            return +topicmatch[1];
-        }
+        var topicmatch = link.href.match(/.*&t=([0-9]+)/);
+        if (topicmatch) return +topicmatch[1];
         return 0;
     }
 }
