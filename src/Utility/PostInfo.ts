@@ -62,13 +62,14 @@ export class PostInfo {
 
     readonly posterLocation: string;
 
+    readonly threadId: number;
+
     /** Create a new PostInfo object based on parsing of a passed HTMLTableRowElement */
     constructor(row: HTMLTableRowElement) {
         this.rowElement = row;
         this.buttonRowElement = row.nextElementSibling as HTMLTableRowElement;
 
         try {
-
             this.postTitle = this.getTitle(row);
             this.isUnread = this.getUnreadState(row);
             this.baseUrl = this.getPostUrl(row);
@@ -86,6 +87,7 @@ export class PostInfo {
             this.posterRegistered = this.getPosterRegistered(row);
             this.posterPosts = this.getPosterPosts(row);
             this.posterLocation = this.getPosterLocation(row);
+            this.threadId = this.getThreadId(row);
         } catch (e) {
             chrome.runtime.sendMessage({ module: "PostInfo", message: e.message, exception: e });
         }
@@ -204,5 +206,15 @@ export class PostInfo {
             }
         }
         return "";
+    }
+
+    private getThreadId(row: HTMLTableRowElement): number {
+        var link = row.parentElement.parentElement.parentElement.querySelector('a[href*="posting.php?mode=reply"]') as HTMLAnchorElement;
+        var url = link.href;
+        var topicmatch = url.match(/.*&t=([0-9]+)/);
+        if (topicmatch) {
+            return +topicmatch[1];
+        }
+        return 0;
     }
 }
