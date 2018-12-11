@@ -57,10 +57,6 @@ export class UserFilter implements ExtensionModule {
             this.cfg = config;
             this.forumTrolls = this.getForumTrollConfig();
             this.threadTrolls = this.getThreadTrollConfig();
-            // BEGIN DEBUG
-            //this.forumTrolls.add(7212); // SHJINNJWÆST
-            //this.forumTrolls.add(1978); // Konesseur
-            // END DEBUG
         } catch (e) {
             console.log("init exception: " + e.message);
         }
