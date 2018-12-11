@@ -13,6 +13,7 @@ import { ColorizeForums } from "./EM_ColorizeForums";
 import { ColorizePosts } from "./EM_ColorizePosts";
 import { UserFilter } from "./EM_UserFilter";
 import { EnhancePosting } from "./EM_EnhancePosting";
+import { ThreadTitleLinks } from "./EM_ThreadTitleLinks";
 
 /**
  * ExtensionModuleLoader
@@ -36,6 +37,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new UsernameTracker(),
         new Empowerment(),
         new UserFilter(),
-        new EnhancePosting()
+        new EnhancePosting(),
+        new ThreadTitleLinks(),
     ];
 }
