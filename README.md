@@ -14,6 +14,9 @@ Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til R
 - Tracker og varsler om brukere endrer brukernavn.
 - Optimaliserer browserens sidelasting.
 - Legger til en rute for brukertips.
+- På sider hvor man oppretter eller redigerer innlegg/tråder vil tekstboksen vokse i takt med innholdet.
+- Man kan trykke hurtigtast `Ctrl-Enter` for å legge inn innlegg uten å klikke med mus e.l.
+- Feltene man vanligvis ønsker å starte i blir fokusert på sider hvor man legger inn innlegg.
 
 ## Viktige punkter for å bruke/utvikle utvidelsen
 
