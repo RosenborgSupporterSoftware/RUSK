@@ -40,6 +40,7 @@ export class ImageCache implements ExtensionModule {
             'folder_locked_big.gif',
             'folder_new_big.gif',
             'icon_latest_reply.gif',
+            'icon_newest_reply.gif',
             'icon_mini_faq.gif',
             'icon_mini_groups.gif',
             'icon_mini_login.gif',
