@@ -6,6 +6,7 @@ import { SignatureFilter } from "./EM_SignatureFilter";
 import { ColorizeThreads } from "./EM_ColorizeThreads";
 import { ImageCache } from "./EM_ImageCache";
 import { InboxAlert } from "./EM_InboxAlert";
+import { TopicFilter } from "./EM_TopicFilter";
 import { HighlightColor } from "./EM_HighlightColor";
 import { UsernameTracker } from "./EM_UsernameTracker";
 import { Empowerment } from "./EM_Empowerment";
@@ -27,6 +28,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new Usertips(),
         new SeasonViews(),
         new TabTitles(),
+        new TopicFilter(),
         new SignatureFilter(),
         new ColorizeThreads(),
         new ColorizeForums(),

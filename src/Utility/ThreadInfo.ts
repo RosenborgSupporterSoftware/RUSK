@@ -15,13 +15,23 @@ export class ThreadInfo {
         let threads = new Array<ThreadInfo>();
 
         document.querySelectorAll('table.forumline tbody tr > td.row3Right').forEach((element) => {
-            threads.push(new ThreadInfo(element.parentElement as HTMLTableRowElement));
+            threads.push(new ThreadInfo(element.parentElement as HTMLTableRowElement, false));
         });
+        if (!threads.length) {
+            document.querySelectorAll('table.forumline tbody tr > td span.topictitle').forEach((element) => {
+                threads.push(new ThreadInfo(element.parentElement.parentElement as HTMLTableRowElement, true));
+            });
+        }
         return threads;
     }
 
     /** The row element from the DOM */
     readonly rowElement: HTMLTableRowElement;
+
+    /** The id of the thread */
+    readonly threadid: number;
+
+    // FIXME: add forumid
 
     /** The title of the thread */
     readonly title: string;
@@ -65,27 +75,39 @@ export class ThreadInfo {
     private threadAttributes: ThreadAttributes;
 
     /** Create a new ThreadInfo object based on parsing of a passed HTMLTableRowElement */
-    constructor(row: HTMLTableRowElement) {
+    constructor(row: HTMLTableRowElement, alt: boolean) {
         this.rowElement = row;
-        this.threadAttributes = this.getThreadAttributes(row);
-
+        this.threadid = this.getThreadId(row);
         this.title = this.getTitle(row);
         this.baseUrl = this.getBaseUrl(row);
         this.latestUrl = this.getLatestUrl(row);
         this.isUnread = this.determineUnreadState(row);
         this.threadType = this.determineThreadType(row);
         this.isLocked = this.determineLockedState(row);
-        this.threadStarter = this.getThreadStarter(row);
-        this.latestPoster = this.getLatestPoster(row);
-        this.replies = this.getReplies(row);
-        this.views = this.getViews(row);
-        this.numberOfPages = this.getNumberOfPages(row);
-        this.lastUpdate = this.getLastUpdate(row);
-        this.hasPoll = this.determinePollState(row);
+
+        if (!alt) {
+            // FIXME: make these work on the alternative topic list views (some might work already)
+            this.threadAttributes = this.getThreadAttributes(row);
+            this.threadStarter = this.getThreadStarter(row);
+            this.latestPoster = this.getLatestPoster(row);
+            this.replies = this.getReplies(row);
+            this.views = this.getViews(row);
+    
+            this.numberOfPages = this.getNumberOfPages(row);
+            this.lastUpdate = this.getLastUpdate(row);
+            this.hasPoll = this.determinePollState(row);
+        }
+    }
+
+    private getThreadId(row: HTMLTableRowElement): number {
+        var link = (row.querySelector('a.topictitle') as HTMLAnchorElement).href;
+        var id = link.match(/viewtopic\.php\?t=([0-9]*)/);
+        if (id) return +(id[1]);
+        return -1;
     }
 
     private getTitle(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row1 span.topictitle a.topictitle') as HTMLAnchorElement).innerText;
+        return (row.querySelector('span.topictitle a.topictitle') as HTMLAnchorElement).innerText;
     }
 
     private getBaseUrl(row: HTMLTableRowElement): string {
