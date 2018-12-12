@@ -206,17 +206,16 @@ export class ColorizeForums implements ExtensionModule {
     }
 
     private tagRows(forum: ForumInfo, index: number): void {
-        let classes = new Array<string>();
+        let row = forum.rowElement;
 
-        classes.push('RUSKItem');
+        row.classList.add('RUSKItem');
         if (forum.isUnread) {
-            classes.push('RUSKUnreadItem');
+            row.classList.add('RUSKUnreadItem');
         }
         if (index % 2 == 0) {
-            classes.push('RUSKEvenRowItem');
+            row.classList.add('RUSKEvenRowItem');
         } else {
-            classes.push('RUSKOddRowItem');
+            row.classList.add('RUSKOddRowItem');
         }
-        forum.rowElement.className = classes.join(" ");
     }
 }

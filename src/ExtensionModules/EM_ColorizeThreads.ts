@@ -240,25 +240,24 @@ export class ColorizeThreads implements ExtensionModule {
     }
 
     private tagRows(thread: ThreadInfo, index: number): void {
-        let classes = new Array<string>();
+        let row = thread.rowElement;
 
-        classes.push('RUSKItem');
+        row.classList.add('RUSKItem');
         if (thread.isUnread) {
-            classes.push('RUSKUnreadItem');
+            row.classList.add('RUSKUnreadItem');
         }
         if (thread.threadType == ThreadType.Announcement) {
-            classes.push('RUSKAnnouncementItem');
+            row.classList.add('RUSKAnnouncementItem');
         } else if (thread.threadType == ThreadType.Sticky) {
-            classes.push('RUSKStickyItem');
+            row.classList.add('RUSKStickyItem');
         }
         if (thread.isLocked) {
-            classes.push('RUSKLockedItem');
+            row.classList.add('RUSKLockedItem');
         }
         if (index % 2 == 0) {
-            classes.push('RUSKEvenRowItem');
+            row.classList.add('RUSKEvenRowItem');
         } else {
-            classes.push('RUSKOddRowItem');
+            row.classList.add('RUSKOddRowItem');
         }
-        thread.rowElement.className = classes.join(" ");
     }
 }
