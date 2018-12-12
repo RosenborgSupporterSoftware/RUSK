@@ -29,3 +29,7 @@ div.pmalert {
     border-radius: 5px;
     font-weight: bold;
 }
+
+.RUSKHiddenItem {
+    display: none;
+}
