@@ -88,9 +88,9 @@ export class TopicFilter implements ExtensionModule {
             img.width = 12;
             img.insertAdjacentHTML('beforebegin',
                 '<a class="nav" id="' + thread.threadid + 'green" title="Show">' +
-                '<img src="' + chrome.runtime.getURL("/img/green.png") + '" valign="top" padding="5" width="12" height="12"/></a>' +
+                '<img src="' + chrome.runtime.getURL("/img/green.png") + '" valign="top" width="12" height="12" class="RUSKKillTopicBullet"/></a>' +
                 '<a class="nav" id="' + thread.threadid + 'red" title="Hide">' +
-                '<img src="' + chrome.runtime.getURL("/img/red.png") + '" valign="top" padding="5" width="12" height="12"/></a> ');
+                '<img src="' + chrome.runtime.getURL("/img/red.png") + '" valign="top" width="12" height="12" class="RUSKKillTopicBullet"/></a> ');
             var reda = row.firstElementChild.querySelector('a[id="' + thread.threadid + 'red"]') as HTMLAnchorElement;
             var greena = row.firstElementChild.querySelector('a[id="' + thread.threadid + 'green"]') as HTMLAnchorElement;
             reda.addEventListener('click', function(ev) {

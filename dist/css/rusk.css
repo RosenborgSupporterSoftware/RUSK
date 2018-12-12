@@ -33,3 +33,7 @@ div.pmalert {
 .RUSKHiddenItem {
     display: none;
 }
+
+.RUSKKillTopicBullet {
+    padding-bottom: 3px;
+}
