@@ -72,8 +72,8 @@ export class MediaEmbedder implements ExtensionModule {
                         // console.log("link: " + href);
                         if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // console.log("found: " + href);
-                            var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([a-zA-Z0-9]*)/);
-                            if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]*)/);
+                            var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/?#]*)/);
+                            if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([^\.?#]*)/);
                             if (!match) match = href.match(/https?:\/\/(youtu)\.be\/([^\/?#]*)/);
                             if (match) {
                                 var code = match[2];
