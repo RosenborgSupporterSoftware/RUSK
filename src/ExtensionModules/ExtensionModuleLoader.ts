@@ -15,6 +15,7 @@ import { ColorizePosts } from "./EM_ColorizePosts";
 import { UserFilter } from "./EM_UserFilter";
 import { EnhancePosting } from "./EM_EnhancePosting";
 import { ThreadTitleLinks } from "./EM_ThreadTitleLinks";
+import { MediaEmbedder } from "./EM_MediaEmbedder";
 
 /**
  * ExtensionModuleLoader
@@ -33,6 +34,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizeThreads(),
         new ColorizeForums(),
         new ColorizePosts(),
+        new MediaEmbedder(),
         new ImageCache(),
         new InboxAlert(),
         new HighlightColor(),
