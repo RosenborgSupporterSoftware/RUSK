@@ -90,7 +90,7 @@ export class MediaEmbedder implements ExtensionModule {
                             if (match) {
                                 var code = match[1];
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
-                                    '<iframe id="tweet_' + code + '" border=0 frameborder=0 width=460 src="https://twitframe.com/show?url=' + encodeURI(href) + '"></iframe>');
+                                    '<iframe id="tweet_' + code + '" border=0 frameborder=0 height=250 width=460 src="https://twitframe.com/show?url=' + encodeURI(href) + '"></iframe>');
                                 anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
                             }
                         }
@@ -106,14 +106,26 @@ export class MediaEmbedder implements ExtensionModule {
             tweetframe.addEventListener('load', function() {
                 tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
                                                      "https://twitframe.com");
+                var origheight = tweetframe.style.height;
+                var interval = setInterval(function() {
+                    if (tweetframe.style.height == origheight) {
+                        tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
+                                                               "https://twitframe.com");
+                    }
+                }, 500);
+                tweetframe.setAttribute("data-interval", "" + interval);
             });
         });
 
         window.addEventListener("message", function(event) {
             if (event.origin != "https://twitframe.com") return;
             if (event.data && event.data.height && event.data.element.match(/^tweet_/)) {
+                var height = parseInt(event.data.height);
+                if (height == 139) return;
                 var iframe = document.getElementById(event.data.element) as HTMLIFrameElement;
-                iframe.style.height = parseInt(event.data.height) + "px";
+                var interval = iframe.getAttribute("data-interval");
+                if (interval) { clearInterval(parseInt(interval)); }
+                iframe.style.height = height + "px";
             }
         });
     };
