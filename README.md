@@ -6,17 +6,24 @@ Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til R
 
 ## Features
 
+- Gjør linker til Youtube-videoer om til videoavspillere i foruminnlegg.
+- Gjør linker til tweets om til tweetene i foruminnlegg.
+- Lar deg filtrere bort brukere fra forumet eller fra enkelttråder.
+- Lar deg filtrere bort uinteressante forumtråder.
 - Fjerner redundante deler av side-titlene så en kompakt rekke med tabs lettere identifiseres.
-- Endrer highlight-farge ved forum-søk.
+- Endrer tekst-highlight-farge ved forum-søk.
 - Gir mer tydelig varsel om man har uleste private meldinger.
 - Legger på ukedag i kampoversiktene.
 - Fargelegger resultatene (seier/uavgjort/tap) i kampoversiktene.
 - Tracker og varsler om brukere endrer brukernavn.
-- Optimaliserer browserens sidelasting.
-- Legger til en rute for brukertips.
+- Optimaliserer browserens side-innlasting.
+- Endrer forumtråd-linker så de sender deg til de nye innleggene istedenfor starten av tråden.
+- Farvelegger de forumpostene du ikke har lest før med egen bakgrunnsfarve.
 - På sider hvor man oppretter eller redigerer innlegg/tråder vil tekstboksen vokse i takt med innholdet.
 - Man kan trykke hurtigtast `Ctrl-Enter` for å legge inn innlegg uten å klikke med mus e.l.
+- Forumlister og diskusjonstråder kan navigeres med tastaturet.
 - Feltene man vanligvis ønsker å starte i blir fokusert på sider hvor man legger inn innlegg.
+- Legger til en rute for brukertips.
 
 ## Viktige punkter for å bruke/utvikle utvidelsen
 
