@@ -84,13 +84,14 @@ export class MediaEmbedder implements ExtensionModule {
                                 anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
                             }
                         }
-                        else if (this.embedTwitter && href.match(/twitter\.com\/.*status\/([0-9]*)/i)) {
+                        else if (this.embedTwitter && href.match(/https?:\/\/twitter\.com\/[^\/]*\/status\/([0-9]*).*/i)) {
                             // console.log("found: " + href);
-                            var match = href.match(/twitter\.com\/.*\/status\/([0-9]*)/i);
+                            var match = href.match(/https?:\/\/twitter\.com\/([^\/]*)\/status\/([0-9]*).*/i);
                             if (match) {
-                                var code = match[1];
+                                var account = match[1];
+                                var code = match[2];
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
-                                    '<iframe id="tweet_' + code + '" border=0 frameborder=0 height=250 width=460 src="https://twitframe.com/show?url=' + encodeURI(href) + '"></iframe>');
+                                    '<iframe id="tweet_' + code + '" border=0 frameborder=0 height=250 width=460 src="https://twitframe.com/show?url=' + encodeURI("https://twitter.com/" + account + "/status/" + code) + '"></iframe>');
                                 anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
                             }
                         }
