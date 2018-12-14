@@ -79,8 +79,13 @@ export class MediaEmbedder implements ExtensionModule {
                 try {
                     if (anchor.parentElement.tagName.match(/SPAN/i) && anchor.parentElement.classList.contains("postbody")) {
                         var href: string = anchor.href;
+                        var text: string = anchor.textContent;
                         // console.log("link: " + href);
-                        if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
+                        if (href.substring(0, 8) != text.substring(0, 8)) {
+                            // nada
+                            console.log("skipping link " + href);
+                        }
+                        else if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // FIXME: support t=NNN for time-start
                             // console.log("found: " + href);
                             var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/\?#]*)/);
