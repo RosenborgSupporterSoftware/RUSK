@@ -39,6 +39,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new InboxAlert(),
         new HighlightColor(),
         new UsernameTracker(),
+        new SignatureFilter(),
         new Empowerment(),
         new UserFilter(),
         new EnhancePosting(),
