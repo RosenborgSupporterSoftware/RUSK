@@ -45,6 +45,14 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithDefaultValue(true)
                     .AsSharedSetting()
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("EmbedStreamable")
+                    .WithLabel("Finner streamable-linker og legger til videoavspiller")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+                    .AsSharedSetting()
+            )
             .Build();
 
     posts: Array<PostInfo>;
@@ -56,9 +64,9 @@ export class MediaEmbedder implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.embedYoutube = true;
-        this.embedTwitter = true;
-        this.embedStreamable = true;
+        this.embedYoutube = this.getConfigBool("EmbedYoutube");
+        this.embedTwitter = this.getConfigBool("EmbedTwitter");
+        this.embedStreamable = this.getConfigBool("EmbedStreamable");
     }
 
     preprocess = () => {
@@ -71,7 +79,7 @@ export class MediaEmbedder implements ExtensionModule {
                 try {
                     if (anchor.parentElement.tagName.match(/SPAN/i) && anchor.parentElement.classList.contains("postbody")) {
                         var href: string = anchor.href;
-                        console.log("link: " + href);
+                        // console.log("link: " + href);
                         if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // console.log("found: " + href);
                             var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/?#]*)/);
@@ -98,7 +106,7 @@ export class MediaEmbedder implements ExtensionModule {
                             }
                         }
                         else if (this.embedStreamable && href.match(/https?:\/\/streamable\.com\/.*$/i)) {
-                            console.log("found: " + href);
+                            // console.log("found: " + href);
                             var match = href.match(/https?:\/\/streamable\.com\/([^\/]*)/i);
                             if (match) {
                                 var code = match[1];
@@ -146,5 +154,19 @@ export class MediaEmbedder implements ExtensionModule {
                 iframe.style.height = height + "px";
             }
         });
-    };
+    }
+
+    private getConfigBool(setting: string): boolean {
+        try {
+            for (let i = 0; i < this.cfg.settings.length; i++) {
+                if (this.cfg.settings[i].setting == setting) {
+                    return this.cfg.settings[i].value as boolean;
+                }
+            }
+            console.log("did not find setting '" + setting);
+        } catch (e) {
+            console.error("getConfigItem exception: " + e.message);
+        }
+    }
+
 };
