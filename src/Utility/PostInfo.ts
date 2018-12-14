@@ -1,10 +1,11 @@
 import { ContextMenu } from "./ContextMenu";
+import { IRUSKPageItem } from "../PageHandler/IRUSKPageItem";
 
 /**
  * PostInfo.ts - utility class used to extract information from individual posts
  */
 
-export class PostInfo {
+export class PostInfo implements IRUSKPageItem {
     /**
     * Extracts PostInfo objects from the passed-in document
     * @param {Document} document - The document (DOM) to query for post objects, substitutable for testing purposes
@@ -19,6 +20,20 @@ export class PostInfo {
         });
         return posts;
     }
+
+    // IRUSKPageItem start
+
+    get itemId(): number {
+        return this.postid;
+    }
+
+    get url(): string {
+        return this.baseUrl;
+    }
+
+    isHidden: boolean;
+
+    // IRUSKPageItem end
 
     /** The row element from the DOM */
     readonly rowElement: HTMLTableRowElement;

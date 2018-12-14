@@ -132,7 +132,7 @@ function executeModules(modules: Array<ExtensionModule>, context: PageContext) {
 function filterModules(modules: Array<ExtensionModule>, context: PageContext): Array<ExtensionModule> {
     let filteredModules = new Array<ExtensionModule>();
     for (let i = 0; i < modules.length; i++) {
-        if (PageTypeClassifier.ShouldRunOnPage(modules[i], context.pageType)) {
+        if (PageTypeClassifier.ShouldRunOnPage(modules[i], context.PageType)) {
             filteredModules.push(modules[i]);
         }
     }

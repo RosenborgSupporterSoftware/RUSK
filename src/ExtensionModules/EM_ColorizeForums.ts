@@ -90,7 +90,7 @@ export class ColorizeForums implements ExtensionModule {
     }
 
     execute = (context: PageContext) => {
-        this.allForums = ForumInfo.GetForumsFromDocument(document);
+        this.allForums = context.RUSKPage.items as Array<ForumInfo>;
 
         this.allForums.forEach((thread, index) => {
             this.tagRows(thread, index);

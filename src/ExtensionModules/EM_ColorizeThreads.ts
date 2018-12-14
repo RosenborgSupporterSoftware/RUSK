@@ -95,7 +95,7 @@ export class ColorizeThreads implements ExtensionModule {
     }
 
     execute = (context: PageContext) => {
-        this.allThreads = ThreadInfo.GetThreadsFromDocument(document);
+        this.allThreads = context.RUSKPage.items as Array<ThreadInfo>;
 
         this.allThreads.forEach((thread, index) => {
             this.tagRows(thread, index);

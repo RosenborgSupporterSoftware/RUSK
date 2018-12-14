@@ -1,12 +1,13 @@
 import { ThreadType } from "../Context/ThreadType";
 import { ThreadAttributes } from "../Context/ThreadAttributes";
 import { ContextMenu } from "./ContextMenu";
+import { IRUSKPageItem } from "../PageHandler/IRUSKPageItem";
 
 /**
  * ThreadInfo - utility class used to extract information from a thread list
  */
 
-export class ThreadInfo {
+export class ThreadInfo implements IRUSKPageItem {
 
     /**
      * Extracts ThreadInfo objects from the passed-in document
@@ -25,6 +26,20 @@ export class ThreadInfo {
         }
         return threads;
     }
+
+    // IRUSKPageItem start
+
+    get itemId(): number {
+        return this.threadid;
+    }
+
+    get url(): string {
+        return this.latestUrl;  // FIXME: Vi burde ha en property som er link til "den fornuftige" siden å gå til når vi tracker uleste
+    }
+
+    isHidden: boolean;
+
+    // IRUSKPageItem end
 
     /** The row element from the DOM */
     readonly rowElement: HTMLTableRowElement;

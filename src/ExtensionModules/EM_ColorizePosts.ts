@@ -92,7 +92,7 @@ export class ColorizePosts implements ExtensionModule {
     }
 
     execute = (context: PageContext) => {
-        this.allPosts = PostInfo.GetPostsFromDocument(document);
+        this.allPosts = context.RUSKPage.items as Array<PostInfo>;
         this.allPosts.forEach((post, index) => {
             this.tagRows(post, index);
         });

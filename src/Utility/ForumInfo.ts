@@ -1,8 +1,14 @@
+import { IRUSKPageItem } from "../PageHandler/IRUSKPageItem";
+
 /**
  * ForumInfo - utility class used to extract information from a forum list
  */
 
-export class ForumInfo {
+export class ForumInfo implements IRUSKPageItem {
+
+    get url(): string {
+        return this.baseUrl;
+    }
 
     /**
      * Extracts ForumInfo objects from the passed-in document
@@ -19,6 +25,12 @@ export class ForumInfo {
 
     /** The row element from the DOM */
     readonly rowElement: HTMLTableRowElement;
+
+    /** The ID of the forum */
+    readonly itemId: number;
+
+    /** Gets a value that indicates if the item should be hidden or not */
+    isHidden: boolean;
 
     /** The title of the forum */
     readonly title: string;

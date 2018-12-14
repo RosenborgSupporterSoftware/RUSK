@@ -97,7 +97,7 @@ export class EnhancePosting implements ExtensionModule {
     execute = (context: PageContext) => {
         this.setPostButtonState();
         this.autoSize();
-        this.setFocus(context.pageType == RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC);
+        this.setFocus(context.PageType == RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC);
         this.setupHotkeys();
     };
 
