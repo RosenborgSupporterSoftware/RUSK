@@ -52,11 +52,13 @@ export class MediaEmbedder implements ExtensionModule {
     // configs
     embedYoutube: boolean;
     embedTwitter: boolean;
+    embedStreamable: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
         this.embedYoutube = true;
         this.embedTwitter = true;
+        this.embedStreamable = true;
     }
 
     preprocess = () => {
@@ -69,7 +71,7 @@ export class MediaEmbedder implements ExtensionModule {
                 try {
                     if (anchor.parentElement.tagName.match(/SPAN/i) && anchor.parentElement.classList.contains("postbody")) {
                         var href: string = anchor.href;
-                        // console.log("link: " + href);
+                        console.log("link: " + href);
                         if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // console.log("found: " + href);
                             var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/?#]*)/);
@@ -93,6 +95,21 @@ export class MediaEmbedder implements ExtensionModule {
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
                                     '<iframe id="tweet_' + code + '" border=0 frameborder=0 height=250 width=460 src="https://twitframe.com/show?url=' + encodeURI("https://twitter.com/" + account + "/status/" + code) + '"></iframe>');
                                 anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
+                            }
+                        }
+                        else if (this.embedStreamable && href.match(/https?:\/\/streamable\.com\/.*$/i)) {
+                            console.log("found: " + href);
+                            var match = href.match(/https?:\/\/streamable\.com\/([^\/]*)/i);
+                            if (match) {
+                                var code = match[1];
+                                /* - kept around in case in case we want to change how we embed this media type
+                                var oembedcodeurl = 'https://api.streamable.com/oembed?url=https://streamable.com/' + code;
+                                fetch(oembedcodeurl).then(function(data) {
+                                    console.log("FETCHED DATA: " + JSON.stringify(data));
+                                }.bind(this)); */
+                                anchor.insertAdjacentHTML('afterend', '<br>' +
+                                    '<embed src="https://streamable.com/o/' + code + '" frameborder="0" allowfullscreen="1" width="460" height="280"></embed>');
+                                //anchor.classList.add("RUSKHiddenItem"); // since fullscreen isn't enabled, keep link
                             }
                         }
                     }
