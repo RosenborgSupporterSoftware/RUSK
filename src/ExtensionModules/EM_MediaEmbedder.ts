@@ -81,13 +81,14 @@ export class MediaEmbedder implements ExtensionModule {
                         var href: string = anchor.href;
                         // console.log("link: " + href);
                         if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
+                            // FIXME: support t=NNN for time-start
                             // console.log("found: " + href);
-                            var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/?#]*)/);
-                            if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([^\.?#]*)/);
-                            if (!match) match = href.match(/https?:\/\/(youtu)\.be\/([^\/?#]*)/);
+                            var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/\?#]*)/);
+                            if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([^\.\?#]*)/);
+                            if (!match) match = href.match(/https?:\/\/(youtu)\.be\/([^\/\?#]*)/);
                             if (match) {
                                 var code = match[2];
-                                // console.log("youtube code: " + code);
+                                //console.log("youtube code: " + code);
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
                                     '<object width="460" height="270" data="https://www.youtube.com/embed/' + code +
                                              '" frameborder="0" allow="encrypted-media"></object>');

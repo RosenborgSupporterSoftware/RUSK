@@ -8,6 +8,7 @@ Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til R
 
 - Gjør linker til Youtube-videoer om til videoavspillere i foruminnlegg.
 - Gjør linker til tweets om til tweetene i foruminnlegg.
+- Legger til videoavspiller der det linkes til streamable.
 - Lar deg filtrere bort brukere fra forumet eller fra enkelttråder.
 - Lar deg filtrere bort uinteressante forumtråder.
 - Fjerner redundante deler av side-titlene så en kompakt rekke med tabs lettere identifiseres.
