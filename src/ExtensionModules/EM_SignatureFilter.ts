@@ -71,7 +71,7 @@ export class SignatureFilter implements ExtensionModule {
                 var index = sub.textContent.indexOf("_________________");
                 if (index != -1) {
                     var remove = false;
-                    sub.childNodes.forEach(function (node, key, parent) {
+                    sub.childNodes.forEach(function(node, key, parent) {
                         try {
                          var n = node as HTMLElement;
                          // console.log(n.tagName);
@@ -81,7 +81,7 @@ export class SignatureFilter implements ExtensionModule {
                              var belement = ((node as Element).closest("table").closest("tr") as HTMLTableRowElement).firstElementChild;
                              var username = belement.querySelector("b").textContent;
                              var postid = belement.querySelector("a").getAttribute("name");
-                             console.log("we have signature in post " + postid);
+                             // console.log("we have signature in post " + postid);
                              var trelement = belement.nextElementSibling as Element;
                              trelement = belement.closest("tr").nextElementSibling as Element;
                              var link = trelement.querySelectorAll('a[href*="profile.php"').item(0) as Element;
@@ -105,7 +105,7 @@ export class SignatureFilter implements ExtensionModule {
                              n.childNodes.forEach(function(node, idx, children) {
                                  try {
                                      var nod = node as HTMLElement;
-                                     if (nod.classList.contains("RUSKSignatureDelimiter")) {
+                                     if (nod && node.classList && nod.classList.contains("RUSKSignatureDelimiter")) {
                                          hide = true;
                                          //nod.classList.add("RUSKHiddenItem");
                                      }
