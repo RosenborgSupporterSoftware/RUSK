@@ -23,8 +23,9 @@ Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til R
 - Endrer forumtråd-linker så de sender deg til de nye innleggene istedenfor starten av tråden.
 - Farvelegger de forumpostene du ikke har lest før med egen bakgrunnsfarve.
 - På sider hvor man oppretter eller redigerer innlegg/tråder vil tekstboksen vokse i takt med innholdet.
+- Optimaliserer poll-innlegging, og lar deg lagre 3 poll-oppsett for gjenbruk senere.
 - Man kan trykke hurtigtast `Ctrl-Enter` for å legge inn innlegg uten å klikke med mus e.l.
-- Forumlister og diskusjonstråder kan navigeres med tastaturet.
+- Forumlister og diskusjonstråder kan navigeres med tastaturet. (hjkl + (r)eply, (q)uote, ++)
 - Feltene man vanligvis ønsker å starte i blir fokusert på sider hvor man legger inn innlegg.
 - Legger til en rute for brukertips.
 
