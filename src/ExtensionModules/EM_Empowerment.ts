@@ -67,7 +67,7 @@ export class Empowerment implements ExtensionModule {
                 tablecell.insertAdjacentHTML("afterend", html);
             }
         }
-    };
+    }
 };
 
 

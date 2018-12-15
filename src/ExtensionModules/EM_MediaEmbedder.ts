@@ -11,6 +11,8 @@ import { SettingType } from "../Configuration/SettingType";
 
  // http://www.rbkweb.no/forum/viewtopic.php?t=2456&start=2525
 
+ // TODO: make sure links we embed are not in the signature part of the post
+
 export class MediaEmbedder implements ExtensionModule {
     readonly name: string = "MediaEmbedder";
     cfg: ModuleConfiguration;

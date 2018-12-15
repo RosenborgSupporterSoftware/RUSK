@@ -131,14 +131,14 @@ export class ImageCache implements ExtensionModule {
                             filename = language.substring(5) + "/" + filename;
                         else if (language == "smiles")
                             filename = "smiles/" + filename;
-                        if (cached.findIndex(function (val, idex, arr) { return filename == val; }) != -1) {
+                        if (cached.indexOf(filename) != -1) {
                             img.src = chrome.runtime.getURL("img/" + filename);
                         }
                     }
                 }
             }
         }
-    };
+    }
 };
 
 
