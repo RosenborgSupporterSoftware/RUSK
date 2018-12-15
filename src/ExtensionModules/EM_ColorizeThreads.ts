@@ -216,7 +216,9 @@ export class ColorizeThreads implements ExtensionModule {
 
         newItem.rowElement.classList.add("RUSKSelectedItem");
         this.currentlySelectedItem = newItem;
-        newItem.rowElement.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
+        //newItem.rowElement.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
+        let obj = newItem.rowElement as any;
+        obj.scrollIntoViewIfNeeded();
     }
 
     private hydrateTemplate(template: string): string {

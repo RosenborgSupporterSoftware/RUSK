@@ -182,7 +182,9 @@ export class ColorizeForums implements ExtensionModule {
 
         newItem.rowElement.classList.add("RUSKSelectedItem");
         this.currentlySelectedItem = newItem;
-        newItem.rowElement.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
+        let obj = newItem.rowElement as any;
+        obj.scrollIntoViewIfNeeded();
+        //newItem.rowElement.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
     }
 
     private hydrateTemplate(template: string): string {

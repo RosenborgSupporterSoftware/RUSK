@@ -251,9 +251,8 @@ export class ColorizePosts implements ExtensionModule {
 
         newItem.rowElement.classList.add("RUSKSelectedItem");
         this.currentlySelectedItem = newItem;
-        (newItem.rowElement.previousElementSibling as HTMLTableRowElement).scrollIntoView();
-        (newItem.rowElement.nextElementSibling as HTMLTableRowElement).scrollIntoView();
-        newItem.rowElement.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
+        let obj = newItem.rowElement as any;    // Typescript disagrees about scrollIntoViewIfNeeded existing on HTML elements
+        obj.scrollIntoViewIfNeeded();
     }
 
     private hydrateTemplate(template: string): string {
