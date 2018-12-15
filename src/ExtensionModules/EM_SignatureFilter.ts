@@ -40,12 +40,9 @@ export class SignatureFilter implements ExtensionModule {
             )
             .Build();
 
-    posts: Array<PostInfo>;
+    //posts: Array<PostInfo>;
 
     hideSignatures: boolean;
-
-    disable: string;
-    enable: string;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
@@ -53,16 +50,13 @@ export class SignatureFilter implements ExtensionModule {
     }
 
     preprocess = () => {
-        this.posts = PostInfo.GetPostsFromDocument(document);
-        this.disable = chrome.runtime.getURL("/img/sub.png");
-        this.enable = chrome.runtime.getURL("/img/add.png");
+        //this.posts = PostInfo.GetPostsFromDocument(document);
     }
 
     execute = () => {
-        //chrome.runtime.sendMessage({logMessage: "SignatureFilter"});
-        this.posts.forEach(function(post, idx, posts) {
-
-        }.bind(this));
+        // FIXME: rewrite to use this.posts
+        //this.posts.forEach(function(post, idx, posts) {
+        //}.bind(this));
 
         var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
         elts.forEach(function (elt, key, parent) {
@@ -74,14 +68,11 @@ export class SignatureFilter implements ExtensionModule {
                     sub.childNodes.forEach(function(node, key, parent) {
                         try {
                          var n = node as HTMLElement;
-                         // console.log(n.tagName);
                          var idx = n.outerHTML.indexOf("_________________");
-                         if (idx != -1) {
-                             // we have a .signature
+                         if (idx != -1) { // we have a .signature
                              var belement = ((node as Element).closest("table").closest("tr") as HTMLTableRowElement).firstElementChild;
                              var username = belement.querySelector("b").textContent;
                              var postid = belement.querySelector("a").getAttribute("name");
-                             // console.log("we have signature in post " + postid);
                              var trelement = belement.nextElementSibling as Element;
                              trelement = belement.closest("tr").nextElementSibling as Element;
                              var link = trelement.querySelectorAll('a[href*="profile.php"').item(0) as Element;
@@ -92,22 +83,17 @@ export class SignatureFilter implements ExtensionModule {
                                  signature = '<span class="RUSKSignatureBegin RUSKHiddenItem postbody">' + n.outerHTML.substring(idx + 17);
                              }
                              var body = n.outerHTML.substring(0, idx) + '</span>';
-                             //var red = chrome.runtime.getURL("/img/red.png");
                              var delimiter = '<span class="RUSKSignatureDelimiter postbody">' +
                                  '<br>' +
                                  '________________' +
-                                 '<br>' +
                                  '</span>';
                              n.outerHTML = body + delimiter + signature;
-                             //console.log("body: "+ body);
-                             //console.log("signature: " + signature);
                              var hide = false;
                              n.childNodes.forEach(function(node, idx, children) {
                                  try {
                                      var nod = node as HTMLElement;
                                      if (nod && node.classList && nod.classList.contains("RUSKSignatureDelimiter")) {
                                          hide = true;
-                                         //nod.classList.add("RUSKHiddenItem");
                                      }
                                      else if (hide == true) {
                                          nod.classList.add("RUSKHiddenItem");
