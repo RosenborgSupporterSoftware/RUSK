@@ -131,8 +131,8 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC;
         if (query.match(/mode=vote/))
             return RBKwebPageType.RBKweb_FORUM_VOTEONTOPIC;
-        if (query == "")
-            return RBKwebPageType.RBKweb_FORUM_POSTINGLANDINGPAGE;
+        if (query == "") // after pressing preview
+            return RBKwebPageType.RBKweb_FORUM_EDITPOST;
 
         console.error('UrlParser could not parse forum posting url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
