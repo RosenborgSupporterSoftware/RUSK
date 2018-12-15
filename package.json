@@ -1,6 +1,6 @@
 {
   "name": "rbkweb-chrome-ext",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha",
   "description": "Utvidelse som samler opp en rekke forbedringer til RBKweb",
   "main": "index.js",
   "scripts": {

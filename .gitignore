@@ -4,4 +4,7 @@ node_modules/
 dist/js
 tmp/
 
+# Area where zip/crx files should eventually be put when generated
+publish/
+
 package-lock.json
