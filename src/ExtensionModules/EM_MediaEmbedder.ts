@@ -53,6 +53,14 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithDefaultValue(true)
                     .AsSharedSetting()
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("EmbedInstagram")
+                    .WithLabel("Gjør om Instagram-linker til Instagram-poster")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+                    .AsSharedSetting()
+            )
             .Build();
 
     posts: Array<PostInfo>;
@@ -61,12 +69,14 @@ export class MediaEmbedder implements ExtensionModule {
     embedYoutube: boolean;
     embedTwitter: boolean;
     embedStreamable: boolean;
+    embedInstagram: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
         this.embedYoutube = this.getConfigBool("EmbedYoutube");
         this.embedTwitter = this.getConfigBool("EmbedTwitter");
         this.embedStreamable = this.getConfigBool("EmbedStreamable");
+        this.embedInstagram = this.getConfigBool("EmbedInstagram");
     }
 
     preprocess = () => {
@@ -83,7 +93,7 @@ export class MediaEmbedder implements ExtensionModule {
                         // console.log("link: " + href);
                         if (href.substring(0, 8) != text.substring(0, 8)) {
                             // nada
-                            console.log("skipping link " + href);
+                            // console.log("skipping link " + href);
                         }
                         else if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // FIXME: support t=NNN for time-start
@@ -126,6 +136,25 @@ export class MediaEmbedder implements ExtensionModule {
                                 //anchor.classList.add("RUSKHiddenItem"); // since fullscreen isn't enabled, keep link
                             }
                         }
+                        else if (this.embedInstagram &&
+                                 (href.match(/https?:\/\/(www\.)?instagram\.com\/.*$/i) || 
+                                  href.match(/https?:\/\/instagr\.am\/p.*/))) {
+                            //console.log("found instagram: " + href);
+                            var match = href.match(/https?:\/\/(www\.)?instagram\.com\/p\/([^\/\?#]*).*$/i);
+                            if (!match) match = href.match(/https?:\/\/(instagr\.am)\/p\/([^\/\?#]*).*$/i);
+                            if (match) {
+                                var code = match[2];
+                                var oembedcodeurl = 'https://api.instagram.com/oembed/?' +
+                                    'url=https://www.instagram.com/p/' + code + '&maxwidth=460&omitscript';
+                                fetch(oembedcodeurl, { mode: 'cors', redirect: 'follow' })
+                                    .then(function(response: Response) { return response.json(); }.bind(this))
+                                    .then(function(data) {
+                                         anchor.insertAdjacentHTML('afterend', '<br>' + data.html + '<br>');
+                                         anchor.classList.add("RUSKHiddenItem");
+                                         this.activateInstagrams();
+                                     }.bind(this));
+                            }
+                        }
                     }
                 } catch (e) {
                     console.error("execute exception: " + e.message);
@@ -160,6 +189,22 @@ export class MediaEmbedder implements ExtensionModule {
                 iframe.style.height = height + "px";
             }
         });
+    }
+
+    private activateInstagrams(): void {
+        (function(d, script) {
+            script = d.createElement('script');
+            script.type = 'text/javascript';
+            script.async = true;
+            script.src = 'https://platform.instagram.com/en_US/embeds.js';
+            script.onload = function() {
+                // remote script has loaded
+                if (typeof window['instgrm'] !== "undefined") {
+                    window['instgrm'].Embeds.process();
+                }
+            };
+            d.getElementsByTagName('head')[0].appendChild(script);
+        }(document));
     }
 
     private getConfigBool(setting: string): boolean {
