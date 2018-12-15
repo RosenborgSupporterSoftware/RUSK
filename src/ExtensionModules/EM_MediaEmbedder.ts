@@ -37,7 +37,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithLabel("Gjør om youtube-linker til youtube-playere")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
-                    .AsSharedSetting()
             )
             .WithConfigOption(opt =>
                 opt
@@ -45,7 +44,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithLabel("Gjør om tweet-linker til tweets")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
-                    .AsSharedSetting()
             )
             .WithConfigOption(opt =>
                 opt
@@ -53,7 +51,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithLabel("Finner streamable-linker og legger til videoavspiller")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
-                    .AsSharedSetting()
             )
             .WithConfigOption(opt =>
                 opt
@@ -61,7 +58,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithLabel("Gjør om Instagram-linker til Instagram-poster")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
-                    .AsSharedSetting()
             )
             .WithConfigOption(opt =>
                 opt
@@ -69,7 +65,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithLabel("Ha med caption på Instagram-poster")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
-                    .AsSharedSetting()
             )
             .WithConfigOption(opt =>
                 opt
@@ -77,7 +72,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithLabel("Vis kun bilde fra Instagram-poster")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(false)
-                    .AsSharedSetting()
             )
             .Build();
 
