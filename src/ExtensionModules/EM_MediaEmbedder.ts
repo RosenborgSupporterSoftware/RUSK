@@ -63,6 +63,22 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithDefaultValue(true)
                     .AsSharedSetting()
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("InstagramCaption")
+                    .WithLabel("Ha med caption på Instagram-poster")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+                    .AsSharedSetting()
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("InstagramOnlyPicture")
+                    .WithLabel("Vis kun bilde fra Instagram-poster")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(false)
+                    .AsSharedSetting()
+            )
             .Build();
 
     posts: Array<PostInfo>;
@@ -72,6 +88,8 @@ export class MediaEmbedder implements ExtensionModule {
     embedTwitter: boolean;
     embedStreamable: boolean;
     embedInstagram: boolean;
+    instagramCaption: boolean;
+    instagramOnlyPicture: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
@@ -79,6 +97,8 @@ export class MediaEmbedder implements ExtensionModule {
         this.embedTwitter = this.getConfigBool("EmbedTwitter");
         this.embedStreamable = this.getConfigBool("EmbedStreamable");
         this.embedInstagram = this.getConfigBool("EmbedInstagram");
+        this.instagramCaption = this.getConfigBool("InstagramCaption");
+        this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
     }
 
     preprocess = () => {
@@ -146,15 +166,21 @@ export class MediaEmbedder implements ExtensionModule {
                             if (!match) match = href.match(/https?:\/\/(instagr\.am)\/p\/([^\/\?#]*).*$/i);
                             if (match) {
                                 var code = match[2];
-                                var oembedcodeurl = 'https://api.instagram.com/oembed/?' +
-                                    'url=https://www.instagram.com/p/' + code + '&maxwidth=460&omitscript';
-                                fetch(oembedcodeurl, { mode: 'cors', redirect: 'follow' })
-                                    .then(function(response: Response) { return response.json(); }.bind(this))
-                                    .then(function(data) {
-                                         anchor.insertAdjacentHTML('afterend', '<br>' + data.html + '<br>');
-                                         anchor.classList.add("RUSKHiddenItem");
-                                         this.activateInstagrams();
-                                     }.bind(this));
+                                if (this.instagramOnlyPicture) {
+                                    anchor.insertAdjacentHTML('afterend', '<br><img src="https://www.instagram.com/p/' + code + '/media/?size=l" width="460"/><br>');
+                                } else {
+                                    var oembedcodeurl = 'https://api.instagram.com/oembed/?' +
+                                        'url=https://www.instagram.com/p/' + code + '&maxwidth=460&omitscript=true';
+                                    if (!this.instagramCaption)
+                                        oembedcodeurl = oembedcodeurl + '&hidecaption=true';
+                                    fetch(oembedcodeurl, { mode: 'cors', redirect: 'follow' })
+                                        .then(function(response: Response) { return response.json(); }.bind(this))
+                                        .then(function(data) {
+                                             anchor.insertAdjacentHTML('afterend', '<br>' + data.html + '<br>');
+                                             anchor.classList.add("RUSKHiddenItem");
+                                             this.activateInstagrams();
+                                         }.bind(this));
+                                }
                             }
                         }
                     }
