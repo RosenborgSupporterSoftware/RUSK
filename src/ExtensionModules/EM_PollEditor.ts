@@ -17,6 +17,7 @@ export class PollEditor implements ExtensionModule {
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC,
+        RBKwebPageType.RBKweb_FORUM_EDITPOST,
     ];
 
     runBefore: Array<string> = ['late-extmod'];
@@ -64,13 +65,11 @@ export class PollEditor implements ExtensionModule {
         try {
             // FIXME: check if poll is already filled in and we've pressed preview
 
-            // transform Add a poll to button, with trigger to show poll
             document.body.querySelectorAll('tr th.thHead').forEach(function(elt: HTMLTableHeaderCellElement, key, parent) {
                 if (elt.textContent == "Add a Poll") { // også for norsk språk?
                     this.addPollHeading = elt;
                     this.addPollHeadingRow = elt.closest('tr') as HTMLTableRowElement;
                     this.pageBodyTable = elt.closest('table');
-                    elt.innerHTML = '<a id="RUSKAddPoll" class="trollbutton">Add a Poll</a>';
                 }
             }.bind(this));
 
@@ -78,26 +77,36 @@ export class PollEditor implements ExtensionModule {
 
             this.injectSavedPolls();
 
-            // initially hide poll
-            var elt = this.addPollHeadingRow;
-            var next = elt.nextElementSibling as HTMLTableRowElement;
-            while (next) {
-                if (!(next.firstElementChild as HTMLTableCellElement).classList.contains('catBottom'))
-                    next.classList.add('RUSKHiddenItem');
-                next = next.nextElementSibling as HTMLTableRowElement;
-            }
+            // check if we are editing a poll already
+            var initialopen = false;
+            this.pageBodyTable.querySelectorAll('input[name*="poll_option_text"]').forEach(
+                function(input: HTMLInputElement, key, parent) {
+                    if (input.value != "") initialopen = true;
+                }.bind(this));
 
-            // add button action to unhide poll
-            var button = this.addPollHeading.querySelector('a') as HTMLAnchorElement;
-            button.addEventListener('click', function(ev) {
-                this.addPollHeading.innerHTML = "Add a Poll";
-                var elt = this.addPollHeadingRow.nextElementSibling as HTMLTableRowElement;
-                while (elt) {
-                    if (elt.classList.contains('RUSKHiddenItem'))
-                        elt.classList.remove('RUSKHiddenItem');
-                    elt = elt.nextElementSibling as HTMLTableRowElement;
+            if (!initialopen) {
+                // initially hide poll
+                var elt = this.addPollHeadingRow;
+                var next = elt.nextElementSibling as HTMLTableRowElement;
+                while (next) {
+                    if (!(next.firstElementChild as HTMLTableCellElement).classList.contains('catBottom'))
+                        next.classList.add('RUSKHiddenItem');
+                    next = next.nextElementSibling as HTMLTableRowElement;
                 }
-            }.bind(this));
+
+                // add button action to unhide poll GUI
+                this.addPollHeading.innerHTML = '<a id="RUSKAddPoll" class="trollbutton">Add a Poll</a>';
+                var button = this.addPollHeading.querySelector('a') as HTMLAnchorElement;
+                button.addEventListener('click', function(ev) {
+                    this.addPollHeading.innerHTML = "Add a Poll";
+                    var elt = this.addPollHeadingRow.nextElementSibling as HTMLTableRowElement;
+                    while (elt) {
+                        if (elt.classList.contains('RUSKHiddenItem'))
+                            elt.classList.remove('RUSKHiddenItem');
+                        elt = elt.nextElementSibling as HTMLTableRowElement;
+                    }
+                }.bind(this));
+            }
 
             // remov all unnecessary form-submit buttons
             function removeInputElement(elt: HTMLInputElement, key, parent) { elt.remove(); };
@@ -108,7 +117,8 @@ export class PollEditor implements ExtensionModule {
             // reconstruct dynamic poll-manip-buttons
             this.pageBodyTable.querySelectorAll('input[name^="poll_option_text"]').forEach(
                 function(input: HTMLInputElement, key, parent) {
-                    input.parentElement.insertAdjacentHTML('beforeend',
+                    input.parentElement.insertAdjacentHTML('afterend',
+                        ' &nbsp;' +
                         ' <a id="quickinsert'+this.counter+'" title="Insert above"><img src="'+this.addURL+'" width="12" valign="middle"/></a>' +
                         ' <a id="quickdel'+this.counter+'" title="Delete"><img src="'+this.subURL+'" width="14" height="14" valign="middle"/></a>');
                     var quickdel = this.pageBodyTable.querySelector('#quickdel'+this.counter) as HTMLAnchorElement;
