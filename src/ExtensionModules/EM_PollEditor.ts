@@ -45,6 +45,8 @@ export class PollEditor implements ExtensionModule {
     subURL: string;
     saveURL: string;
 
+    language: string;
+
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
         var pollscfg = this.getConfigItem("polls");
@@ -61,15 +63,35 @@ export class PollEditor implements ExtensionModule {
     addPollHeading: HTMLTableHeaderCellElement;
     addPollHeadingRow: HTMLTableRowElement;
 
+    tr_no = {
+        "Add a Poll": "Legg til en avstemning",
+        "Insert above": "Legg til alternativ",
+        "Delete": "Slett",
+        "Add option": "Legg til alternativ",
+        "Remember poll": "Lagre oppsett",
+        "Saved polls": "Lagrede avstemninger",
+        "Poll option": "Avstemningens alternativ",
+        "(3 last)": "(3 siste)"
+    }
+
+    tr = {}
+
+    private i18n(text: string): string {
+        if (this.tr[text]) return this.tr[text];
+        return text;
+    }
+
     execute = () => {
         try {
             // FIXME: check if poll is already filled in and we've pressed preview
 
             document.body.querySelectorAll('tr th.thHead').forEach(function(elt: HTMLTableHeaderCellElement, key, parent) {
-                if (elt.textContent == "Add a Poll") { // også for norsk språk?
+                if (elt.textContent == "Add a Poll" || elt.textContent == "Legg til en avstemning") { // også for norsk språk?
                     this.addPollHeading = elt;
                     this.addPollHeadingRow = elt.closest('tr') as HTMLTableRowElement;
                     this.pageBodyTable = elt.closest('table');
+                    this.language = elt.textContent == "Add a Poll" ? "english" : "norwegian";
+                    if (this.language == "norwegian") this.tr = this.tr_no;
                 }
             }.bind(this));
 
@@ -95,10 +117,11 @@ export class PollEditor implements ExtensionModule {
                 }
 
                 // add button action to unhide poll GUI
-                this.addPollHeading.innerHTML = '<a id="RUSKAddPoll" class="trollbutton">Add a Poll</a>';
+                this.addPollHeading.innerHTML = '<a id="RUSKAddPoll" class="trollbutton">'
+                    + this.i18n('Add a Poll') + '</a>';
                 var button = this.addPollHeading.querySelector('a') as HTMLAnchorElement;
                 button.addEventListener('click', function(ev) {
-                    this.addPollHeading.innerHTML = "Add a Poll";
+                    this.addPollHeading.innerHTML = this.i18n('Add a Poll');
                     var elt = this.addPollHeadingRow.nextElementSibling as HTMLTableRowElement;
                     while (elt) {
                         if (elt.classList.contains('RUSKHiddenItem'))
@@ -119,8 +142,9 @@ export class PollEditor implements ExtensionModule {
                 function(input: HTMLInputElement, key, parent) {
                     input.parentElement.insertAdjacentHTML('afterend',
                         ' &nbsp;' +
-                        ' <a id="quickinsert'+this.counter+'" title="Insert above"><img src="'+this.addURL+'" width="12" valign="middle"/></a>' +
-                        ' <a id="quickdel'+this.counter+'" title="Delete"><img src="'+this.subURL+'" width="14" height="14" valign="middle"/></a>');
+                        ' <a id="quickinsert'+this.counter+'" title="' + this.i18n('Insert above') +
+                         '"><img src="'+this.addURL+'" width="12" valign="middle"/></a>' +
+                        ' <a id="quickdel'+this.counter+'" title="' + this.i18n('Delete') + '"><img src="'+this.subURL+'" width="14" height="14" valign="middle"/></a>');
                     var quickdel = this.pageBodyTable.querySelector('#quickdel'+this.counter) as HTMLAnchorElement;
                     var quickinsert = this.pageBodyTable.querySelector('#quickinsert'+this.counter) as HTMLAnchorElement;
                     quickdel.addEventListener('click', function(ev) {
@@ -134,7 +158,8 @@ export class PollEditor implements ExtensionModule {
                     this.counter += 1;
                 }.bind(this));
             var addoption = this.pageBodyTable.querySelector('input[name="add_poll_option_text"]') as HTMLInputElement;
-            addoption.parentElement.insertAdjacentHTML('afterend', ' &nbsp; <a id="quickadd" title="Add option"><img src="'+this.addURL+'" width="12" valign="middle"/></a>');
+            addoption.parentElement.insertAdjacentHTML('afterend', ' &nbsp; <a id="quickadd" title="' +
+                 this.i18n('Add option') + '"><img src="'+this.addURL+'" width="12" valign="middle"/></a>');
             var lastadd = this.pageBodyTable.querySelector('#quickadd') as HTMLAnchorElement;
             lastadd.addEventListener('click', function(ev) {
                 this.quickAddClicked();
@@ -143,7 +168,8 @@ export class PollEditor implements ExtensionModule {
             // set up for saving poll
             var titleinput = this.pageBodyTable.querySelector('input[name="poll_title"]') as HTMLInputElement;
             titleinput.parentElement.parentElement.insertAdjacentHTML('beforeend',
-                ' &nbsp; <a id="quicksave" title="Remember poll"><img src="'+this.saveURL+'" width="12" valign="middle"/></a>');
+                ' &nbsp; <a id="quicksave" title="' + this.i18n('Remember poll') +
+                '"><img src="'+this.saveURL+'" width="12" valign="middle"/></a>');
             var savelink = this.pageBodyTable.querySelector('a#quicksave') as HTMLAnchorElement;
             savelink.addEventListener('click', function(ev) {
                 this.scrapePoll();
@@ -194,8 +220,8 @@ export class PollEditor implements ExtensionModule {
             });
             var titlerow = anchor.closest("tr") as HTMLTableRowElement;
             titlerow.insertAdjacentHTML('beforebegin', '<tr id="savedpolls">' +
-                            '<td class="row1"><span class="gen"><b>Saved polls</b></span></td>' +
-                            '<td class="row2"><span class="gen">' + pollactions.join(", ") + ' (3 last)</span></td>' +
+                            '<td class="row1"><span class="gen"><b>' + this.i18n('Saved polls') + '</b></span></td>' +
+                            '<td class="row2"><span class="gen">' + pollactions.join(", ") + ' ' + this.i18n('(3 last)') + '</span></td>' +
                             '</tr>');
             this.polls['_order'].forEach(function(title, idx) {
                 (this.pageBodyTable.querySelector("a#poll"+idx) as HTMLAnchorElement).addEventListener('click',
@@ -228,7 +254,7 @@ export class PollEditor implements ExtensionModule {
             var loop = true;
             for (var idx = 0; loop; idx++) {
                 var key = "poll_option_text["+idx+"]";
-                if (data[key]) {
+                if (data[key] !== undefined) {
                     this.quickAddClicked();
                     (this.pageBodyTable.querySelector('input[name="'+key+'"]') as HTMLInputElement).value = data[key];
                 } else {
@@ -255,12 +281,12 @@ export class PollEditor implements ExtensionModule {
 
     private addOptionBefore(row: HTMLTableRowElement, value: string): void {
         var numoptions = this.pageBodyTable.querySelectorAll('tr td input[name^="poll_option_text"]').length;
-        row.insertAdjacentHTML('beforebegin', '<tr><td class="row1"><span class="gen"><b>Poll option</b></span></td>' +
+        row.insertAdjacentHTML('beforebegin', '<tr><td class="row1"><span class="gen"><b>' + this.i18n('Poll option') + '</b></span></td>' +
                    '<td class="row2"><span class="genmed">' +
                    '<input type="text" name="poll_option_text['+numoptions+']" size="50" class="post" maxlength="255" value="'+value+'">' +
                    '</span> &nbsp;' +
-                   ' <a id="quickinsert'+this.counter+'" title="Insert above"><img src="'+this.addURL+'" width="12" valign="middle"/></a>' +
-                   ' <a id="quickdel'+this.counter+'" title="Delete"><img src="'+this.subURL+'" width="14" height="14" valign="middle"/></a>' +
+                   ' <a id="quickinsert'+this.counter+'" title="' + this.i18n('Insert above') + '"><img src="'+this.addURL+'" width="12" valign="middle"/></a>' +
+                   ' <a id="quickdel'+this.counter+'" title="' + this.i18n('Delete') + '"><img src="'+this.subURL+'" width="14" height="14" valign="middle"/></a>' +
                    '</td></tr>');
         var quickdel = this.pageBodyTable.querySelector('a#quickdel'+this.counter) as HTMLAnchorElement;
         var quickinsert = this.pageBodyTable.querySelector('a#quickinsert'+this.counter) as HTMLAnchorElement;
