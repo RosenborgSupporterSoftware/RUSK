@@ -1,5 +1,5 @@
 td.win {
-    background-color: green;
+    background-color: limegreen;
 }
 
 td.draw {
@@ -7,7 +7,7 @@ td.draw {
 }
 
 td.loss {
-    background-color: red;
+    background-color: tomato;
 }
 
 b.highlighted {
