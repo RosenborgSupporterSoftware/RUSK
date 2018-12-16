@@ -2,13 +2,19 @@
     "tips": [
         "Du kan velge neste/forrige forum, tråd eller innlegg ved å trykke navigeringstastene (i utgangspunktet 'j' og 'k', men dette kan konfigureres).",
         "Hvis du står i et forum og vil opp til forumlista, kan du trykke 'o' på tastaturet (konfigurerbart).",
+        "Med RUSK legges twitter-meldinger direkte i innlegg som linker til Twitter.",
+        "Med RUSK legges instagram-bilder direkte i innlegg som linker til Instagram.",
+        "Med RUSK legges video-avspillere direkte i innlegg som linker til Youtube.",
+        "Med RUSK legges video-avspillere direkte i innlegg som linker til Streamable.",
         "Hvis du ønsker å bidra til utviklingen av RUSK kan du gjøre det <a href='https://github.com/RosenborgSupporterSoftware/RUSK'>her</a>.",
         "ImageCache-modulen lagrer de fleste bildefilene brukt i RBKweb-siden lokalt slik at de ikke må hentes over nettet på hvert sideoppslag.",
         "InboxAlert-modulen gjør det veldig tydelig at du har uleste private meldinger i din innboks.",
-        "Med SignatureFilter kan du skjule signaturene til utvalgte brukere dersom du synes de er irriterende, tar for mye plass e.l.",
+        "Med SignatureFilter kan du skjule alle forumpost-signaturene dersom du synes de er irriterende, tar for mye plass e.l.",
         "TabTitles kan fjerne prefix på sidetitler dersom du ønsker et bedre overblikk over hvilke faner du har åpne",
         "Kampoversikt-modulen setter inn nyttig informasjon som ukedager i kampoversikten på RBKweb.",
         "UsernameTracker holder styr på brukere som endrer navn, og viser hvilket navn du normalt har kjent dem under.",
-        "Brukertips-modulen viser disse fantastiske tipsene på høyresiden av forumet."
+        "Brukertips-modulen viser disse fantastiske tipsene på høyresiden av forumet.",
+        "RUSK gjør det raskere å lage forumtråder med poll-avstemninger.",
+        "Utviklerene av RUSK ønsker alle en God Jul!"
     ]
 }
