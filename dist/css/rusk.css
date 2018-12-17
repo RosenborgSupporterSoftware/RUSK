@@ -1,7 +1,3 @@
-b.highlighted {
-    color: #ff6666;
-}
-
 a.trollbutton {
     border-radius: 5px;
     color: #000000;
@@ -18,10 +14,10 @@ div.pmalert {
     font-weight: bold;
 }
 
-.RUSKHiddenItem {
-    display: none;
-}
-
 .RUSKKillTopicBullet {
     padding-bottom: 3px;
+}
+
+.RUSKHiddenItem {
+    display: none;
 }

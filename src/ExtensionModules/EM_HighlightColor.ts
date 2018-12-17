@@ -28,10 +28,10 @@ export class HighlightColor implements ExtensionModule {
             .WithDescription("Denne modulen endrer farge for utheving av f.eks. søkeresultater.")
             .WithConfigOption(opt =>
                 opt
-                    .WithSettingName("color")
+                    .WithSettingName("HighlightColor")
                     .WithSettingType(SettingType.color)
                     .WithLabel("Farge for highlighting")
-                    .WithDefaultValue('888888')
+                    .WithDefaultValue('#ff6666')
                     .WithVisibility(ConfigurationOptionVisibility.Always)
             )
             .Build();
@@ -40,20 +40,32 @@ export class HighlightColor implements ExtensionModule {
         this.cfg = config;
     }
 
-    preprocess = () => {
+    preprocess = async () => {
+        let request = await fetch(chrome.runtime.getURL("/data/highlightColor.css"));
+        let text = await request.text();
+        let css = this.hydrateTemplate(text);
+        chrome.runtime.sendMessage({ css: css });
     }
 
     execute = () => {
         var highlights = document.body.querySelectorAll('b[style="color:#FFFFFF"]');
-        if (highlights) {
-            for (var c = 0; c < highlights.length; ++c) {
-                var highlight = highlights.item(c) as HTMLElement;
-                var style = highlight.style;
-                style.color = "";
-                highlight.setAttribute("class", highlight.getAttribute("class") + " highlighted");
-            }
-        }
+        highlights.forEach(function(elt: HTMLElement, key, parent) {
+            elt.style.color = "";
+            elt.classList.add("RUSKHighlightColor");
+        }.bind(this));
     };
+
+    private hydrateTemplate(template: string): string {
+        let keys = [], values = [];
+        keys.push("$RUSKHighlightColor$");
+        values.push(this.cfg.GetSetting('HighlightColor'));
+
+        for (let i = 0; i < keys.length; i++) {
+            template = template.replace(keys[i], values[i]);
+        }
+
+        return template;
+    }
 };
 
 
