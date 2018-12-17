@@ -40,13 +40,41 @@ export class SeasonViews implements ExtensionModule {
                     .WithLabel('Farvelegg kampresultat')
                     .WithDefaultValue(true)
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName('MatchWinColor')
+                    .WithSettingType(SettingType.color)
+                    .WithLabel('Farve for vunnede kamper')
+                    .WithDefaultValue("limegreen")
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName('MatchDrawColor')
+                    .WithSettingType(SettingType.color)
+                    .WithLabel('Farve for uavgjorte kamper')
+                    .WithDefaultValue("yellow")
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName('MatchLossColor')
+                    .WithSettingType(SettingType.color)
+                    .WithLabel('Farve for tapte kamper')
+                    .WithDefaultValue("tomato")
+            )
             .Build();
+
+    colorize: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+        this.colorize = this.getConfigBool("colorizeResult")
     }
 
-    preprocess = () => {
+    preprocess = async () => {
+        let request = await fetch(chrome.runtime.getURL("/data/matchView.css"));
+        let text = await request.text();
+        let css = this.hydrateTemplate(text);
+        chrome.runtime.sendMessage({ css: css });
     }
 
     execute = () => {
@@ -72,7 +100,7 @@ export class SeasonViews implements ExtensionModule {
                 });
             }
 
-            if (true /* colorize */) {
+            if (this.colorize) {
                 tbody.childNodes.forEach(function (node, idx, parent) {
                     if (node.hasChildNodes && node.childNodes.length > 3) {
                         var matchnode = node.childNodes.item(1) as HTMLTableCellElement;
@@ -84,15 +112,45 @@ export class SeasonViews implements ExtensionModule {
                         if (goals) {
                             var goaldiff = (homegame ? 1 : -1) * (parseInt(goals[1]) - parseInt(goals[2]));
                             if (goaldiff > 0)
-                                resultnode.setAttribute("class", resultnode.getAttribute("class") + " win");
+                                resultnode.classList.add("RUSKMatchWin");
                             else if (goaldiff == 0)
-                                resultnode.setAttribute("class", resultnode.getAttribute("class") + " draw");
+                                resultnode.classList.add("RUSKMatchDraw");
                             else if (goaldiff < 0)
-                                resultnode.setAttribute("class", resultnode.getAttribute("class") + " loss");
+                                resultnode.classList.add("RUSKMatchLoss");
                         }
                     }
                 });
             }
         }
     }
+
+    private hydrateTemplate(template: string): string {
+        let keys = [], values = [];
+        keys.push("$RUSKMatchWin$");
+        values.push(this.cfg.GetSetting('MatchWinColor'));
+        keys.push("$RUSKMatchDraw$");
+        values.push(this.cfg.GetSetting('MatchDrawColor'));
+        keys.push("$RUSKMatchLoss$");
+        values.push(this.cfg.GetSetting('MatchLossColor'));
+
+        for (let i = 0; i < keys.length; i++) {
+            template = template.replace(keys[i], values[i]);
+        }
+
+        return template;
+    }
+ 
+    private getConfigBool(setting: string): boolean {
+        try {
+            for (let i = 0; i < this.cfg.settings.length; i++) {
+                if (this.cfg.settings[i].setting == setting) {
+                    return this.cfg.settings[i].value as boolean;
+                }
+            }
+            console.log("did not find setting '" + setting + "'");
+        } catch (e) {
+            console.error("getConfigItem exception: " + e.message);
+        }
+    }
+
 };

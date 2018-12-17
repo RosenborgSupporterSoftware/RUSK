@@ -1,0 +1,11 @@
+td.RUSKMatchWin {
+    background-color: $RUSKMatchWin$ !important;
+}
+
+td.RUSKMatchDraw {
+    background-color: $RUSKMatchDraw$ !important;
+}
+
+td.RUSKMatchLoss {
+    background-color: $RUSKMatchLoss$ !important;
+}
