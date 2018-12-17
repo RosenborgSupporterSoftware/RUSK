@@ -63,11 +63,13 @@ export class SeasonViews implements ExtensionModule {
             )
             .Build();
 
+    weekday: boolean;
     colorize: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.colorize = this.getConfigBool("colorizeResult")
+        this.weekday = this.getConfigBool("displayWeekday");
+        this.colorize = this.getConfigBool("colorizeResult");
     }
 
     preprocess = async () => {
@@ -84,7 +86,7 @@ export class SeasonViews implements ExtensionModule {
         if (urlmatch) {
             var year = parseInt(urlmatch[1]);
             var tbody = document.body.querySelector("center table tbody");
-            if (true /* weekday */) {
+            if (this.weekday) {
                 tbody.childNodes.forEach(function (node, idx, parent) {
                     if (node.hasChildNodes && node.firstChild && node.firstChild.textContent) {
                         var matchdate = node.firstChild.textContent.match(/^([0-9]*)\/([0-9]*)$/);
