@@ -103,13 +103,27 @@ export class MediaEmbedder implements ExtensionModule {
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             post.rowElement.querySelectorAll('a').forEach(function(anchor: HTMLAnchorElement, key, parent) {
                 try {
-                    if (anchor.parentElement.tagName.match(/SPAN/i) && anchor.parentElement.classList.contains("postbody")) {
+                    if (anchor.parentElement.tagName.match(/SPAN/i) &&
+                        anchor.parentElement.classList.contains("postbody")) {
                         var href: string = anchor.href;
                         var text: string = anchor.textContent;
                         // console.log("link: " + href);
-                        if (href.substring(0, 8) != text.substring(0, 8)) {
-                            // nada
-                            // console.log("skipping link " + href);
+                        var signaturelink = false;
+                        var postbody = anchor.parentElement as HTMLSpanElement;
+                        var signaturedelimiter = false;
+                        postbody.closest('td').querySelectorAll("*").forEach(function(node: Node, key, parent) {
+                            if (node.textContent.match(/________/))
+                                signaturedelimiter = true;
+                            else if (node.isEqualNode(anchor)) {
+                                if (signaturedelimiter) // already seen the delimiter
+                                    signaturelink = true;
+                            }
+                        }.bind(this));
+                        if (signaturelink) {
+                            // console.log("skipping link " + href + " in signature");
+                        }
+                        else if (href.substring(0, 8) != text.substring(0, 8)) {
+                            // console.log("skipping decorated link " + href);
                         }
                         else if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // FIXME: support t=NNN for time-start
