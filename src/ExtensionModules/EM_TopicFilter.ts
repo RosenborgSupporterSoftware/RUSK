@@ -20,7 +20,7 @@ export class TopicFilter implements ExtensionModule {
     cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_FORUM_ALL // FIXME: only post views
+        RBKwebPageType.RBKweb_FORUM_TOPICLIST
     ];
 
     runBefore: Array<string> = ['late-extmod'];
