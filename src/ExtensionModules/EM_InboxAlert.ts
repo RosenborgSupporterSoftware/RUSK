@@ -2,6 +2,8 @@ import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { SettingType } from "../Configuration/SettingType";
+import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 
 /**
  * EM_InboxAlert - Extension module for RBKweb.
@@ -33,13 +35,25 @@ export class InboxAlert implements ExtensionModule {
             .WithExtensionModuleName(this.name)
             .WithDisplayName('Inbox Alert')
             .WithDescription("Denne modulen legger inn et ekstra (mer synlig) varsel dersom du har private meldinger.")
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("PMAlertColor")
+                    .WithLabel("Farve for PM alert melding")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('#ff6666')
+                    .WithVisibility(ConfigurationOptionVisibility.Always)
+            )
             .Build();
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
     }
 
-    preprocess = () => {
+    preprocess = async () => {
+        let request = await fetch(chrome.runtime.getURL("/data/pmAlert.css"));
+        let text = await request.text();
+        let css = this.hydrateTemplate(text);
+        chrome.runtime.sendMessage({ css: css });
     }
 
     execute = () => {
@@ -53,11 +67,23 @@ export class InboxAlert implements ExtensionModule {
                 var table = icon.closest("table") as HTMLTableElement;
                 var parent = table.parentElement;
                 table.insertAdjacentHTML("afterend",
-                    '<div class="pmalert" width="100%" align="center">' +
+                    '<div class="RUSKPrivateMessageAlert" width="100%" align="center">' +
                     '<br><a href="privmsg.php?folder=inbox">DU HAR ULESTE PRIVATE MELDINGER</a><br><br>' +
                     '</div>');
             }
         }
+    }
 
-    };
+    private hydrateTemplate(template: string): string {
+        let keys = [], values = [];
+        keys.push("$PMAlertColor$");
+        values.push(this.cfg.GetSetting('PMAlertColor'));
+        console.log("values: " + JSON.stringify(values));
+
+        for (let i = 0; i < keys.length; i++) {
+            template = template.replace(keys[i], values[i]);
+        }
+
+        return template;
+    }
 };
