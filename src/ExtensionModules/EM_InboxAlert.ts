@@ -78,7 +78,6 @@ export class InboxAlert implements ExtensionModule {
         let keys = [], values = [];
         keys.push("$PMAlertColor$");
         values.push(this.cfg.GetSetting('PMAlertColor'));
-        console.log("values: " + JSON.stringify(values));
 
         for (let i = 0; i < keys.length; i++) {
             template = template.replace(keys[i], values[i]);
