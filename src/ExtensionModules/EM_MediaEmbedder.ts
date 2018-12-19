@@ -109,9 +109,8 @@ export class MediaEmbedder implements ExtensionModule {
                         var text: string = anchor.textContent;
                         // console.log("link: " + href);
                         var signaturelink = false;
-                        var postbody = anchor.parentElement as HTMLSpanElement;
                         var signaturedelimiter = false;
-                        postbody.closest('td').querySelectorAll("*").forEach(function(node: Node, key, parent) {
+                        anchor.closest('td').querySelectorAll("*").forEach(function(node: Node, key, parent) {
                             if (node.textContent.match(/________/))
                                 signaturedelimiter = true;
                             else if (node.isEqualNode(anchor)) {
