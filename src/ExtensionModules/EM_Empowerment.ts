@@ -60,7 +60,7 @@ export class Empowerment implements ExtensionModule {
                 tablecell.setAttribute("colspan", "" + (span - 2));
                 var html =
                     '<td colspan="2" align="right" bgcolor="' + color + '">' +
-                    '<font face="verdana,arial,helvtica" size="1">' +
+                    '<font face="verdana,arial,helvetica" size="1">' +
                     '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:' + diffuse + ';">Empowered by </a>' +
                     '<a href="http://www.github.com/RosenborgSupporterSoftware/RUSK" style="text-decoration:none;color:#000;">RUSK</a> 👊' +
                     '</font></td>';
