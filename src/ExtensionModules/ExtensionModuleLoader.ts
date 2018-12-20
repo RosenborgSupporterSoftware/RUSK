@@ -27,24 +27,24 @@ import { PollEditor } from "./EM_PollEditor";
 // TODO: Mat inn config fra sync storage til den enkelte modulen
 export default function loadModules(path: string): Array<ExtensionModule> {
     return [
+        new Empowerment(),
         new Usertips(),
         new SeasonViews(),
         new TabTitles(),
         new TopicFilter(),
         new SignatureFilter(),
-        new ColorizeThreads(),
-        new ColorizeForums(),
-        new ColorizePosts(),
         new MediaEmbedder(),
         new ImageCache(),
         new InboxAlert(),
         new HighlightColor(),
         new UsernameTracker(),
         new SignatureFilter(),
-        new Empowerment(),
         new PollEditor(),
         new UserFilter(),
         new EnhancePosting(),
         new ThreadTitleLinks(),
+        new ColorizeThreads(),
+        new ColorizeForums(),
+        new ColorizePosts(),
     ];
 }

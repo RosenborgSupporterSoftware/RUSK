@@ -234,6 +234,17 @@ export class ColorizePosts implements ExtensionModule {
     private determineSelectedItem(posts: Array<PostInfo>): void {
         if (posts.length == 0) return;
 
+        let urlMatch = window.location.href.match(/^.*\/forum\/viewtopic\.php\?p=(\d+)#\1$/);
+        if (urlMatch) {
+            let target = +urlMatch[1];
+            for (let i = 0; i < posts.length; i++) {
+                if (posts[i].postid == target) {
+                    this.selectNewItem(posts[i], true);
+                    return;
+                }
+            }
+        }
+
         for (let i = 0; i < posts.length; i++) {
             if (posts[i].isUnread) {
                 this.selectNewItem(posts[i]);
@@ -244,15 +255,17 @@ export class ColorizePosts implements ExtensionModule {
         this.selectNewItem(posts[posts.length - 1]);
     }
 
-    private selectNewItem(newItem: PostInfo) {
+    private selectNewItem(newItem: PostInfo, skipScrolling: boolean = false) {
         if (this.currentlySelectedItem != null) {
             this.currentlySelectedItem.rowElement.classList.remove("RUSKSelectedItem");
         }
 
         newItem.rowElement.classList.add("RUSKSelectedItem");
         this.currentlySelectedItem = newItem;
-        let obj = newItem.rowElement as any;    // Typescript disagrees about scrollIntoViewIfNeeded existing on HTML elements
-        obj.scrollIntoViewIfNeeded();
+        if (!skipScrolling) {
+            let obj = newItem.rowElement as any;    // Typescript disagrees about scrollIntoViewIfNeeded existing on HTML elements
+            obj.scrollIntoViewIfNeeded();
+        }
     }
 
     private hydrateTemplate(template: string): string {
