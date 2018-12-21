@@ -25,6 +25,7 @@ export class Empowerment implements ExtensionModule {
             .EnabledByDefault()
             .WithDisplayName(this.name)
             .WithDescription('Denne modulen viser på RBKweb at RUSK er aktiv')
+            .InvisibleToConfig()
             .Build();
 
     init = (config: ModuleConfiguration) => {

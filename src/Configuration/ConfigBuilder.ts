@@ -11,7 +11,8 @@ export class ConfigBuilder {
     name: string;
     displayName: string;
     description: string;
-    defaultEnabled: boolean;
+    defaultEnabled: boolean = true;
+    defaultVisible: boolean = true;
     configOptions: Array<ConfigOptionBuilder> = [];
 
     /** A method used to define the configuration needed for an ExtensionModule */
@@ -40,7 +41,7 @@ export class ConfigBuilder {
                     break;
             }
         });
-        return new ModuleConfiguration(this.name, this.displayName, this.description, this.defaultEnabled, settings);
+        return new ModuleConfiguration(this.name, this.displayName, this.description, this.defaultEnabled, this.defaultVisible, settings);
     }
 
     private createTextOption(opt: ConfigOptionBuilder): ConfigurationSetting<string> {
@@ -104,6 +105,12 @@ export class ConfigBuilder {
     /** Defines that this ExtensionModule should not be enabled by default for new users with no existing configuraton for it */
     public DisabledByDefault(): ConfigBuilder {
         this.defaultEnabled = false;
+        return this;
+    }
+
+    /** Defines that this ExtensionModule should not show up in the module configuration user interface */
+    public InvisibleToConfig(): ConfigBuilder {
+        this.defaultVisible = false;
         return this;
     }
 

@@ -22,6 +22,9 @@ export class ModuleConfiguration {
     /** Gets or sets a value indicating if the ExtensionModule is enabled */
     public moduleEnabled: boolean;
 
+    /** Gets or sets a value indicating if the ExtensionModule is visible in the configuration UI */
+    public moduleVisible: boolean;
+
     public settings: Array<ConfigSetting>;
 
     /**
@@ -30,13 +33,15 @@ export class ModuleConfiguration {
      * @param displayName - The display name of the ExtensionModule, seen in the settings UI
      * @param desc - A user-visible description of the ExtensionModule
      * @param enabled - A value indicating if the module is enabled
+     * @param visible - A value indicating if the module should be visible in the config UI
      * @param settings - An array of settings belonging to the ExtensionModule
      */
-    public constructor(name: string, displayName: string, desc: string, enabled: boolean, settings: Array<ConfigSetting>) {
+    public constructor(name: string, displayName: string, desc: string, enabled: boolean, visible: boolean, settings: Array<ConfigSetting>) {
         this.moduleName = name;
         this.displayName = displayName;
         this.moduleDescription = desc;
         this.moduleEnabled = enabled;
+        this.moduleVisible = visible;
         this.settings = settings;
     }
 
@@ -134,6 +139,7 @@ export class ModuleConfiguration {
             moduleDescription: this.moduleDescription,
             displayName: this.displayName,
             enabled: this.moduleEnabled,
+            visible: this.moduleVisible,
             settings
         };
     }
