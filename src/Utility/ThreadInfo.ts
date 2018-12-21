@@ -186,8 +186,7 @@ export class ThreadInfo {
     private getThreadAttributes(row: HTMLTableRowElement): ThreadAttributes {
 
         let img = row.querySelector('td > img') as HTMLImageElement;
-        let imageName = img.src.match(/templates\/subSilver\/images\/([\w_]+)\.gif/)[1];
-        //console.log(imageName + this.getTitle(row));
+        let imageName = img.src.match(/\/(images|img)\/([\w_]+)\.gif/)[2];
         let fileAttrs = this.getAttributesFromFilename(imageName);
         if (fileAttrs == ThreadAttributes.None) {
             console.error('ThreadInfo.getThreadAttributes håndterer ikke ' + imageName + ' ennå');
