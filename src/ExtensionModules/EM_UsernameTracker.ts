@@ -47,7 +47,7 @@ export class UsernameTracker implements ExtensionModule {
             this.names = JSON.parse(dictstr || "{}");
             var count = 0;
             for (var key in this.names) { count += 1; }
-            var logmsg = this.name + ": tracking " + count + " account names";
+            var logmsg = this.name + ": tracking " + count + " account names (" + dictstr.length + " bytes)";
             console.log(logmsg);
             chrome.runtime.sendMessage({logMessage: logmsg, level: "debug"});
         } catch (e) {
