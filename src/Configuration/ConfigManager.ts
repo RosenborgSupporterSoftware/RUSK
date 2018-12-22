@@ -89,6 +89,21 @@ export class ConfigManager {
         });
     }
 
+    /**
+     * For developer use only. :)
+     */
+    public GetAllConfigAsJSON(): string {
+        let allConfig = {};
+        let keys = Array.from(this._moduleConfigs.keys());
+        for (let i = 0; i < this._moduleConfigs.size; i++) {
+            let key = keys[i];
+            allConfig[key] = this._moduleConfigs.get(key);
+        }
+        let json = JSON.stringify(allConfig);
+
+        return json;
+    }
+
     private getModule(moduleName: string): ExtensionModule {
         for (let i = 0; i < this._allModules.length; i++) {
             if (this._allModules[i].name == moduleName) return this._allModules[i];
