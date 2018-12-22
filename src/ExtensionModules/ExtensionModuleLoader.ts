@@ -19,6 +19,7 @@ import { MediaEmbedder } from "./EM_MediaEmbedder";
 import { PollEditor } from "./EM_PollEditor";
 import { Log } from "../Utility/Log";
 import { AvatarFilter } from "./EM_AvatarFilter";
+import { AlternateSearchEngine } from "./EM_AlternateSearchEngine";
 
 /**
  * ExtensionModuleLoader
@@ -47,6 +48,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizeThreads(),
         new ColorizeForums(),
         new ColorizePosts(),
+        new AlternateSearchEngine(),
     ];
 
     verifyModules(allModules);
