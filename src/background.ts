@@ -17,8 +17,22 @@ let configManager = ConfigManager.Instance;
 // debug logging
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.logMessage) {
-        console.log(request.logMessage);
-        return;
+        if (!request.logLevel)
+        {
+            console.log(request.logMessage);
+        } else {
+            switch (request.logLevel) {
+                case "EL_DEBUG":
+                    console.log(request.logMessage);
+                    break;
+                case "EL_WARNING":
+                    console.warn(request.logMessage);
+                    break;
+                case "EL_ERROR":
+                    console.error(request.logMessage);
+                    break;
+            }
+        }
     }
 });
 

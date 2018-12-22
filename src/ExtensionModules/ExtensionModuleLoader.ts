@@ -17,6 +17,7 @@ import { EnhancePosting } from "./EM_EnhancePosting";
 import { ThreadTitleLinks } from "./EM_ThreadTitleLinks";
 import { MediaEmbedder } from "./EM_MediaEmbedder";
 import { PollEditor } from "./EM_PollEditor";
+import { Log } from "../Utility/Log";
 
 /**
  * ExtensionModuleLoader
@@ -24,9 +25,8 @@ import { PollEditor } from "./EM_PollEditor";
  */
 
 // TODO: Last inn fra generert JSON-fil med liste over moduler (når den eksisterer)
-// TODO: Mat inn config fra sync storage til den enkelte modulen
 export default function loadModules(path: string): Array<ExtensionModule> {
-    return [
+    let allModules = [
         new Empowerment(),
         new Usertips(),
         new SeasonViews(),
@@ -47,4 +47,27 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizeForums(),
         new ColorizePosts(),
     ];
+
+    verifyModules(allModules);
+
+    return allModules;
 }
+
+/**
+ * Simple function that does some preflight checks on modules and reports errors to the dev console.
+ * This could probably done in a more modular, sane way.
+ * @param modules - The modules to verify
+ */
+function verifyModules(modules: Array<ExtensionModule>) {
+
+    modules.forEach(mod => {
+        if (isNullOrEmpty(mod.name)) Log.Error('Module with empty name detected - can\'t tell you which one though.');
+        if (mod.name.indexOf(' ') != -1) Log.Error(mod.name + ': Modules should not have spaces in their names (were you thinking of the displayName?)!');
+        let cfg = mod.configSpec();
+        if (mod.name != cfg.moduleName) Log.Error(mod.name + ': Module names needs to match in config spec and module');
+        if (cfg.moduleVisible && isNullOrEmpty(cfg.displayName)) Log.Error(mod.name + ': A visible module needs a display name');
+        if (cfg.moduleVisible && isNullOrEmpty(cfg.moduleDescription)) Log.Error(mod.name + ': A visible module needs a description');
+    });
+}
+
+function isNullOrEmpty(str: string): boolean { return !str }
