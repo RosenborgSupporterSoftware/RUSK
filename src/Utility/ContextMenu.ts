@@ -16,15 +16,18 @@ export class ContextMenu {
     }
 
     public async injectCSS() {
+        /*
         try {
-            console.log("context menu injecting css");
             let request = await fetch(chrome.runtime.getURL("/data/contextMenu.css"));
             let text = await request.text();
-            let css = this.hydrateTemplate(text);
-            chrome.runtime.sendMessage({ css: css });
+            if (text && text.length > 1) {
+                let css = this.hydrateTemplate(text);
+                chrome.runtime.sendMessage({ css: css });
+            }
         } catch (e) {
             console.error("error: " + e.message);
         }
+        */
     }
 
     public addAction(name: string, visible: boolean, callback): MenuItem {
@@ -81,10 +84,6 @@ export class ContextMenu {
 
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];
-        // keys.push("$RUSKMatchWin$");
-        // values.push(this.cfg.GetSetting('MatchWinColor'));
-        // keys.push("$RUSKMatchDraw$");
-        // values.push(this.cfg.GetSetting('MatchDrawColor'));
         // keys.push("$RUSKMatchLoss$");
         // values.push(this.cfg.GetSetting('MatchLossColor'));
 
