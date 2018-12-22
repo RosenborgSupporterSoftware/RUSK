@@ -2,6 +2,7 @@ import { SettingType } from "./SettingType";
 import { ConfigurationOptionVisibility } from "./ConfigurationOptionVisibility";
 import { ModuleConfiguration } from "./ModuleConfiguration";
 import { ConfigSetting, ConfigurationSetting } from "./ConfigurationSetting";
+import { Log } from "../Utility/Log";
 
 /**
  * ConfigBuilder is a fluent interface for defining the configuration options used by an ExtensionModule.
@@ -50,32 +51,38 @@ export class ConfigBuilder {
             throw new Error('Option ' + opt.setting + ' unsuitable as string');
         }
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared);
+        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
     }
 
     private createColorOption(opt: ConfigOptionBuilder): ConfigurationSetting<string> {
         if (opt.type != SettingType.color || typeof opt.defaultValue != "string") {
-            throw new Error('Option ' + opt.setting + ' unsuitable as color');
+            let err = 'Option ' + opt.setting + ' unsuitable as color';
+            Log.Error(err);
+            throw new Error(err);
         }
         // TODO: Validate default color value
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared);
+        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
     }
 
     private createBoolOption(opt: ConfigOptionBuilder): ConfigurationSetting<boolean> {
         if (opt.type != SettingType.bool || typeof opt.defaultValue != "boolean") {
-            throw new Error('Option ' + opt.setting + ' unsuitable as bool');
+            let err = 'Option ' + opt.setting + ' unsuitable as bool';
+            Log.Error(err);
+            throw new Error(err);
         }
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared);
+        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
     }
 
     private createListOption(opt: ConfigOptionBuilder): ConfigurationSetting<Array<string>> {
         if (opt.type != SettingType.list || !Array.isArray(opt.defaultValue)) {
-            throw new Error('Option ' + opt.setting + ' unsuitable as bool');
+            let err = 'Option ' + opt.setting + ' unsuitable as bool';
+            Log.Error(err);
+            throw new Error(err);
         }
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared);
+        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
     }
 
     /** Names the ExtensionModule that will use the configuration */

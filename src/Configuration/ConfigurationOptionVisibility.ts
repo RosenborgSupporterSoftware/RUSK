@@ -4,14 +4,14 @@
  */
 export enum ConfigurationOptionVisibility {
     /** The configoption is always visible in the settings UI */
-    Always,
+    Always = "COV_ALWAYS",
 
     /** The configoption is visible only to beta testers */
-    Beta,
+    Beta = "COV_BETA",
 
     /** The configoption is visible only to alpha testers */
-    Alpha,
+    Alpha = "COV_ALPHA",
 
     /** The configoption is always hidden */
-    Never
+    Never = "COV_NEVER"
 }
