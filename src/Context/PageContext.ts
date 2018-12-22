@@ -33,10 +33,10 @@ export class PageContext {
 
         var content = linkElement.innerText;
 
-        var match = content.match(/Log out \[ (.*) \]$/);
+        var match = content.match(/(Log out|Logg ut) \[ (.*) \]$/);
         if (match == null) {
             return undefined;
         }
-        return match[1];
+        return match[2];
     }
 }
