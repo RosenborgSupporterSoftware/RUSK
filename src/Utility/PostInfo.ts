@@ -1,3 +1,4 @@
+import { ContextMenu } from "./ContextMenu";
 
 /**
  * PostInfo.ts - utility class used to extract information from individual posts
@@ -91,6 +92,16 @@ export class PostInfo {
         } catch (e) {
             chrome.runtime.sendMessage({ module: "PostInfo", message: e.message, exception: e });
         }
+    }
+
+    public getContextMenu(): ContextMenu {
+        try {
+            var menu = new ContextMenu(this.rowElement);
+            return menu;
+        } catch (e) {
+            console.error("exception: " + e.message);
+        }
+        return null;
     }
 
     private getTitle(row: HTMLTableRowElement): string {

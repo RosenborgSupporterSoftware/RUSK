@@ -61,7 +61,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             code: request.css,
             cssOrigin: "user"
         }, () => {
-            console.log('Inserted CSS');
+            if (request.from)
+                console.log('Inserted CSS from ' + request.from);
+            else
+                console.log('Inserted CSS');
         }); // Y U NO?!
     }
 });

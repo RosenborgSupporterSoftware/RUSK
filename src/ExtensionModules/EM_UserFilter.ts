@@ -7,6 +7,7 @@ import { PostInfo } from "../Utility/PostInfo";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
+import { ChromeSyncStorage } from "../Configuration/ChromeSyncStorage";
 
 /**
  * EM_UserFilter - Extension module for RBKweb.
@@ -51,12 +52,35 @@ export class UserFilter implements ExtensionModule {
     posts: Array<PostInfo> = new Array<PostInfo>();
     forumTrolls: Set<number> = new Set<number>();
     threadTrolls: Map<string, Object> = new Map<string, Object>();
+    dotdotdotURL: string;
+
+    BLOCK_MENUITEM: string = "Block user";
+    THREADBLOCK_MENUITEM: string = "Thread block 48H";
+    UNBLOCK_MENUITEM: string = "Unblock";
+
+    css_template: string;
+    css: string;
+
+    rendered: boolean;
 
     init = (config: ModuleConfiguration) => {
         try {
             this.cfg = config;
+            this.rendered = false;
             this.forumTrolls = this.getForumTrollConfig();
             this.threadTrolls = this.getThreadTrollConfig();
+            this.dotdotdotURL = chrome.runtime.getURL("/img/dotdotdot.png");
+
+            fetch(chrome.runtime.getURL("/data/contextMenu.css")).then(function(response) {
+                return response.text();
+            }.bind(this)).then(function(text) {
+                let css = this.hydrateTemplate(text);
+                this.css_template = css;
+                //console.log("css: " + css);
+                this.css = css;
+                if (this.rendered)
+                    chrome.runtime.sendMessage({ css: this.css, from: 'UserFilter' });
+            }.bind(this));
         } catch (e) {
             console.log("init exception: " + e.message);
         }
@@ -65,6 +89,12 @@ export class UserFilter implements ExtensionModule {
     preprocess = () => {
         try {
             this.posts = PostInfo.GetPostsFromDocument(document);
+            if (this.css)
+                chrome.runtime.sendMessage({ css: this.css, from: 'UserFilter' });
+            else {
+                console.log('no css loaded yet');
+                this.rendered = true;
+            }
         } catch (e) {
             console.error("UserFilter.preprocess: " + e.message);
         }
@@ -76,24 +106,10 @@ export class UserFilter implements ExtensionModule {
             try {
                 var row = post.rowElement;
                 var nameelt = row.querySelector("span.name") as Element;
-                nameelt.insertAdjacentHTML('afterend',
-                    ' ' +
-                    '<a class="nav" id="' + post.posterid + 'green" title="Unblock">' +
-                    '<img src="' + chrome.runtime.getURL('/img/green.png') + '" valign="middle" width="12" height="12" border="0"/>' +
-                    '</a>' +
-                    '\u202f' +
-                    '<a class="nav" id="' + post.posterid + 'orange" title="48h Topic Block">' +
-                    '<img src="' + chrome.runtime.getURL('/img/orange.png') + '" valign="middle" width="12" height="12" border="0"/>' +
-                    '</a>' +
-                    '\u202f' +
-                    '<a class="nav" id="' + post.posterid + 'red" title="Block">' +
-                    '<img src="' + chrome.runtime.getURL('/img/red.png') + '" valign="middle" width="12" height="12" border="0"/>' +
-                    '</a>');
-                var green = row.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
-                var orange = row.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
-                var red = row.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
-                green.addEventListener("click", function(ev) {
-                    console.log("Unblocking " + post.posterNickname);
+                var menu = post.getContextMenu();
+                var threadblocked = this.isThreadTroll(""+post.threadId, ""+post.posterid);
+                var blocked = this.forumTrolls.has(post.posterid);
+                menu.addAction(this.UNBLOCK_MENUITEM, blocked, function() {
                     if (this.isThreadTroll(""+post.threadId, ""+post.posterid)) {
                         this.removeThreadTroll(""+post.threadId, ""+post.posterid);
                         this.storeThreadTrolls();
@@ -103,40 +119,17 @@ export class UserFilter implements ExtensionModule {
                     }
                     this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
                         if (other.posterid == post.posterid) {
-                            if (other.postid != post.postid) {
-                                other.rowElement.style.display = "";
-                                other.buttonRowElement.style.display = "";
-                                (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "none";
-                            }
-                            var r = other.rowElement.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
-                            var o = other.rowElement.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
-                            var g = other.rowElement.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
-                            r.style.display = "";
-                            o.style.display = "";
-                            g.style.display = "none";
+                            other.rowElement.style.display = "";
+                            other.buttonRowElement.style.display = "";
+                            (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "none";
+                            var cmenu = other.getContextMenu();
+                            cmenu.getAction(this.UNBLOCK_MENUITEM).hide();
+                            cmenu.getAction(this.BLOCK_MENUITEM).show();
+                            cmenu.getAction(this.THREADBLOCK_MENUITEM).show();
                         }
                     }.bind(this));
                 }.bind(this));
-                orange.addEventListener("click", function() {
-                    console.log("Thread-blocking " + post.posterNickname);
-                    this.addThreadTroll(""+post.threadId, ""+post.posterid);
-                    this.storeThreadTrolls();
-                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
-                        if (other.posterid == post.posterid) {
-                            other.rowElement.style.display = "none";
-                            other.buttonRowElement.style.display = "none";
-                            (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "";
-                            var r = other.rowElement.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
-                            var o = other.rowElement.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
-                            var g = other.rowElement.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
-                            r.style.display = "none";
-                            o.style.display = "none";
-                            g.style.display = "";
-                        }
-                    }.bind(this));
-                }.bind(this));
-                red.addEventListener("click", function() {
-                    console.log("Blocking " + post.posterNickname);
+                menu.addAction(this.BLOCK_MENUITEM, !blocked, function() {
                     this.forumTrolls.add(post.posterid);
                     this.storeForumTrolls();
                     this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
@@ -144,22 +137,28 @@ export class UserFilter implements ExtensionModule {
                             other.rowElement.style.display = "none";
                             other.buttonRowElement.style.display = "none";
                             (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "";
-                            var r = other.rowElement.querySelector('a[id="'+post.posterid+'red"]') as HTMLAnchorElement;
-                            var o = other.rowElement.querySelector('a[id="'+post.posterid+'orange"]') as HTMLAnchorElement;
-                            var g = other.rowElement.querySelector('a[id="'+post.posterid+'green"]') as HTMLAnchorElement;
-                            r.style.display = "none";
-                            o.style.display = "none";
-                            g.style.display = "";
+                            var cmenu = other.getContextMenu();
+                            cmenu.getAction(this.BLOCK_MENUITEM).hide();
+                            cmenu.getAction(this.THREADBLOCK_MENUITEM).hide();
+                            cmenu.getAction(this.UNBLOCK_MENUITEM).show();
                         }
                     }.bind(this));
                 }.bind(this));
-                if (this.forumTrolls.has(post.posterid) || this.isThreadTroll(""+post.threadId, ""+post.posterid)) {
-                    orange.style.display = "none";
-                    red.style.display = "none";
-                }
-                else {
-                    green.style.display = "none";
-                }
+                menu.addAction(this.THREADBLOCK_MENUITEM, !threadblocked, function() {
+                    this.addThreadTroll(""+post.threadId, ""+post.posterid);
+                    this.storeThreadTrolls();
+                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
+                        if (other.posterid == post.posterid) {
+                            other.rowElement.style.display = "none";
+                            other.buttonRowElement.style.display = "none";
+                            (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "";
+                            var cmenu = other.getContextMenu();
+                            cmenu.getAction(this.BLOCK_MENUITEM).hide();
+                            cmenu.getAction(this.THREADBLOCK_MENUITEM).hide();
+                            cmenu.getAction(this.UNBLOCK_MENUITEM).show();
+                        }
+                    }.bind(this));
+                }.bind(this));
             } catch (e) {
                 console.error("exception: " + e.message);
             }
@@ -314,4 +313,17 @@ export class UserFilter implements ExtensionModule {
         //console.log("storing threadTrolls: '" + dictstr + "'");
         this.cfg.ChangeSetting("threadTrolls", dictstr);
     }
+
+    private hydrateTemplate(template: string): string {
+        let keys = [], values = [];
+        // keys.push("$RUSKMatchWin$");
+        // values.push(this.cfg.GetSetting('MatchWinColor'));
+
+        for (let i = 0; i < keys.length; i++) {
+            template = template.replace(keys[i], values[i]);
+        }
+
+        return template;
+    }
+ 
 };
