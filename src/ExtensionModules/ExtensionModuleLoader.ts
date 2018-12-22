@@ -18,6 +18,7 @@ import { ThreadTitleLinks } from "./EM_ThreadTitleLinks";
 import { MediaEmbedder } from "./EM_MediaEmbedder";
 import { PollEditor } from "./EM_PollEditor";
 import { Log } from "../Utility/Log";
+import { AvatarFilter } from "./EM_AvatarFilter";
 
 /**
  * ExtensionModuleLoader
@@ -41,6 +42,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new UserFilter(),
         new EnhancePosting(),
         new SignatureFilter(),
+        new AvatarFilter(),
         new ThreadTitleLinks(),
         new ColorizeThreads(),
         new ColorizeForums(),

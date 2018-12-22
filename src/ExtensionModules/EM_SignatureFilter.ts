@@ -10,8 +10,6 @@ import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOpt
  * EM_SignatureFilter - Extension module for RBKweb.
  */
 
- // http://www.rbkweb.no/forum/viewtopic.php?t=5976&postdays=0&postorder=asc&start=8525
-
 export class SignatureFilter implements ExtensionModule {
     readonly name: string = "Signaturfilter";
     cfg: ModuleConfiguration;
@@ -69,8 +67,6 @@ export class SignatureFilter implements ExtensionModule {
     SHOW_SIGNATURE: string = "Show signature";
 
     execute = () => {
-        console.log("SignatureFilter.execute()");
-
         var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
         elts.forEach(function (elt, key, parent) {
             try {
