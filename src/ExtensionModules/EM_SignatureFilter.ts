@@ -38,25 +38,38 @@ export class SignatureFilter implements ExtensionModule {
                     .WithVisibility(ConfigurationOptionVisibility.Always)
                     .WithDefaultValue(false)
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("HideSignatureUsers")
+                    .WithSettingType(SettingType.text)
+                    .WithLabel("Skjul signaturene fra visse postere")
+                    .WithVisibility(ConfigurationOptionVisibility.Never)
+                    .WithDefaultValue("[]")
+            )
             .Build();
 
     //posts: Array<PostInfo>;
 
     hideSignatures: boolean;
+    hideUserSignatures: Array<number>;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
         this.hideSignatures = this.getConfigBool("HideSignatures");
+        this.hideUserSignatures = JSON.parse(this.getConfigString("HideSignatureUsers"));
     }
+
+    posts: Array<PostInfo>;
 
     preprocess = () => {
-        //this.posts = PostInfo.GetPostsFromDocument(document);
+        this.posts = PostInfo.GetPostsFromDocument(document);
     }
 
+    HIDE_SIGNATURE: string = "Hide signature";
+    SHOW_SIGNATURE: string = "Show signature";
+
     execute = () => {
-        // FIXME: rewrite to use this.posts
-        //this.posts.forEach(function(post, idx, posts) {
-        //}.bind(this));
+        console.log("SignatureFilter.execute()");
 
         var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
         elts.forEach(function (elt, key, parent) {
@@ -64,7 +77,7 @@ export class SignatureFilter implements ExtensionModule {
                 var sub = elt as HTMLTableCellElement;
                 var index = sub.textContent.indexOf("_________________");
                 if (index != -1) {
-                    var remove = false;
+                    var hideSignature = false;
                     sub.childNodes.forEach(function(node, key, parent) {
                         try {
                          var n = node as HTMLElement;
@@ -77,9 +90,9 @@ export class SignatureFilter implements ExtensionModule {
                              trelement = belement.closest("tr").nextElementSibling as Element;
                              var link = trelement.querySelectorAll('a[href*="profile.php"').item(0) as Element;
                              var userid = parseInt(link.getAttribute("href").match(/u=([0-9]*)/)[1]);
-                             remove = this.hideSignatures;
                              var signature = '<span class="RUSKSignatureBegin postbody">' + n.outerHTML.substring(idx + 17);
-                             if (remove) {
+                             hideSignature = this.hideUserSignatures.indexOf(userid) != -1;
+                             if (hideSignature || this.hideSignatures) {
                                  signature = '<span class="RUSKSignatureBegin RUSKHiddenItem postbody">' + n.outerHTML.substring(idx + 17);
                              }
                              var body = n.outerHTML.substring(0, idx) + '</span>';
@@ -102,7 +115,7 @@ export class SignatureFilter implements ExtensionModule {
                                      console.log("exception: " + e.message);
                                  }
                              }.bind(this));
-                         } else if (remove) {
+                         } else if (hideSignature || this.hideSignatures) {
                              n.classList.add("RUSKHiddenItem");
                          }
                      } catch (e) {
@@ -113,6 +126,45 @@ export class SignatureFilter implements ExtensionModule {
             } catch (e) {
                 chrome.runtime.sendMessage({ message: e.message, exception: e });
             }
+        }.bind(this));
+
+        this.posts.forEach(function(post: PostInfo, idx, posts) {
+            if (this.hideSignatures) return; // no need for context menu options when hiding all
+            var cmenu = post.getContextMenu();
+            var posterid = post.posterid;
+            var hideSignature = this.hideUserSignatures.indexOf(posterid) != -1;
+            var hasSignature = post.rowElement.querySelector("span.RUSKSignatureDelimiter") as HTMLSpanElement;
+            if (!hasSignature) return;
+            cmenu.addAction(this.HIDE_SIGNATURE, !hideSignature, function() {
+                this.posts.forEach(function(thepost: PostInfo, idx, posts) {
+                    if (thepost.posterid != posterid) return;
+                    cmenu.getAction(this.HIDE_SIGNATURE).hide(); // FIXME: make checkboxed menu option instead
+                    cmenu.getAction(this.SHOW_SIGNATURE).show();
+                    var elt = thepost.rowElement.querySelector('span.RUSKSignatureDelimiter') as HTMLElement;
+                    while (elt) {
+                        elt.classList.add('RUSKHiddenItem');
+                        elt = elt.nextElementSibling as HTMLElement;
+                    }
+                    this.hideUserSignatures.push(posterid);
+                    this.saveHideUserSignatures();
+                }.bind(this));
+            }.bind(this));
+            cmenu.addAction(this.SHOW_SIGNATURE, hideSignature, function() {
+                this.posts.forEach(function(thepost: PostInfo, idx, posts) {
+                    if (thepost.posterid != posterid) return;
+                    cmenu.getAction(this.HIDE_SIGNATURE).show();
+                    cmenu.getAction(this.SHOW_SIGNATURE).hide();
+                    var elt = thepost.rowElement.querySelector('span.RUSKSignatureDelimiter') as HTMLElement;
+                    while (elt) {
+                        elt.classList.remove('RUSKHiddenItem');
+                        elt = elt.nextElementSibling as HTMLElement;
+                    }
+                    var idx = this.hideUserSignatures.indexOf(posterid);
+                    this.hideUserSignatures[idx] = this.hideUserSignatures[this.hideUserSignatures.length-1];
+                    this.hideUserSignatures.pop();
+                    this.saveHideUserSignatures();
+                }.bind(this));
+            }.bind(this));
         }.bind(this));
     }
 
@@ -127,5 +179,26 @@ export class SignatureFilter implements ExtensionModule {
         } catch (e) {
             console.error("getConfigItem exception: " + e.message);
         }
+        return false;
     }
-};
+
+    private getConfigString(setting: string): string {
+        try {
+            for (let i = 0; i < this.cfg.settings.length; i++) {
+                if (this.cfg.settings[i].setting == setting) {
+                    return this.cfg.settings[i].value as string;
+                }
+            }
+            console.log("did not find setting '" + setting);
+        } catch (e) {
+            console.error("getConfigItem exception: " + e.message);
+        }
+        return null;
+    }
+
+    private saveHideUserSignatures(): void {
+        var arraystr = JSON.stringify(this.hideUserSignatures);
+        //console.log("storing signature-hidden users: '" + arraystr + "'");
+        this.cfg.ChangeSetting("HideSignatureUsers", arraystr);
+    }
+}

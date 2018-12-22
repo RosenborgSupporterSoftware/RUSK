@@ -92,7 +92,7 @@ export class UserFilter implements ExtensionModule {
             if (this.css)
                 chrome.runtime.sendMessage({ css: this.css, from: 'UserFilter' });
             else {
-                console.log('no css loaded yet');
+                //console.log('no css loaded yet');
                 this.rendered = true;
             }
         } catch (e) {
