@@ -59,6 +59,7 @@ export class EnhancePosting implements ExtensionModule {
             .Define()
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
+            .WithDisplayName("Forbedringer ved posting")
             .WithDescription("Denne modulen gjør små forbedringer når du skal legge inn eller redigere et innlegg på forumet.")
             .WithConfigOption(opt =>
                 opt

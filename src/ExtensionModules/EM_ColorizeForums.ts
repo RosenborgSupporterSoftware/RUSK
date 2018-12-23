@@ -16,7 +16,7 @@ import { ForumInfo } from "../Utility/ForumInfo";
 
 export class ColorizeForums implements ExtensionModule {
 
-    readonly name: string = "Fargelegging av forum";
+    readonly name: string = "ColorizeForums";
     cfg: ModuleConfiguration;
     currentlySelectedItem: ForumInfo = null;
     allForums: Array<ForumInfo> = null;

@@ -9,7 +9,7 @@ import { PageContext } from "../Context/PageContext";
 import { ThreadInfo } from "../Utility/ThreadInfo";
 
 /**
- * EM_UserFilter - Extension module for RBKweb.
+ * EM_TopicFilter - Extension module for RBKweb.
  */
 
 // FIXME: common preprocessing step with UsernameTracker, SignatureFilter (marking userid
@@ -30,7 +30,8 @@ export class TopicFilter implements ExtensionModule {
         ConfigBuilder
             .Define()
             .EnabledByDefault()
-            .WithExtensionModuleName("TopicFilter")
+            .WithExtensionModuleName(this.name)
+            .WithDisplayName('Trådfilter')
             .WithDescription("Denne modulen filtrerer forumtråder")
             .WithConfigOption(opt =>
                 opt

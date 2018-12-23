@@ -25,6 +25,7 @@ export class HighlightColor implements ExtensionModule {
             .Define()
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
+            .WithDisplayName("Uthevingsfarge")
             .WithDescription("Denne modulen endrer farge for utheving av f.eks. søkeresultater.")
             .WithConfigOption(opt =>
                 opt

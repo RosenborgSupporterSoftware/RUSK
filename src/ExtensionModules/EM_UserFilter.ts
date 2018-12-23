@@ -1,5 +1,4 @@
 import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
@@ -7,7 +6,6 @@ import { PostInfo } from "../Utility/PostInfo";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
-import { ChromeSyncStorage } from "../Configuration/ChromeSyncStorage";
 
 /**
  * EM_UserFilter - Extension module for RBKweb.
@@ -31,7 +29,8 @@ export class UserFilter implements ExtensionModule {
         ConfigBuilder
             .Define()
             .EnabledByDefault()
-            .WithExtensionModuleName("UserFilter")
+            .WithExtensionModuleName(this.name)
+            .WithDisplayName("Brukerfiltrering")
             .WithDescription("Denne modulen filtrerer forumbrukere")
             .WithConfigOption(opt =>
                 opt
@@ -325,5 +324,5 @@ export class UserFilter implements ExtensionModule {
 
         return template;
     }
- 
+
 };

@@ -26,7 +26,8 @@ export class Usertips implements ExtensionModule {
         ConfigBuilder
             .Define()
             .EnabledByDefault()
-            .WithExtensionModuleName("Brukertips")
+            .WithExtensionModuleName(this.name)
+            .WithDisplayName(this.name)
             .WithDescription("Denne modulen viser enkle brukertips oppe til høyre på RBKweb-siden, rett under sitatene.")
             .Build();
 

@@ -21,7 +21,7 @@ const SCROLLDIRECTION_KEY = "RUSK-ThreadPage-ScrollDirection";
 
 export class ColorizeThreads implements ExtensionModule {
 
-    readonly name: string = "Fargelegging av tråder";
+    readonly name: string = "ColorizeThreads";
     cfg: ModuleConfiguration;
     currentlySelectedItem: ThreadInfo = null;
     allThreads: Array<ThreadInfo> = null;

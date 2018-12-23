@@ -18,7 +18,7 @@ const SCROLLDIRECTION_KEY = "RUSK-PostPage-ScrollDirection";
 
 export class ColorizePosts implements ExtensionModule {
 
-    readonly name: string = "Fargelegging av innlegg";
+    readonly name: string = "ColorizePosts";
     cfg: ModuleConfiguration;
     currentlySelectedItem: PostInfo = null;
     allPosts: Array<PostInfo> = null;
@@ -35,7 +35,7 @@ export class ColorizePosts implements ExtensionModule {
             .Define()
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
-            .WithDisplayName(this.name)
+            .WithDisplayName("Fargelegging av innlegg")
             .WithDescription("Denne modulen fargelegger innlegg på RBKweb i henhold til status.")
             .WithConfigOption(opt =>
                 opt
