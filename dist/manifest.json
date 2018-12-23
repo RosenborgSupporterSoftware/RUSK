@@ -3,7 +3,7 @@
 
   "name": "RBKweb Ultimate Survival Kit",
   "description": "Utvidet funksjonalitet for RBKweb.no",
-  "version": "0.0.5",
+  "version": "0.0.6",
 
   "options_ui": {
     "page": "options.html",
