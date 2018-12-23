@@ -1,4 +1,5 @@
 import { ConfigurationOptionVisibility } from "./ConfigurationOptionVisibility";
+import { SettingType } from "./SettingType";
 
 /** Value types that can be used in ConfigurationSetting<T> objects */
 export type settingValueTypes = string | boolean | Array<string>;
@@ -11,32 +12,38 @@ export type ConfigSetting = ConfigurationSetting<settingValueTypes>;
  */
 export class ConfigurationSetting<T extends settingValueTypes>  {
     readonly setting: string;
+    readonly type: SettingType;
     value: T;
     readonly isShared: boolean;
-    readonly visability: ConfigurationOptionVisibility;
+    readonly visibility: ConfigurationOptionVisibility;
+    readonly label: string;
 
-    constructor(setting: string, value: T, isShared: boolean = false, visibility: ConfigurationOptionVisibility = ConfigurationOptionVisibility.Always) {
+    constructor(setting: string, type: SettingType, value: T, label: string, isShared: boolean = false, visibility: ConfigurationOptionVisibility = ConfigurationOptionVisibility.Always) {
         this.setting = setting;
+        this.type = type;
         this.value = value;
+        this.label = label;
         this.isShared = isShared;
-        this.visability = visibility;
+        this.visibility = visibility;
     }
 
     /** Creates a clone of the ConfigurationSetting instance */
     public Clone(): ConfigurationSetting<T> {
-        return new ConfigurationSetting(this.setting, this.value, this.isShared, this.visability);
+        return new ConfigurationSetting(this.setting, this.type, this.value, this.label, this.isShared, this.visibility);
     }
 
     public ToStorageObject(): object {
         return {
             setting: this.setting,
+            type: this.type,
+            label: this.label,
             isShared: this.isShared,
-            visability: this.visability,
+            visibility: this.visibility,
             value: this.value
         };
     }
 
     public static FromStorageObject(obj: any): ConfigSetting {
-        return new ConfigurationSetting(obj.setting, obj.value, obj.isShared, obj.visability);
+        return new ConfigurationSetting(obj.setting, obj.type, obj.value, obj.label, obj.isShared, obj.visibility);
     }
 }

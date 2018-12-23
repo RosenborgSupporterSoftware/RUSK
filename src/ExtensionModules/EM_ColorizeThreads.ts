@@ -45,7 +45,7 @@ export class ColorizeThreads implements ExtensionModule {
                     .WithSettingName("UnreadColorEven")
                     .WithLabel("Farge for uleste tråder (liketallslinjer)")
                     .WithSettingType(SettingType.color)
-                    .WithDefaultValue('lightgreen')
+                    .WithDefaultValue('#90EE90')
                     .AsSharedSetting()
             )
             .WithConfigOption(opt =>
@@ -53,7 +53,7 @@ export class ColorizeThreads implements ExtensionModule {
                     .WithSettingName("UnreadColorOdd")
                     .WithLabel("Farge for uleste tråder (oddetallslinjer)")
                     .WithSettingType(SettingType.color)
-                    .WithDefaultValue('lightgreen')
+                    .WithDefaultValue('#A0FEA0')
                     .AsSharedSetting()
             )
             .WithConfigOption(opt =>
@@ -61,7 +61,7 @@ export class ColorizeThreads implements ExtensionModule {
                     .WithSettingName("ReadColorEven")
                     .WithLabel("Farge for leste tråder (liketallslinjer)")
                     .WithSettingType(SettingType.color)
-                    .WithDefaultValue('white')
+                    .WithDefaultValue('#FFFFFF')
                     .AsSharedSetting()
             )
             .WithConfigOption(opt =>
@@ -69,7 +69,7 @@ export class ColorizeThreads implements ExtensionModule {
                     .WithSettingName("ReadColorOdd")
                     .WithLabel("Farge for leste tråder (oddetallslinjer)")
                     .WithSettingType(SettingType.color)
-                    .WithDefaultValue('white')
+                    .WithDefaultValue('#EFEFEF')
                     .AsSharedSetting()
             )
             .WithConfigOption(opt =>
@@ -77,7 +77,7 @@ export class ColorizeThreads implements ExtensionModule {
                     .WithSettingName("SelectedItemColor")
                     .WithLabel("Farge for valgt tråd")
                     .WithSettingType(SettingType.color)
-                    .WithDefaultValue('DDE7C7')
+                    .WithDefaultValue('#DDE7C7')
                     .AsSharedSetting()
             )
             .Build();

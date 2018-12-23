@@ -1,6 +1,6 @@
 import { ConfigSetting, settingValueTypes, ConfigurationSetting } from "./ConfigurationSetting";
-import { RUSKConfig } from "./RUSKConfig";
 import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
+import { ColorChecker } from "../Utility/ColorChecker";
 
 /**
  * ModuleConfiguration contains configuration for a single ExtensionModule
@@ -8,7 +8,14 @@ import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
 
 export class ModuleConfiguration {
 
-    private parentConfig: RUSKConfig;
+    private _isDirty: boolean = false;
+
+    /**
+     * Gets the dirty state of this ModuleConfiguration object
+     */
+    get IsDirty(): boolean {
+        return this._isDirty;
+    }
 
     /** Gets a value specifying what ExtensionModule this ModuleConfiguration object is for */
     public readonly moduleName: string;
@@ -45,18 +52,46 @@ export class ModuleConfiguration {
         this.settings = settings;
     }
 
+    /**
+     * Restore and sanitize configuration from a POJO to an actual ModuleConfiguration
+     * @param obj - The configuration object stored in memory
+     * @param module - The ExtensionModule to which this configuration object should apply
+     * @returns A populated ModuleConfiguration object
+     */
     public static FromStorageObject(obj: any, module: ExtensionModule): ModuleConfiguration {
         let modConf = module.configSpec();
         if (obj && obj.settings) {
             for (let i = 0; i < obj.settings.length; i++) {
-                let setting = obj.settings[i].setting;
-                if (modConf.doesSettingExist(setting)) {
-                    modConf.changeSetting(setting, obj.settings[i].value);
+                let setting = obj.settings[i];
+                if (setting.visability) {
+                    setting.visibility = setting.visability;
+                    modConf.SetDirtyState(true); // Get rid of embarassing typo
+                }
+                if (modConf.doesSettingExist(setting.setting)) {
+                    let modConfSetting = modConf.getConfigSetting(setting.setting);
+                    if (modConfSetting.type == "ST_COLOR") {
+                        // Verify if colors are in the right format.
+                        if (!ColorChecker.CheckColorFormat(setting.value)) {
+                            // setting.value = ColorChecker.GetBestColorOption(setting.value, modConfSetting.value as string);
+                            setting.value = ColorChecker.GetBestColorOption("#abc", modConfSetting.value as string);
+                            modConf.SetDirtyState(true);
+                        }
+                    }
+                    modConf.changeSetting(setting, setting.value);
+                } else {
+                    modConf.SetDirtyState(true);
                 }
             }
         }
-
         return modConf;
+    }
+
+    /**
+     * Sets the dirty state of the ModuleConfiguration
+     * @param newState - The new dirty state to set the configuration to
+     */
+    public SetDirtyState(newState: boolean): void {
+        this._isDirty = newState;
     }
 
     private doesSettingExist(setting: string): boolean {
@@ -66,10 +101,10 @@ export class ModuleConfiguration {
         return false;
     }
 
-    /** Sets the given RUSKConfig object as the parent/owner of this ModuleConfiguration */
-    public setOwner(parentConfig: RUSKConfig): void {
-        this.parentConfig = parentConfig;
-    }
+    // /** Sets the given RUSKConfig object as the parent/owner of this ModuleConfiguration */
+    // public setOwner(parentConfig: RUSKConfig): void {
+    //     this.parentConfig = parentConfig;
+    // }
 
     /**
      * Change a setting in a ModuleConfiguration

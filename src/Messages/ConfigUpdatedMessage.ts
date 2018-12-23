@@ -1,4 +1,3 @@
-import { RUSKConfig } from "../Configuration/RUSKConfig";
 
 /**
  * A class sendt to tell our background script that the configuration has been updated

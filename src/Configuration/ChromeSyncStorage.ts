@@ -1,5 +1,4 @@
 import { IConfigurationStorage } from "./IConfigurationStorage";
-import { RUSKConfig } from "./RUSKConfig";
 import { ModuleConfiguration } from "./ModuleConfiguration";
 
 /**

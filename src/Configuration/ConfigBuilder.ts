@@ -51,7 +51,7 @@ export class ConfigBuilder {
             throw new Error('Option ' + opt.setting + ' unsuitable as string');
         }
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
+        return new ConfigurationSetting(opt.setting, opt.type, opt.defaultValue, opt.label, opt.isShared, opt.visibility);
     }
 
     private createColorOption(opt: ConfigOptionBuilder): ConfigurationSetting<string> {
@@ -62,7 +62,7 @@ export class ConfigBuilder {
         }
         // TODO: Validate default color value
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
+        return new ConfigurationSetting(opt.setting, opt.type, opt.defaultValue, opt.label, opt.isShared, opt.visibility);
     }
 
     private createBoolOption(opt: ConfigOptionBuilder): ConfigurationSetting<boolean> {
@@ -72,17 +72,17 @@ export class ConfigBuilder {
             throw new Error(err);
         }
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
+        return new ConfigurationSetting(opt.setting, opt.type, opt.defaultValue, opt.label, opt.isShared, opt.visibility);
     }
 
     private createListOption(opt: ConfigOptionBuilder): ConfigurationSetting<Array<string>> {
         if (opt.type != SettingType.list || !Array.isArray(opt.defaultValue)) {
-            let err = 'Option ' + opt.setting + ' unsuitable as bool';
+            let err = 'Option ' + opt.setting + ' unsuitable as list';
             Log.Error(err);
             throw new Error(err);
         }
 
-        return new ConfigurationSetting(opt.setting, opt.defaultValue, opt.isShared, opt.visibility);
+        return new ConfigurationSetting(opt.setting, opt.type, opt.defaultValue, opt.label, opt.isShared, opt.visibility);
     }
 
     /** Names the ExtensionModule that will use the configuration */

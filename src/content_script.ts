@@ -4,7 +4,6 @@ import { PageContext } from './Context/PageContext';
 import { PageTypeClassifier } from './Context/PageTypeClassifier';
 import { ChromeSyncStorage } from './Configuration/ChromeSyncStorage';
 import { IConfigurationStorage } from './Configuration/IConfigurationStorage';
-import { RUSKConfig } from './Configuration/RUSKConfig';
 import { ModuleError } from './Errors/ModuleError';
 import { ModuleConfiguration } from './Configuration/ModuleConfiguration';
 
@@ -13,7 +12,6 @@ var allModules = moduleLoader("notyet");
 let storage = new ChromeSyncStorage() as IConfigurationStorage;
 
 storage.GetConfiguration(config => {
-    let ruskConfig: RUSKConfig = null;
 
     if (config == null) {
         // Lag ny config med default ting

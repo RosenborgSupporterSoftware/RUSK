@@ -1,5 +1,3 @@
-import { RUSKConfig } from "./RUSKConfig";
-
 /**
  * ConfigurationStorage interface is an abstraction over how to store configuration data for RUSK
  */

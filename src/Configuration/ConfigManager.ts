@@ -43,9 +43,13 @@ export class ConfigManager {
                     // Dette er en ModuleConfiguration pojo
                     let modname = key.substr(this._moduleConfPrefix.length);
                     let mod = this.getModule(modname);
-                    if (mod == null) continue;  // The config is for a module we do not have.
+                    if (mod == null) continue;  // The config is for a module we do not have. FIXME: Delete
                     // this._moduleConfigs.push([key, ModuleConfiguration.FromStorageObject(data[key], mod)]);
-                    this._moduleConfigs.set(key, ModuleConfiguration.FromStorageObject(data[key], mod));
+                    let modConf = ModuleConfiguration.FromStorageObject(data[key], mod);
+                    this._moduleConfigs.set(key, modConf);
+                    if (modConf.IsDirty) {
+                        this.SetConfigForModule(mod, modConf);
+                    }
                 } else {
                     // Annen data. Håndter.
                     console.log('Unhandled config object: ' + key);
@@ -85,6 +89,7 @@ export class ConfigManager {
         this._moduleConfigs.set(storageKey, modConf);
 
         chrome.storage.sync.set({ [storageKey]: modConf.ToStorageObject() }, () => {
+            modConf.SetDirtyState(false);
             console.log('Configuration for ' + modname + ' stored in sync storage under key ' + storageKey);
         });
     }
