@@ -6,6 +6,8 @@ import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 
+const SCROLLDIRECTION_KEY = "RUSK-PostPage-ScrollDirection";
+
 /**
  * EM_ColorizePosts - Extension module for colorizing posts on RBKweb.
  * Unread posts are colorized green.
@@ -170,6 +172,7 @@ export class ColorizePosts implements ExtensionModule {
         let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
         links.forEach(el => {
             if (el.textContent == 'Next' || el.textContent == 'Neste') {
+                localStorage.setItem(SCROLLDIRECTION_KEY, "FromNewer");
                 window.location.href = el.href;
             }
         });
@@ -179,6 +182,7 @@ export class ColorizePosts implements ExtensionModule {
         let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
         links.forEach(el => {
             if (el.textContent == 'Previous' || el.textContent == 'Forrige') {
+                localStorage.setItem(SCROLLDIRECTION_KEY, "FromOlder");
                 window.location.href = el.href;
             }
         });
@@ -250,6 +254,17 @@ export class ColorizePosts implements ExtensionModule {
                 this.selectNewItem(posts[i]);
                 return;
             }
+        }
+
+        let scrollDirection = localStorage.getItem(SCROLLDIRECTION_KEY);
+        if (scrollDirection) {
+            if (scrollDirection == "FromOlder") {
+                this.selectNewItem(posts[posts.length - 1]);
+            } else if (scrollDirection == "FromNewer") {
+                this.selectNewItem(posts[0]);
+            }
+            localStorage.removeItem(SCROLLDIRECTION_KEY);
+            return;
         }
 
         this.selectNewItem(posts[posts.length - 1]);

@@ -7,6 +7,8 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 
+const SCROLLDIRECTION_KEY = "RUSK-ThreadPage-ScrollDirection";
+
 /**
  * EM_ColorizeThreads - Extension module for colorizing threads on RBKweb.
  * Unread threads are colorized green.
@@ -135,6 +137,7 @@ export class ColorizeThreads implements ExtensionModule {
         let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
         links.forEach(el => {
             if (el.textContent == 'Next' || el.textContent == 'Neste') {
+                localStorage.setItem(SCROLLDIRECTION_KEY, "FromNewer");
                 window.location.href = el.href;
             }
         });
@@ -144,6 +147,7 @@ export class ColorizeThreads implements ExtensionModule {
         let links = (document.querySelectorAll('span.gensmall b a') as NodeListOf<HTMLAnchorElement>);
         links.forEach(el => {
             if (el.textContent == 'Previous' || el.textContent == 'Forrige') {
+                localStorage.setItem(SCROLLDIRECTION_KEY, "FromOlder");
                 window.location.href = el.href;
             }
         });
@@ -179,6 +183,17 @@ export class ColorizeThreads implements ExtensionModule {
 
     private determineSelectedItem(threads: Array<ThreadInfo>): void {
         if (threads.length == 0) return;
+
+        let scrollDirection = localStorage.getItem(SCROLLDIRECTION_KEY);
+        if (scrollDirection) {
+            if (scrollDirection == "FromOlder") {
+                this.selectNewItem(threads[threads.length - 1]);
+            } else if (scrollDirection == "FromNewer") {
+                this.selectNewItem(threads[0]);
+            }
+            localStorage.removeItem(SCROLLDIRECTION_KEY);
+            return;
+        }
 
         let bestCandidate: ThreadInfo = null;
 
