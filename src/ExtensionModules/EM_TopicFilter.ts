@@ -7,6 +7,7 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { PageContext } from "../Context/PageContext";
 import { ThreadInfo } from "../Utility/ThreadInfo";
+import { ContextMenu } from "../Utility/ContextMenu";
 
 /**
  * EM_TopicFilter - Extension module for RBKweb.
@@ -59,90 +60,113 @@ export class TopicFilter implements ExtensionModule {
         }
     }
 
+    HIDE_THREAD: string = "Hide thread";
+    SHOW_THREAD: string = "Show thread";
+    HIDE_THREADS: string = "Hide filtered threads";
+    SHOW_THREADS: string = "Show hidden threads";
+
+    topmenu: ContextMenu = null;
+
     execute = (context: PageContext) => {
         if (!this.topics) return;
 
-        // set up top-toggle
-        var toptoggle = null;
-        document.body.querySelectorAll("tr td span.nav a").forEach(function(elt, idx, parent) {
-            if (idx == 0 && elt.getAttribute('href') == "index.php") {
-                elt.closest("tr").insertAdjacentHTML('beforeend',
-                    '<td align="right" valign="bottom">' +
-                    '<a id="toptoggle" title="Show hidden">' +
-                    '<img src="'+chrome.runtime.getURL("/img/green.png")+'" width="14" height="14" border="0"/>' +
-                    '</a></td>');
-                toptoggle = elt.closest('table').querySelector("a#toptoggle") as HTMLAnchorElement;
-                toptoggle.addEventListener('click', function(ev) {
-                    // FIXME: showthreads();
-                    this.topics.forEach(function(thread, idx, threads) {
+        // set up top-menu
+        try {
+            if (this.topmenu == null) {
+                var body = document.body.querySelector('table.forumline') as HTMLTableElement;
+                if (body) {
+                    var header = body.previousElementSibling;
+                    if (header) {
+                        var link = header.querySelector('span.gensmall a[href*="mark=topics"]') as HTMLAnchorElement;
+                        if (link) {
+                            link.insertAdjacentHTML('afterend', ' <div style="margin-left:5px;"></div>');
+                            var root = link.nextElementSibling as HTMLDivElement;
+                            this.topmenu = new ContextMenu(root, "forumline");
+                        }
+                    }
+                }
+            }
+            if (this.topmenu == null) {
+                document.body.querySelectorAll("tr td span.nav a").forEach(function(elt, idx, parent) {
+                    if (idx == 0 && elt.getAttribute('href') == "index.php") {
+                        this.topmenu = new ContextMenu(elt.closest("tr"), "forumline");
+                    }
+                }.bind(this));
+            }
+            if (this.topmenu != null) {
+                this.topmenu.addAction(this.SHOW_THREADS, true, function() {
+                    this.topmenu.getAction(this.SHOW_THREADS).hide();
+                    this.topmenu.getAction(this.HIDE_THREADS).show();
+                    this.topics.forEach(function(thread: ThreadInfo, idx, threads) {
                         thread.rowElement.classList.remove("RUSKHiddenItem");
                     }.bind(this));
                 }.bind(this));
+                this.topmenu.addAction(this.HIDE_THREADS, true, function() {
+                    this.topmenu.getAction(this.SHOW_THREADS).show();
+                    this.topmenu.getAction(this.HIDE_THREADS).hide();
+                    this.topics.forEach(function(thread: ThreadInfo, idx, threads) {
+                        if (this.hideThreads.indexOf(thread.threadid) != -1)
+                            thread.rowElement.classList.add("RUSKHiddenItem");
+                    }.bind(this));
+                }.bind(this));
             }
-        }.bind(this));
+        } catch (e) {
+            console.error("error: " + e.message + " => " + e.stack);
+        }
 
-        // set up thread toggles
-        this.topics.forEach(function(thread, idx, threads) {
-            var row = thread.rowElement as HTMLTableRowElement;
-            var img = row.firstElementChild.querySelector("img") as HTMLImageElement;
-            img.height = 12;
-            img.width = 12;
-            img.insertAdjacentHTML('beforebegin',
-                '<a class="nav" id="' + thread.threadid + 'green" title="Show">' +
-                '<img src="' + chrome.runtime.getURL("/img/green.png") + '" valign="top" width="12" height="12" class="RUSKKillTopicBullet"/></a>' +
-                '<a class="nav" id="' + thread.threadid + 'red" title="Hide">' +
-                '<img src="' + chrome.runtime.getURL("/img/red.png") + '" valign="top" width="12" height="12" class="RUSKKillTopicBullet"/></a> ');
-            var reda = row.firstElementChild.querySelector('a[id="' + thread.threadid + 'red"]') as HTMLAnchorElement;
-            var greena = row.firstElementChild.querySelector('a[id="' + thread.threadid + 'green"]') as HTMLAnchorElement;
-            reda.addEventListener('click', function(ev) {
+        var hiddencount = 0;
+        this.topics.forEach(function(topic: ThreadInfo, idx, topics) {
+            var menu = topic.getContextMenu();
+            var visible = this.hideThreads.indexOf(topic.threadid);
+            if (!visible) {
+                hiddencount += 1;
+                topic.rowElement.classList.add("RUSKHiddenItem");
+            }
+            menu.addAction(this.HIDE_THREAD, visible, function() {
                 try {
-                    this.hideThreads.push(thread.threadid);
+                    this.hideThreads.push(topic.threadid);
                     this.saveHideThreads();
-                    thread.rowElement.classList.add("RUSKHiddenItem");
-                    toptoggle.classList.remove("RUSKHiddenItem");
-                    reda.classList.add("RUSKHiddenItem");
-                    greena.classList.remove("RUSKHiddenItem");
+                    topic.rowElement.classList.add("RUSKHiddenItem");
+                    this.topmenu.menuElement.classList.remove("RUSKHiddenItem");
+                    menu.getAction(this.SHOW_THREAD).show();
+                    menu.getAction(this.HIDE_THREAD).hide();
+                    this.topmenu.getAction(this.HIDE_THREADS).hide();
+                    this.topmenu.getAction(this.SHOW_THREADS).show();
                 } catch (e) {
-                    console.log("exception click red: " + e.message);
+                    console.log("exception hiding topic: " + e.message);
                 }
             }.bind(this));
-            greena.addEventListener('click', function(ev) {
+            menu.addAction(this.SHOW_THREAD, !visible, function() {
                 try {
-                    this.hideThreads = this.hideThreads.filter((num) => { return num != thread.threadid });
+                    this.hideThreads = this.hideThreads.filter((num) => { return num != topic.threadid });
                     this.saveHideThreads();
-                    thread.rowElement.classList.remove("RUSKHiddenItem");
                     var count = 0;
                     this.topics.forEach(function(thread, idx, threads) {
                         if (this.hideThreads.indexOf(thread.threadid) != -1) { count += 1; }
                     }.bind(this));
-                    if (count == 0) toptoggle.classList.add("RUSKHiddenItem");
-                    greena.classList.add("RUSKHiddenItem");
-                    reda.classList.remove("RUSKHiddenItem");
+                    if (count == 0) this.topmenu.menuElement.classList.add("RUSKHiddenItem");
+                    this.saveHideThreads();
+                    topic.rowElement.classList.remove("RUSKHiddenItem");
+                    menu.getAction(this.SHOW_THREAD).hide();
+                    menu.getAction(this.HIDE_THREAD).show();
                 } catch (e) {
-                    console.log("gren click exception: " + e.message);
+                    console.log("exception showing topic: " + e.message);
                 }
             }.bind(this));
         }.bind(this));
 
-        // hide threads
-        var hiddencount = 0;
-        this.topics.forEach(function(thread, idx, threads) {
-            try {
-                if (this.hideThreads.indexOf(thread.threadid) != -1) {
-                    hiddencount += 1;
-                    thread.rowElement.classList.add("RUSKHiddenItem");
-                    (thread.rowElement.querySelector('a[id="' + thread.threadid + 'red"]') as HTMLAnchorElement).classList.add("RUSKHiddenItem");
-                } else {
-                    (thread.rowElement.querySelector('a[id="' + thread.threadid + 'green"]') as HTMLAnchorElement).classList.add("RUSKHiddenItem");
-                }
-            } catch (e) {
-                console.error("exception: " + e.message);
+        // hide top-menu if no items are hidden
+        if (this.topmenu) {
+            if (hiddencount == 0) {
+                this.topmenu.menuElement.classList.add("RUSKHiddenItem");
+                this.topmenu.getAction(this.SHOW_THREADS).hide();
+                this.topmenu.getAction(this.HIDE_THREADS).show();
             }
-        }.bind(this));
-
-        // hide top-toggle if no items are hidden
-        if (hiddencount == 0) {
-            toptoggle.classList.add("RUSKHiddenItem");
+            else {
+                this.topmenu.menuElement.classList.remove("RUSKHiddenItem");
+                this.topmenu.getAction(this.HIDE_THREADS).hide();
+                this.topmenu.getAction(this.SHOW_THREADS).show();
+            }
         }
     }
 

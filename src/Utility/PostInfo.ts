@@ -96,7 +96,7 @@ export class PostInfo {
 
     public getContextMenu(): ContextMenu {
         try {
-            var menu = new ContextMenu(this.rowElement);
+            var menu = new ContextMenu(this.rowElement, "post");
             return menu;
         } catch (e) {
             console.error("exception: " + e.message);

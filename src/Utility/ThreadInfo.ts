@@ -1,5 +1,6 @@
 import { ThreadType } from "../Context/ThreadType";
 import { ThreadAttributes } from "../Context/ThreadAttributes";
+import { ContextMenu } from "./ContextMenu";
 
 /**
  * ThreadInfo - utility class used to extract information from a thread list
@@ -96,7 +97,16 @@ export class ThreadInfo {
         this.isUnread = this.determineUnreadState(row);
         this.threadType = this.determineThreadType(row);
         this.isLocked = this.determineLockedState(row);
+    }
 
+    public getContextMenu(): ContextMenu {
+        try {
+            var menu = new ContextMenu(this.rowElement, "thread");
+            return menu;
+        } catch (e) {
+            console.error("exception: " + e.message);
+        }
+        return null;
     }
 
     private getThreadId(row: HTMLTableRowElement): number {
