@@ -60,6 +60,20 @@ export class AvatarFilter implements ExtensionModule {
 
     preprocess = () => {
         this.posts = PostInfo.GetPostsFromDocument(document);
+        var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
+        if (pbutton.textContent == "Profil")
+            this.i18n = this.i18n_no;
+    }
+
+    i18n_no = {
+        "Hide avatar": "Skjul profilbilde",
+        "Show avatar": "Vis profilbilde",
+    }
+
+    i18n = {}
+
+    tr = (text: string): string => {
+        return this.i18n[text] || text;
     }
 
     HIDE_AVATAR: string = "Hide avatar";
@@ -74,7 +88,7 @@ export class AvatarFilter implements ExtensionModule {
             }
             if (!this.hideAvatars && avatar) { // no need for context menu options when hiding all, or no avatar
                 var cmenu = post.getContextMenu();
-                cmenu.addAction(this.HIDE_AVATAR, !hideAvatar, function() {
+                cmenu.addAction(this.tr(this.HIDE_AVATAR), !hideAvatar, function() {
                     this.posts.forEach(function(thepost: PostInfo, idx, posts) {
                         try {
                             if (thepost.posterid != post.posterid) return;
@@ -85,15 +99,15 @@ export class AvatarFilter implements ExtensionModule {
                                 var avatar = thepost.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
                                 if (avatar) avatar.style.display = "none";
                                 var menu = thepost.getContextMenu();
-                                menu.getAction(this.HIDE_AVATAR).hide(); // FIXME: make checkboxed menu option instead
-                                menu.getAction(this.SHOW_AVATAR).show();
+                                menu.getAction(this.tr(this.HIDE_AVATAR)).hide(); // FIXME: make checkboxed menu option instead
+                                menu.getAction(this.tr(this.SHOW_AVATAR)).show();
                             }.bind(this));
                         } catch (e) {
                             Log.Error('avatar hide error: ' + e.message);
                         }
                     }.bind(this));
                 }.bind(this));
-                cmenu.addAction(this.SHOW_AVATAR, hideAvatar, function() {
+                cmenu.addAction(this.tr(this.SHOW_AVATAR), hideAvatar, function() {
                     this.posts.forEach(function(thepost: PostInfo, idx, posts) {
                         try {
                             if (thepost.posterid != post.posterid) return;
@@ -106,8 +120,8 @@ export class AvatarFilter implements ExtensionModule {
                                 var avatar = thepost.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
                                 if (avatar) avatar.style.display = "";
                                 var menu = thepost.getContextMenu();
-                                menu.getAction(this.HIDE_AVATAR).show();
-                                menu.getAction(this.SHOW_AVATAR).hide();
+                                menu.getAction(this.tr(this.HIDE_AVATAR)).show();
+                                menu.getAction(this.tr(this.SHOW_AVATAR)).hide();
                             }.bind(this));
                         } catch (e) {
                             Log.Error('avatar show error: ' + e.message);

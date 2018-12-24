@@ -53,6 +53,18 @@ export class UserFilter implements ExtensionModule {
     threadTrolls: Map<string, Object> = new Map<string, Object>();
     dotdotdotURL: string;
 
+    i18n_no = {
+        "Block user": "Blokker bruker",
+        "Thread block 48H": "Blokker i tråd for 2 dager",
+        "Unblock": "Stopp blokkering",
+    }
+
+    i18n = {}
+
+    tr = (text: string): string => {
+        return this.i18n[text] || text;
+    }
+
     BLOCK_MENUITEM: string = "Block user";
     THREADBLOCK_MENUITEM: string = "Thread block 48H";
     UNBLOCK_MENUITEM: string = "Unblock";
@@ -97,6 +109,9 @@ export class UserFilter implements ExtensionModule {
         } catch (e) {
             console.error("UserFilter.preprocess: " + e.message);
         }
+        var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
+        if (pbutton.textContent == "Profil")
+            this.i18n = this.i18n_no;
     }
 
     execute = (context: PageContext) => {
@@ -108,7 +123,7 @@ export class UserFilter implements ExtensionModule {
                 var menu = post.getContextMenu();
                 var threadblocked = this.isThreadTroll(""+post.threadId, ""+post.posterid);
                 var blocked = this.forumTrolls.has(post.posterid);
-                menu.addAction(this.UNBLOCK_MENUITEM, blocked, function() {
+                menu.addAction(this.tr(this.UNBLOCK_MENUITEM), blocked, function() {
                     if (this.isThreadTroll(""+post.threadId, ""+post.posterid)) {
                         this.removeThreadTroll(""+post.threadId, ""+post.posterid);
                         this.storeThreadTrolls();
@@ -122,13 +137,13 @@ export class UserFilter implements ExtensionModule {
                             other.buttonRowElement.style.display = "";
                             (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "none";
                             var cmenu = other.getContextMenu();
-                            cmenu.getAction(this.UNBLOCK_MENUITEM).hide();
-                            cmenu.getAction(this.BLOCK_MENUITEM).show();
-                            cmenu.getAction(this.THREADBLOCK_MENUITEM).show();
+                            cmenu.getAction(this.tr(this.UNBLOCK_MENUITEM)).hide();
+                            cmenu.getAction(this.tr(this.BLOCK_MENUITEM)).show();
+                            cmenu.getAction(this.tr(this.THREADBLOCK_MENUITEM)).show();
                         }
                     }.bind(this));
                 }.bind(this));
-                menu.addAction(this.BLOCK_MENUITEM, !blocked, function() {
+                menu.addAction(this.tr(this.BLOCK_MENUITEM), !blocked, function() {
                     this.forumTrolls.add(post.posterid);
                     this.storeForumTrolls();
                     this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
@@ -137,13 +152,13 @@ export class UserFilter implements ExtensionModule {
                             other.buttonRowElement.style.display = "none";
                             (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "";
                             var cmenu = other.getContextMenu();
-                            cmenu.getAction(this.BLOCK_MENUITEM).hide();
-                            cmenu.getAction(this.THREADBLOCK_MENUITEM).hide();
-                            cmenu.getAction(this.UNBLOCK_MENUITEM).show();
+                            cmenu.getAction(this.tr(this.BLOCK_MENUITEM)).hide();
+                            cmenu.getAction(this.tr(this.THREADBLOCK_MENUITEM)).hide();
+                            cmenu.getAction(this.tr(this.UNBLOCK_MENUITEM)).show();
                         }
                     }.bind(this));
                 }.bind(this));
-                menu.addAction(this.THREADBLOCK_MENUITEM, !threadblocked, function() {
+                menu.addAction(this.tr(this.THREADBLOCK_MENUITEM), !threadblocked, function() {
                     this.addThreadTroll(""+post.threadId, ""+post.posterid);
                     this.storeThreadTrolls();
                     this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
@@ -152,9 +167,9 @@ export class UserFilter implements ExtensionModule {
                             other.buttonRowElement.style.display = "none";
                             (other.buttonRowElement.nextElementSibling as HTMLTableRowElement).style.display = "";
                             var cmenu = other.getContextMenu();
-                            cmenu.getAction(this.BLOCK_MENUITEM).hide();
-                            cmenu.getAction(this.THREADBLOCK_MENUITEM).hide();
-                            cmenu.getAction(this.UNBLOCK_MENUITEM).show();
+                            cmenu.getAction(this.tr(this.BLOCK_MENUITEM)).hide();
+                            cmenu.getAction(this.tr(this.THREADBLOCK_MENUITEM)).hide();
+                            cmenu.getAction(this.tr(this.UNBLOCK_MENUITEM)).show();
                         }
                     }.bind(this));
                 }.bind(this));

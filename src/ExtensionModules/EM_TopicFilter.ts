@@ -58,6 +58,22 @@ export class TopicFilter implements ExtensionModule {
         } catch (e) {
             console.log("topics scrape exception: " + e.message);
         }
+        var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
+        if (pbutton.textContent == "Profil")
+            this.i18n = this.i18n_no;
+    }
+
+    i18n_no = {
+        "Hide thread": "Skjul emne",
+        "Show thread": "Vis emne",
+        "Hide filtered threads": "Skjul filtrerte emner",
+        "Show hidden threads": "Vis skjulte emner",
+    }
+
+    i18n = {}
+
+    tr = (text: string): string => {
+        return this.i18n[text] || text;
     }
 
     HIDE_THREAD: string = "Hide thread";
@@ -94,16 +110,16 @@ export class TopicFilter implements ExtensionModule {
                 }.bind(this));
             }
             if (this.topmenu != null) {
-                this.topmenu.addAction(this.SHOW_THREADS, true, function() {
-                    this.topmenu.getAction(this.SHOW_THREADS).hide();
-                    this.topmenu.getAction(this.HIDE_THREADS).show();
+                this.topmenu.addAction(this.tr(this.SHOW_THREADS), true, function() {
+                    this.topmenu.getAction(this.tr(this.SHOW_THREADS)).hide();
+                    this.topmenu.getAction(this.tr(this.HIDE_THREADS)).show();
                     this.topics.forEach(function(thread: ThreadInfo, idx, threads) {
                         thread.rowElement.classList.remove("RUSKHiddenItem");
                     }.bind(this));
                 }.bind(this));
-                this.topmenu.addAction(this.HIDE_THREADS, true, function() {
-                    this.topmenu.getAction(this.SHOW_THREADS).show();
-                    this.topmenu.getAction(this.HIDE_THREADS).hide();
+                this.topmenu.addAction(this.tr(this.HIDE_THREADS), true, function() {
+                    this.topmenu.getAction(this.tr(this.SHOW_THREADS)).show();
+                    this.topmenu.getAction(this.tr(this.HIDE_THREADS)).hide();
                     this.topics.forEach(function(thread: ThreadInfo, idx, threads) {
                         if (this.hideThreads.indexOf(thread.threadid) != -1)
                             thread.rowElement.classList.add("RUSKHiddenItem");
@@ -122,21 +138,21 @@ export class TopicFilter implements ExtensionModule {
                 hiddencount += 1;
                 topic.rowElement.classList.add("RUSKHiddenItem");
             }
-            menu.addAction(this.HIDE_THREAD, visible, function() {
+            menu.addAction(this.tr(this.HIDE_THREAD), visible, function() {
                 try {
                     this.hideThreads.push(topic.threadid);
                     this.saveHideThreads();
                     topic.rowElement.classList.add("RUSKHiddenItem");
                     this.topmenu.menuElement.classList.remove("RUSKHiddenItem");
-                    menu.getAction(this.SHOW_THREAD).show();
-                    menu.getAction(this.HIDE_THREAD).hide();
-                    this.topmenu.getAction(this.HIDE_THREADS).hide();
-                    this.topmenu.getAction(this.SHOW_THREADS).show();
+                    menu.getAction(this.tr(this.SHOW_THREAD)).show();
+                    menu.getAction(this.tr(this.HIDE_THREAD)).hide();
+                    this.topmenu.getAction(this.tr(this.HIDE_THREADS)).hide();
+                    this.topmenu.getAction(this.tr(this.SHOW_THREADS)).show();
                 } catch (e) {
                     console.log("exception hiding topic: " + e.message);
                 }
             }.bind(this));
-            menu.addAction(this.SHOW_THREAD, !visible, function() {
+            menu.addAction(this.tr(this.SHOW_THREAD), !visible, function() {
                 try {
                     this.hideThreads = this.hideThreads.filter((num) => { return num != topic.threadid });
                     this.saveHideThreads();
@@ -147,8 +163,8 @@ export class TopicFilter implements ExtensionModule {
                     if (count == 0) this.topmenu.menuElement.classList.add("RUSKHiddenItem");
                     this.saveHideThreads();
                     topic.rowElement.classList.remove("RUSKHiddenItem");
-                    menu.getAction(this.SHOW_THREAD).hide();
-                    menu.getAction(this.HIDE_THREAD).show();
+                    menu.getAction(this.tr(this.SHOW_THREAD)).hide();
+                    menu.getAction(this.tr(this.HIDE_THREAD)).show();
                 } catch (e) {
                     console.log("exception showing topic: " + e.message);
                 }
@@ -159,13 +175,13 @@ export class TopicFilter implements ExtensionModule {
         if (this.topmenu) {
             if (hiddencount == 0) {
                 this.topmenu.menuElement.classList.add("RUSKHiddenItem");
-                this.topmenu.getAction(this.SHOW_THREADS).hide();
-                this.topmenu.getAction(this.HIDE_THREADS).show();
+                this.topmenu.getAction(this.tr(this.SHOW_THREADS)).hide();
+                this.topmenu.getAction(this.tr(this.HIDE_THREADS)).show();
             }
             else {
                 this.topmenu.menuElement.classList.remove("RUSKHiddenItem");
-                this.topmenu.getAction(this.HIDE_THREADS).hide();
-                this.topmenu.getAction(this.SHOW_THREADS).show();
+                this.topmenu.getAction(this.tr(this.HIDE_THREADS)).hide();
+                this.topmenu.getAction(this.tr(this.SHOW_THREADS)).show();
             }
         }
     }
