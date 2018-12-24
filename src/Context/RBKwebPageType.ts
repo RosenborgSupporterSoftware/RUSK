@@ -32,6 +32,7 @@
 
     RBKweb_FORUM_USERPROFILE,       // http://www.rbkweb.no/forum/profile.php?mode=viewprofile&u=6500
     RBKweb_FORUM_USERPROFILE_FORM,  // http://www.rbkweb.no/forum/profile.php?mode=editprofile&u=6500
+    RBKweb_FORUM_USERPROFILE_SAVED, // http://www.rbkweb.no/forum/profile.php
     RBKweb_FORUM_SEARCH_FORM,       // http://www.rbkweb.no/forum/search.php
     RBKweb_FORUM_SEARCH_BYAUTHOR,   // http://www.rbkweb.no/forum/search.php?search_author=OrionPax
 

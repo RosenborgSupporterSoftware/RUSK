@@ -62,9 +62,8 @@ export class SignatureFilter implements ExtensionModule {
     preprocess = () => {
         this.posts = PostInfo.GetPostsFromDocument(document);
         var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
-        if (pbutton.textContent == "Profil") {
+        if (pbutton.textContent == "Profil")
             this.i18n = this.i18n_no;
-        }
     }
 
     i18n_no = {

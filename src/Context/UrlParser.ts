@@ -82,10 +82,14 @@ export class UrlParser {
         if (url == 'forum/search.php')
             return this.parseForumSearchUrl(url, query);
 
-        if (url == 'forum/profile.php' && query.match(/mode=viewprofile/))
-            return RBKwebPageType.RBKweb_FORUM_USERPROFILE;
-        if (url == 'forum/profile.php' && query.match(/mode=editprofile/))
-            return RBKwebPageType.RBKweb_FORUM_USERPROFILE_FORM;
+        if (url == 'forum/profile.php') {
+            if (query.match(/mode=viewprofile/))
+                return RBKwebPageType.RBKweb_FORUM_USERPROFILE;
+            if (query.match(/mode=editprofile/))
+                return RBKwebPageType.RBKweb_FORUM_USERPROFILE_FORM;
+            if (!query)
+                return RBKwebPageType.RBKweb_FORUM_USERPROFILE_SAVED;
+        }
 
         console.error('UrlParser could not parse forum url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
