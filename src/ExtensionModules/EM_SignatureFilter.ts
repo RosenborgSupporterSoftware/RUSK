@@ -67,56 +67,29 @@ export class SignatureFilter implements ExtensionModule {
     SHOW_SIGNATURE: string = "Show signature";
 
     execute = () => {
+        // restructure post body to manipulate signature easier
         var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
         elts.forEach(function (elt, key, parent) {
             try {
                 var sub = elt as HTMLTableCellElement;
                 var index = sub.textContent.indexOf("_________________");
                 if (index != -1) {
-                    var hideSignature = false;
                     sub.childNodes.forEach(function(node, key, parent) {
                         try {
-                         var n = node as HTMLElement;
-                         var idx = n.outerHTML.indexOf("_________________");
-                         if (idx != -1) { // we have a .signature
-                             var belement = ((node as Element).closest("table").closest("tr") as HTMLTableRowElement).firstElementChild;
-                             var username = belement.querySelector("b").textContent;
-                             var postid = belement.querySelector("a").getAttribute("name");
-                             var trelement = belement.nextElementSibling as Element;
-                             trelement = belement.closest("tr").nextElementSibling as Element;
-                             var link = trelement.querySelectorAll('a[href*="profile.php"').item(0) as Element;
-                             var userid = parseInt(link.getAttribute("href").match(/u=([0-9]*)/)[1]);
-                             var signature = '<span class="RUSKSignatureBegin postbody">' + n.outerHTML.substring(idx + 17);
-                             hideSignature = this.hideUserSignatures.indexOf(userid) != -1;
-                             if (hideSignature || this.hideSignatures) {
-                                 signature = '<span class="RUSKSignatureBegin RUSKHiddenItem postbody">' + n.outerHTML.substring(idx + 17);
-                             }
-                             var body = n.outerHTML.substring(0, idx) + '</span>';
-                             var delimiter = '<span class="RUSKSignatureDelimiter postbody">' +
-                                 '<br>' +
-                                 '________________' +
-                                 '</span>';
-                             n.outerHTML = body + delimiter + signature;
-                             var hide = false;
-                             n.childNodes.forEach(function(node, idx, children) {
-                                 try {
-                                     var nod = node as HTMLElement;
-                                     if (nod && node.classList && nod.classList.contains("RUSKSignatureDelimiter")) {
-                                         hide = true;
-                                     }
-                                     else if (hide == true) {
-                                         nod.classList.add("RUSKHiddenItem");
-                                     }
-                                 } catch (e) {
-                                     console.log("exception: " + e.message);
-                                 }
-                             }.bind(this));
-                         } else if (hideSignature || this.hideSignatures) {
-                             n.classList.add("RUSKHiddenItem");
-                         }
-                     } catch (e) {
-                         console.log("exception: " + e.message);
-                     }
+                            var n = node as HTMLElement;
+                            var idx = n.outerHTML.indexOf("_________________");
+                            if (idx != -1) { // we have a .signature
+                                var signature = '<span class="RUSKSignatureBegin postbody">' + n.outerHTML.substring(idx + 17);
+                                var body = n.outerHTML.substring(0, idx) + '</span>';
+                                var delimiter = '<span class="RUSKSignatureDelimiter postbody">' +
+                                    '<br>' +
+                                    '________________' +
+                                    '</span>';
+                                n.outerHTML = body + delimiter + signature;
+                            }
+                        } catch (e) {
+                            console.log("exception: " + e.message);
+                        }
                     }.bind(this));
                 }
             } catch (e) {
@@ -124,6 +97,20 @@ export class SignatureFilter implements ExtensionModule {
             }
         }.bind(this));
 
+        // hide all signatures we should hide
+        this.posts.forEach(function(post: PostInfo, idx, posts) {
+            var posterid = post.posterid;
+            var hideSignature = this.hideUserSignatures.indexOf(posterid) != -1 || this.hideSignatures;
+            var hasSignature = post.rowElement.querySelector("span.RUSKSignatureDelimiter") as HTMLSpanElement;
+            if (!hasSignature || !hideSignature) return;
+            var elt = post.rowElement.querySelector('span.RUSKSignatureDelimiter') as HTMLElement;
+            while (elt) {
+                elt.classList.add('RUSKHiddenItem');
+                elt = elt.nextElementSibling as HTMLElement;
+            }
+        }.bind(this));
+
+        // add context menu actions
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             if (this.hideSignatures) return; // no need for context menu options when hiding all
             var cmenu = post.getContextMenu();
