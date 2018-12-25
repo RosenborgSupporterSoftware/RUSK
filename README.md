@@ -13,6 +13,7 @@ Dette er en Chrome-extension som legger til funksjonalitet og diverse digg til R
 - Lar deg filtrere bort brukere fra forumet eller fra enkelttråder.
 - Lar deg filtrere bort uinteressante forumtråder.
 - Lar deg skjule brukerenes signaturer i forumpostene.
+- Lar deg bokmerke innlegg du vil gå tilbake til senere.
 - Fjerner redundante deler av side-titlene så en kompakt rekke med tabs lettere identifiseres.
 - Endrer tekst-highlight-farge ved forum-søk.
 - Gir mer tydelig varsel om man har uleste private meldinger.
