@@ -16,6 +16,7 @@
     RBKweb_FORUM_TOPICLIST,         // http://www.rbkweb.no/forum/viewforum.php?f=1 +
                                     // http://www.rbkweb.no/forum/search.php?search_id=newposts
     RBKweb_FORUM_POSTLIST,          // http://www.rbkweb.no/forum/viewtopic.php?t=8423
+    RBKweb_FORUM_BOOKMARKS,         // http://www.rbkweb.no/forum/index.php#bookmarks
 
     RBKweb_FORUM_POSTNEWTOPIC,      // http://www.rbkweb.no/forum/posting.php?mode=newtopic&f=1
     RBKweb_FORUM_REPLYTOTOPIC,      // http://www.rbkweb.no/forum/posting.php?mode=reply&t=2186

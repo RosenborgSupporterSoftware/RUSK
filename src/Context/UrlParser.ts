@@ -18,6 +18,12 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_NON_RBKWEB_URL;
         }
         var restUrl = rbkwebMatch[rbkwebMatch.length - 1];
+        var hashPart = restUrl.match(/^([^#]*)#(.*)/);
+        var hashArg = "";
+        if  (hashPart) {
+            hashArg = hashPart[2];
+            restUrl = hashPart[1];
+        }
         var queryStringMatch = restUrl.match(/^([^?]*)\?(.*)/);
         var queryString = "";
         if (queryStringMatch) {
@@ -32,7 +38,7 @@ export class UrlParser {
         try {
             if (restUrl.startsWith('forum/')) {
                 // We're at the forum, yay!
-                return this.parseForumUrl(restUrl, queryString);
+                return this.parseForumUrl(restUrl, queryString, hashArg);
             }
         } catch (e) {
             chrome.runtime.sendMessage({ module: "UrlParser", message: e.message, exception: e });
@@ -59,11 +65,13 @@ export class UrlParser {
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
-    parseForumUrl(url: string, query: string): RBKwebPageType {
+    parseForumUrl(url: string, query: string, hash: string): RBKwebPageType {
         if (url == 'forum/login.php')
             return RBKwebPageType.RBKweb_FORUM_LOGIN;
         if (url == 'forum/' || url == 'forum/index.php')
             return RBKwebPageType.RBKweb_FORUM_FORUMLIST;
+        if (url == 'forum/index.php' && hash == "bookmarks")
+            return RBKwebPageType.RBKweb_FORUM_BOOKMARKS;
 
         if (url == 'forum/viewforum.php')
             return RBKwebPageType.RBKweb_FORUM_TOPICLIST;

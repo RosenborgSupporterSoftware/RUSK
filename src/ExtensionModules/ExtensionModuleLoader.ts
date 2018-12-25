@@ -20,6 +20,7 @@ import { PollEditor } from "./EM_PollEditor";
 import { Log } from "../Utility/Log";
 import { AvatarFilter } from "./EM_AvatarFilter";
 import { AlternateSearchEngine } from "./EM_AlternateSearchEngine";
+import { Bookmarks } from "./EM_Bookmarks";
 
 /**
  * ExtensionModuleLoader
@@ -49,6 +50,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizeForums(),
         new ColorizePosts(),
         new AlternateSearchEngine(),
+        new Bookmarks(),
     ];
 
     verifyModules(allModules);
