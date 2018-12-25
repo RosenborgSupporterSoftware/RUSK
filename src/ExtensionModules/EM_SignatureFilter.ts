@@ -77,12 +77,46 @@ export class SignatureFilter implements ExtensionModule {
         return this.i18n[text] || text;
     }
 
-
     HIDE_SIGNATURE: string = "Hide signature";
     SHOW_SIGNATURE: string = "Show signature";
 
     execute = () => {
         // restructure post body to manipulate signature easier
+        this.posts.forEach(function(post: PostInfo, idx, posts) {
+            try {
+                var body: HTMLTableDataCellElement = post.postBodyElement;
+                var elt: HTMLElement = body.firstElementChild as HTMLElement;
+                while (elt) {
+                    var index = elt.textContent.indexOf("_________________");
+                    if (index != -1) {
+                        var charidx = elt.outerHTML.indexOf("_________________");
+                        var signature = '<span class="postbody">' + elt.outerHTML.substring(charidx + 17);
+                        var textbody = elt.outerHTML.substring(0, charidx) + '</span>';
+                        var delimiter = '<span class="RUSKSignature postbody">' +
+                            '<br>' +
+                            '________________' +
+                            '</span>';
+                        elt.outerHTML = textbody + delimiter + signature;
+                        break;
+                    }
+                    elt = elt.nextElementSibling as HTMLElement;
+                }
+                var inSignature = false;
+                elt = body.firstElementChild as HTMLElement;
+                while (elt) {
+                    if (inSignature)
+                        elt.classList.add('RUSKSignature');
+                    else if (elt.classList.contains('RUSKSignature'))
+                        inSignature = true;
+                    elt = elt.nextElementSibling as HTMLElement;
+                }
+            } catch (e) {
+                console.error("exception " + e.message + " - " + e.stack);
+            }
+        }.bind(this));
+
+        // restructure post body to manipulate signature easier
+        /*
         var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
         elts.forEach(function (elt, key, parent) {
             try {
@@ -111,18 +145,16 @@ export class SignatureFilter implements ExtensionModule {
                 chrome.runtime.sendMessage({ message: e.message, exception: e });
             }
         }.bind(this));
+        */
 
         // hide all signatures we should hide
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var posterid = post.posterid;
-            var hideSignature = this.hideUserSignatures.indexOf(posterid) != -1 || this.hideSignatures;
-            var elt = post.rowElement.querySelector("span.RUSKSignatureDelimiter") as HTMLSpanElement;
-            var hasSignature = elt != null;
-            if (!hasSignature || !hideSignature) return;
-            while (elt) {
+            var hideSignature = this.hideSignatures || (this.hideUserSignatures.indexOf(posterid) != -1);
+            if (!hideSignature) return;
+            post.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement, idx, parent) {
                 elt.classList.add('RUSKHiddenItem');
-                elt = elt.nextElementSibling as HTMLElement;
-            }
+            }.bind(this));
         }.bind(this));
 
         // add context menu actions
@@ -131,18 +163,16 @@ export class SignatureFilter implements ExtensionModule {
             var cmenu = post.getContextMenu();
             var posterid = post.posterid;
             var hideSignature = this.hideUserSignatures.indexOf(posterid) != -1;
-            var hasSignature = post.rowElement.querySelector("span.RUSKSignatureDelimiter") as HTMLSpanElement;
+            var hasSignature = post.rowElement.querySelector(".RUSKSignature") as HTMLSpanElement;
             if (!hasSignature) return;
             cmenu.addAction(this.tr(this.HIDE_SIGNATURE), !hideSignature, function() {
                 this.posts.forEach(function(thepost: PostInfo, idx, posts) {
                     if (thepost.posterid != posterid) return;
                     cmenu.getAction(this.tr(this.HIDE_SIGNATURE)).hide(); // FIXME: make checkboxed menu option instead
                     cmenu.getAction(this.tr(this.SHOW_SIGNATURE)).show();
-                    var elt = thepost.rowElement.querySelector('span.RUSKSignatureDelimiter') as HTMLElement;
-                    while (elt) {
+                    thepost.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement, idx, parent) {
                         elt.classList.add('RUSKHiddenItem');
-                        elt = elt.nextElementSibling as HTMLElement;
-                    }
+                    }.bind(this));
                     this.hideUserSignatures.push(posterid);
                     this.saveHideUserSignatures();
                 }.bind(this));
@@ -152,11 +182,9 @@ export class SignatureFilter implements ExtensionModule {
                     if (thepost.posterid != posterid) return;
                     cmenu.getAction(this.tr(this.HIDE_SIGNATURE)).show();
                     cmenu.getAction(this.tr(this.SHOW_SIGNATURE)).hide();
-                    var elt = thepost.rowElement.querySelector('span.RUSKSignatureDelimiter') as HTMLElement;
-                    while (elt) {
+                    thepost.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement, idx, parent) {
                         elt.classList.remove('RUSKHiddenItem');
-                        elt = elt.nextElementSibling as HTMLElement;
-                    }
+                    }.bind(this));
                     var idx = this.hideUserSignatures.indexOf(posterid);
                     this.hideUserSignatures[idx] = this.hideUserSignatures[this.hideUserSignatures.length-1];
                     this.hideUserSignatures.pop();
