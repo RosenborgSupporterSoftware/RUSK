@@ -80,7 +80,7 @@ export class Bookmarks implements ExtensionModule {
         this.unstarredPNG = chrome.runtime.getURL('/img/unstarred.png');
         this.bookmarkedThreads = JSON.parse(this.getConfigString("bookmarkedThreads"));
         this.bookmarkedPosts = JSON.parse(this.getConfigString("bookmarkedPosts"));
-        console.log("posts: " + this.getConfigString("bookmarkedPosts"));
+        //console.log("posts: " + this.getConfigString("bookmarkedPosts"));
         this.accountNames = JSON.parse(this.getConfigString('accountNames'));
         this.threadNames = JSON.parse(this.getConfigString('threadNames'));
     }
@@ -316,25 +316,25 @@ export class Bookmarks implements ExtensionModule {
 
     private saveThreadNames(): void {
         var json = JSON.stringify(this.threadNames);
-        console.log("storing thread names: '" + json + "'");
+        //console.log("storing thread names: '" + json + "'");
         this.cfg.ChangeSetting("threadNames", json);
     }
 
     private saveAccountNames(): void {
         var json = JSON.stringify(this.accountNames);
-        console.log("storing account names: '" + json + "'");
+        //console.log("storing account names: '" + json + "'");
         this.cfg.ChangeSetting("accountNames", json);
     }
 
     private saveBookmarkedThreads(): void {
         var json = JSON.stringify(this.bookmarkedThreads);
-        console.log("storing thread bookmarks: '" + json + "'");
+        //console.log("storing thread bookmarks: '" + json + "'");
         this.cfg.ChangeSetting("bookmarkedThreads", json);
     }
 
     private saveBookmarkedPosts(): void {
         var json = JSON.stringify(this.bookmarkedPosts);
-        console.log("storing post bookmarks: '" + json + "'");
+        //console.log("storing post bookmarks: '" + json + "'");
         this.cfg.ChangeSetting("bookmarkedPosts", json);
     }
 }
