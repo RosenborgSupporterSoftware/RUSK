@@ -160,8 +160,8 @@ export class PostInfo {
 
     private getPostedDate(row: HTMLTableRowElement): Date {
         let text = row.querySelector('td > table > tbody > tr > td > span.postdetails').textContent;
-        let dateInfo = text.match(/Posted|Skrevet: (\d{2})\.(\d{2}).(\d{4}) (\d{2}):(\d{2})/);
-        return new Date(+dateInfo[3], +dateInfo[2] - 1, +dateInfo[1], +dateInfo[4], +dateInfo[5]);
+        let dateInfo = text.match(/(Posted|Skrevet): (\d{2})\.(\d{2}).(\d{4}) (\d{2}):(\d{2})/);
+        return new Date(+dateInfo[4], +dateInfo[3] - 1, +dateInfo[2], +dateInfo[5], +dateInfo[6]);
     }
 
     private getPosterNickname(row: HTMLTableRowElement): string {
@@ -182,8 +182,9 @@ export class PostInfo {
         return this.getPostBodyElement(row).textContent;
     }
 
-    private getPostBodyElement(row: HTMLTableRowElement): HTMLSpanElement {
-        return row.querySelector('td > table > tbody > tr > td > span.postbody');
+    private getPostBodyElement(row: HTMLTableRowElement): HTMLTableDataCellElement {
+        var ruler = row.querySelector('tr td hr').closest('tr');
+        return ruler.nextElementSibling.firstElementChild as HTMLTableDataCellElement; // next row, first (only) cell
     }
 
     private getPosterRegistered(row: HTMLTableRowElement): Date {
