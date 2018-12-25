@@ -159,7 +159,7 @@ export class Bookmarks implements ExtensionModule {
                         html.push('<td class="row2" align="center"><a title="Unstar"><img name="starred" data-postid="' + postid + '" src="' + this.starredPNG + '" width="14" height="14"/></a></td>');
                         html.push('<td class="row2" align="center"><span class="name"><a href="profile.php?mode=viewprofile&u='+userid+'">' + this.accountNames[""+userid] + '</a></span></td>');
                         html.push('<td class="row2"><a class="topictitle" href="viewtopic.php?p=' + postid + '#' + postid + '">' + this.threadNames[""+threadid] + '</a></td>');
-                        html.push('<td class="row2"><span class="gensmall">' + snippet + '</span></td>');
+                        html.push('<td class="row2"><a class="gensmall" href="viewtopic.php?p=' + postid + '#' + postid + '">' + snippet + '</a></td>');
                         html.push('<td class="row2"><span class="gensmall">' + timestr + '</span></td>');
                         html.push('</tr>');
                     }.bind(this));
