@@ -55,7 +55,7 @@ export class PostInfo {
 
     readonly postTextBody: string;
 
-    readonly postBodyElement: HTMLSpanElement;
+    readonly postBodyElement: HTMLTableDataCellElement;
 
     readonly posterRegistered: Date;
 
