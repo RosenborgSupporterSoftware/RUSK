@@ -1,4 +1,5 @@
 import { RBKwebPageType } from "./RBKwebPageType";
+import { Log } from "../Utility/Log";
 
 /**
  * A simple utility class that receives an RBKweb URL and returns the appropriate RBKwebPageType enum value
@@ -30,7 +31,7 @@ export class UrlParser {
             restUrl = queryStringMatch[1];
             queryString = queryStringMatch[2];
         }
-            
+
 
         if (restUrl == "") // FIXME: proper enum
             return RBKwebPageType.RBKweb_UNKNOWN_URL;
@@ -61,7 +62,7 @@ export class UrlParser {
         }
 
         // Dette må fjernes når denne klassen begynner å bli noenlunde moden
-        console.error('UrlParser could not parse url ' + url);
+        Log.Error('UrlParser could not parse url ' + url);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -99,7 +100,7 @@ export class UrlParser {
                 return RBKwebPageType.RBKweb_FORUM_USERPROFILE_SAVED;
         }
 
-        console.error('UrlParser could not parse forum url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -109,7 +110,7 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_SEARCH_FORM;
         if (query.match(/search_author=.+/))
             return RBKwebPageType.RBKweb_FORUM_SEARCH_BYAUTHOR;
-        console.error('UrlParser could not parse forum search url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum search url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -128,7 +129,7 @@ export class UrlParser {
         if (query.match(/folder=inbox/) && query.match(/mode=read/))
             return RBKwebPageType.RBKweb_FORUM_PM_READINBOX;
 
-        console.error('UrlParser could not parse forum privmsg url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum privmsg url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -146,7 +147,7 @@ export class UrlParser {
         if (query == "") // after pressing preview
             return RBKwebPageType.RBKweb_FORUM_EDITPOST;
 
-        console.error('UrlParser could not parse forum posting url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum posting url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 }
