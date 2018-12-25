@@ -115,38 +115,6 @@ export class SignatureFilter implements ExtensionModule {
             }
         }.bind(this));
 
-        // restructure post body to manipulate signature easier
-        /*
-        var elts = document.body.querySelectorAll("table.forumline tbody tr td table tbody tr td");
-        elts.forEach(function (elt, key, parent) {
-            try {
-                var sub = elt as HTMLTableCellElement;
-                var index = sub.textContent.indexOf("_________________");
-                if (index != -1) {
-                    sub.childNodes.forEach(function(node, key, parent) {
-                        try {
-                            var n = node as HTMLElement;
-                            var idx = n.outerHTML.indexOf("_________________");
-                            if (idx != -1) { // we have a .signature
-                                var signature = '<span class="RUSKSignatureBegin postbody">' + n.outerHTML.substring(idx + 17);
-                                var body = n.outerHTML.substring(0, idx) + '</span>';
-                                var delimiter = '<span class="RUSKSignatureDelimiter postbody">' +
-                                    '<br>' +
-                                    '________________' +
-                                    '</span>';
-                                n.outerHTML = body + delimiter + signature;
-                            }
-                        } catch (e) {
-                            console.log("exception: " + e.message);
-                        }
-                    }.bind(this));
-                }
-            } catch (e) {
-                chrome.runtime.sendMessage({ message: e.message, exception: e });
-            }
-        }.bind(this));
-        */
-
         // hide all signatures we should hide
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var posterid = post.posterid;
