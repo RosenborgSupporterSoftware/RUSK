@@ -254,7 +254,7 @@ export class Bookmarks implements ExtensionModule {
             '<br>' +
             '</tr>' +
             '<tr>' +
-            '<td><a class="nav" href="index.php">Forum</a> <span class="nav">-&gt;</span> <span class="nav">Bookmarked posts</span></td>' +
+            '<td><a class="nav" href="index.php">RBKweb Forum Index</a> <span class="nav">-&gt;</span> <span class="nav">Bookmarked posts</span></td>' +
             '<br>' +
             '</tr>' +
             '</table>');
