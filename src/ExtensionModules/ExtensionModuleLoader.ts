@@ -21,6 +21,7 @@ import { Log } from "../Utility/Log";
 import { AvatarFilter } from "./EM_AvatarFilter";
 import { AlternateSearchEngine } from "./EM_AlternateSearchEngine";
 import { Bookmarks } from "./EM_Bookmarks";
+import { ModPostTools } from "./EM_ModPostTools";
 
 /**
  * ExtensionModuleLoader
@@ -51,6 +52,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizePosts(),
         new AlternateSearchEngine(),
         new Bookmarks(),
+        new ModPostTools()
     ];
 
     verifyModules(allModules);
