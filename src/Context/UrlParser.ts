@@ -110,6 +110,8 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_SEARCH_FORM;
         if (query.match(/search_author=.+/))
             return RBKwebPageType.RBKweb_FORUM_SEARCH_BYAUTHOR;
+        if (query.match(/mode=results/))
+            return RBKwebPageType.RBKweb_FORUM_SEARCH_RESULTS;
         Log.Error('UrlParser could not parse forum search url ' + url + '&' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
@@ -144,6 +146,8 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC;
         if (query.match(/mode=vote/))
             return RBKwebPageType.RBKweb_FORUM_VOTEONTOPIC;
+        if (query.match(/mode=smilies/))
+            return RBKwebPageType.RBKweb_FORUM_SMILEYS;
         if (query == "") // after pressing preview
             return RBKwebPageType.RBKweb_FORUM_EDITPOST;
 

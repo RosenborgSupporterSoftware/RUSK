@@ -23,6 +23,7 @@
     RBKweb_FORUM_EDITPOST,          // http://www.rbkweb.no/forum/posting.php?mode=editpost&p=1013975
     RBKweb_FORUM_VOTEONTOPIC,       // http://www.rbkweb.no/forum/posting.php?mode=vote&t=1
     RBKweb_FORUM_POSTINGLANDINGPAGE,// http://www.rbkweb.no/forum/posting.php
+    RBKweb_FORUM_SMILEYS,           // http://www.rbkweb.no/forum/posting.php?mode=smilies
 
     RBKweb_FORUM_PM_INBOX,          // http://www.rbkweb.no/forum/privmsg.php?folder=inbox
     RBKweb_FORUM_PM_SENTBOX,        // http://www.rbkweb.no/forum/privmsg.php?folder=sentbox
@@ -36,6 +37,7 @@
     RBKweb_FORUM_USERPROFILE_SAVED, // http://www.rbkweb.no/forum/profile.php
     RBKweb_FORUM_SEARCH_FORM,       // http://www.rbkweb.no/forum/search.php
     RBKweb_FORUM_SEARCH_BYAUTHOR,   // http://www.rbkweb.no/forum/search.php?search_author=OrionPax
+    RBKweb_FORUM_SEARCH_RESULTS,    // http://www.rbkweb.no/forum/search.php?mode=results
 
     RBKweb_FORUM_END,               // Not a page - the end of the forum related values
 
