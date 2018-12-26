@@ -309,7 +309,7 @@ export class Bookmarks implements ExtensionModule {
         }
         return "" + date.getDate() +
             "." + (date.getMonth() + 1) +
-            "." + date.getFullYear() + " " +
+            "." + date.getFullYear() + "&nbsp;" +
             print02(date.getHours()) + ":" +
             print02(date.getMinutes());
     }
