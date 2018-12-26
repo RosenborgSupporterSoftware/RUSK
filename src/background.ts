@@ -131,8 +131,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // *************************************************************************
 // Make sure we get CORS-access to certain sites, by injecting the
-// "Allow-Access-Control-Origin: *" header into al responses we receive from
-// them.
+// "Allow-Access-Control-Origin: *" header into all responses we receive
+// from them.
 
 chrome.webRequest.onHeadersReceived.addListener(function(details: chrome.webRequest.WebResponseHeadersDetails) {
     var idx = details.responseHeaders.findIndex((h) => {
