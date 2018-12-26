@@ -6,12 +6,9 @@ import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 
 /**
- * EM_InboxAlert - Extension module for RBKweb.
+ * EM_MediaEmbedder - Extension module for RBKweb.
+ * Embeds Youtube, Twitter, Instagram, Streamable directly into posts.
  */
-
- // http://www.rbkweb.no/forum/viewtopic.php?t=2456&start=2525
-
- // TODO: make sure links we embed are not in the signature part of the post
 
 export class MediaEmbedder implements ExtensionModule {
     readonly name: string = "MediaEmbedder";
@@ -54,6 +51,13 @@ export class MediaEmbedder implements ExtensionModule {
             )
             .WithConfigOption(opt =>
                 opt
+                    .WithSettingName("ReplaceStreamableLinks")
+                    .WithLabel("Fjern original streamable-link når videospiller legges inn")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(false)
+            )
+            .WithConfigOption(opt =>
+                opt
                     .WithSettingName("EmbedInstagram")
                     .WithLabel("Gjør om Instagram-linker til Instagram-poster")
                     .WithSettingType(SettingType.bool)
@@ -81,6 +85,7 @@ export class MediaEmbedder implements ExtensionModule {
     embedYoutube: boolean;
     embedTwitter: boolean;
     embedStreamable: boolean;
+    replaceStreamableLinks: boolean;
     embedInstagram: boolean;
     instagramCaption: boolean;
     instagramOnlyPicture: boolean;
@@ -90,6 +95,7 @@ export class MediaEmbedder implements ExtensionModule {
         this.embedYoutube = this.getConfigBool("EmbedYoutube");
         this.embedTwitter = this.getConfigBool("EmbedTwitter");
         this.embedStreamable = this.getConfigBool("EmbedStreamable");
+        this.replaceStreamableLinks = this.getConfigBool("ReplaceStreamableLinks");
         this.embedInstagram = this.getConfigBool("EmbedInstagram");
         this.instagramCaption = this.getConfigBool("InstagramCaption");
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
@@ -101,23 +107,20 @@ export class MediaEmbedder implements ExtensionModule {
 
     execute = () => {
         this.posts.forEach(function(post: PostInfo, idx, posts) {
-            post.rowElement.querySelectorAll('a').forEach(function(anchor: HTMLAnchorElement, key, parent) {
+            var sigpos = post.postBodyElement.innerHTML.indexOf('________');
+            var hasSignature = sigpos != -1;
+            post.postBodyElement.querySelectorAll('a').forEach(function(anchor: HTMLAnchorElement, key, parent) {
                 try {
                     if (anchor.parentElement.tagName.match(/SPAN/i) &&
                         anchor.parentElement.classList.contains("postbody")) {
                         var href: string = anchor.href;
                         var text: string = anchor.textContent;
-                        // console.log("link: " + href);
                         var signaturelink = false;
-                        var signaturedelimiter = false;
-                        anchor.closest('td').querySelectorAll("*").forEach(function(node: Node, key, parent) {
-                            if (node.textContent.match(/________/))
-                                signaturedelimiter = true;
-                            else if (node.isEqualNode(anchor)) {
-                                if (signaturedelimiter) // already seen the delimiter
-                                    signaturelink = true;
-                            }
-                        }.bind(this));
+                        if (hasSignature) {
+                            var linkpos = post.postBodyElement.innerHTML.indexOf(anchor.outerHTML);
+                            if (sigpos < linkpos)
+                                signaturelink = true;
+                        }
                         if (signaturelink) {
                             // console.log("skipping link " + href + " in signature");
                         }
@@ -155,14 +158,31 @@ export class MediaEmbedder implements ExtensionModule {
                             var match = href.match(/https?:\/\/streamable\.com\/([^\/]*)/i);
                             if (match) {
                                 var code = match[1];
-                                /* - kept around in case in case we want to change how we embed this media type
                                 var oembedcodeurl = 'https://api.streamable.com/oembed?url=https://streamable.com/' + code;
                                 fetch(oembedcodeurl).then(function(data) {
-                                    console.log("FETCHED DATA: " + JSON.stringify(data));
-                                }.bind(this)); */
-                                anchor.insertAdjacentHTML('afterend', '<br>' +
-                                    '<embed src="https://streamable.com/o/' + code + '" frameborder="0" allowfullscreen="1" width="460" height="280"></embed>');
-                                //anchor.classList.add("RUSKHiddenItem"); // since fullscreen isn't enabled, keep link
+                                    return data.json();
+                                }.bind(this)).then(function(data) {
+                                    var html: string = data['html'];
+                                    var widthmatch = html.match('width="([0-9]*)"');
+                                    var width = 0;
+                                    if (widthmatch) {
+                                         width = parseInt(widthmatch[1]);
+                                        var heightmatch = html.match('height="([0-9]*)"');
+                                        html = html.replace(widthmatch[0], ' width="460"');
+                                        if (heightmatch) {
+                                            var height = parseInt(heightmatch[1]);
+                                            if (height > 0) {
+                                                height = Math.trunc(height * 460 / width);
+                                                html = html.replace(heightmatch[0], ' height="' + height + '"');
+                                            }
+                                        }
+                                    }
+                                    anchor.insertAdjacentHTML('afterend', '<br>' + html + '<br>');
+                                    if (this.replaceStreamableLinks)
+                                        anchor.classList.add("RUSKHiddenItem");
+                                }.bind(this)).catch(function(err) {
+                                    console.error("fetch error: " + err.message + " - " + err.stack);
+                                }.bind(this));
                             }
                         }
                         else if (this.embedInstagram &&
@@ -254,5 +274,4 @@ export class MediaEmbedder implements ExtensionModule {
             console.error("getConfigItem exception: " + e.message);
         }
     }
-
-};
+}
