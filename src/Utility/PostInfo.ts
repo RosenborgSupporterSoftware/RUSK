@@ -169,9 +169,12 @@ export class PostInfo {
     }
 
     private getPosterId(row: HTMLTableRowElement): number {
-        let profileLink = (this.buttonRowElement.querySelector('td > table > tbody > tr > td > a:first-child') as HTMLAnchorElement).href;
-        let match = profileLink.match(/.*\/profile\.php\?mode=viewprofile&u=(\d+)$/);
-        return match ? +match[1] : -1;
+        let profileAnchor = this.buttonRowElement.querySelector('td > table > tbody > tr > td > a:first-child') as HTMLAnchorElement;
+        if (profileAnchor) {
+            let match = profileAnchor.href.match(/.*\/profile\.php\?mode=viewprofile&u=(\d+)$/);
+            return match ? +match[1] : -1;
+        }
+        return -1; // "Guest" (deleted account)
     }
 
     private getPosterLevel(row: HTMLTableRowElement): string {
