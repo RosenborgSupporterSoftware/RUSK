@@ -127,6 +127,8 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_PM_SAVEBOX;
         if (query.match(/mode=post/))
             return RBKwebPageType.RBKweb_FORUM_PM_POST;
+        if (query.match(/mode=quote/))
+            return RBKwebPageType.RBKweb_FORUM_PM_POST;
 
         if (query.match(/folder=inbox/) && query.match(/mode=read/))
             return RBKwebPageType.RBKweb_FORUM_PM_READINBOX;
