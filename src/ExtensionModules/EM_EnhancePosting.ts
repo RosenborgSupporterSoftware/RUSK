@@ -172,16 +172,18 @@ export class EnhancePosting implements ExtensionModule {
     private setupTitle(): void {
         try {
             var iframe = document.body.querySelector('iframe') as HTMLIFrameElement;
-            var threadidmatch = iframe.src.match(/\bt=([0-9]+)\b/);
-            if (threadidmatch) {
-                var threadId = +threadidmatch[1];
-                var titleidx = this.topicIds.indexOf(threadId);
-                if (titleidx != -1) {
-                    var title = this.topicTitles[titleidx];
-                    var anchorelt = document.body.querySelector('span.nav a[href="index.php"]') as HTMLAnchorElement;
-                    var spanelt = anchorelt.closest('span');
-                    spanelt.insertAdjacentHTML('beforeend', ' -> ' +
-                        '<a href="viewtopic.php?t=' + threadId + '" class="nav">' + title + '</a>');
+            if (iframe) {
+                var threadidmatch = iframe.src.match(/\bt=([0-9]+)\b/);
+                if (threadidmatch) {
+                    var threadId = +threadidmatch[1];
+                    var titleidx = this.topicIds.indexOf(threadId);
+                    if (titleidx != -1) {
+                        var title = this.topicTitles[titleidx];
+                        var anchorelt = document.body.querySelector('span.nav a[href="index.php"]') as HTMLAnchorElement;
+                        var spanelt = anchorelt.closest('span');
+                        spanelt.insertAdjacentHTML('beforeend', ' -> ' +
+                            '<a href="viewtopic.php?t=' + threadId + '" class="nav">' + title + '</a>');
+                    }
                 }
             }
         } catch (e) {
