@@ -1,5 +1,6 @@
-import { ContextMenu } from "./ContextMenu";
 import { IRUSKPageItem } from "../PageHandler/IRUSKPageItem";
+import { ContextMenu } from "./ContextMenu";
+import { Log } from "./Log";
 
 /**
  * PostInfo.ts - utility class used to extract information from individual posts
@@ -105,7 +106,7 @@ export class PostInfo implements IRUSKPageItem {
             this.posterLocation = this.getPosterLocation(row);
             this.threadId = this.getThreadId(row);
         } catch (e) {
-            chrome.runtime.sendMessage({ module: "PostInfo", message: e.message, exception: e });
+            Log.Error("PostInfo exception " + e.message + " - " + e.stack);
         }
     }
 
