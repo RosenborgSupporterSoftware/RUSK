@@ -2,6 +2,7 @@ import { ThreadType } from "../Context/ThreadType";
 import { ThreadAttributes } from "../Context/ThreadAttributes";
 import { ContextMenu } from "./ContextMenu";
 import { IRUSKPageItem } from "../PageHandler/IRUSKPageItem";
+import { Log } from "./Log";
 
 /**
  * ThreadInfo - utility class used to extract information from a thread list
@@ -254,6 +255,20 @@ export class ThreadInfo implements IRUSKPageItem {
                 return ThreadAttributes.isLocked | ThreadAttributes.isNormalThread;
             default:
                 return ThreadAttributes.None;
+        }
+    }
+
+    public markAsRead(): void {
+        var hostmatch = this.latestUrl.match(/^(https?:\/\/[^\/]*\/)forum/);
+        var postmatch = this.latestUrl.match(/#([0-9]*)$/);
+        if (hostmatch && postmatch) {
+            var url = hostmatch[1] + 'forum/posting.php?mode=quote&p=' + postmatch[1];
+            fetch(url, { mode: 'cors', credentials: 'include' })
+                .then(function(response){ return response.text(); }.bind(this))
+                .then(function(text) { Log.Debug('marked thread ' + this.threadid + ' as read.');
+                    console.log("document: " + text);
+                }.bind(this))
+                .catch(function(err) { Log.Warning('failed on request to mark thread ' + this.threadid + ' as read.'); }.bind(this));
         }
     }
 }
