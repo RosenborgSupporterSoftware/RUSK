@@ -97,9 +97,9 @@ export class UserFilter implements ExtensionModule {
         }
     }
 
-    preprocess = () => {
+    preprocess = (context: PageContext) => {
         try {
-            this.posts = PostInfo.GetPostsFromDocument(document);
+            this.posts = context.RUSKPage.items as Array<PostInfo>;
             if (this.css)
                 chrome.runtime.sendMessage({ css: this.css, from: 'UserFilter' });
             else {

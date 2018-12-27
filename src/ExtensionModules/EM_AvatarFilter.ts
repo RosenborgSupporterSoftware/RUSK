@@ -6,6 +6,7 @@ import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { Log } from "../Utility/Log";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_AvatarFilter - Extension module for RBKweb.
@@ -58,8 +59,8 @@ export class AvatarFilter implements ExtensionModule {
 
     posts: Array<PostInfo>;
 
-    preprocess = () => {
-        this.posts = PostInfo.GetPostsFromDocument(document);
+    preprocess = (context: PageContext) => {
+        this.posts = context.RUSKPage.items as Array<PostInfo>;
         var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
         if (pbutton.textContent == "Profil")
             this.i18n = this.i18n_no;
@@ -79,7 +80,7 @@ export class AvatarFilter implements ExtensionModule {
     HIDE_AVATAR: string = "Hide avatar";
     SHOW_AVATAR: string = "Show avatar";
 
-    execute = () => {
+    execute = (ctx: PageContext) => {
         this.posts.forEach(function(post: PostInfo, key, parent) {
             var avatar = post.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
             var hideAvatar = this.hideUserAvatars.indexOf(post.posterid) != -1;

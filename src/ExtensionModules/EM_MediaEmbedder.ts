@@ -4,6 +4,7 @@ import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_MediaEmbedder - Extension module for RBKweb.
@@ -101,11 +102,11 @@ export class MediaEmbedder implements ExtensionModule {
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
     }
 
-    preprocess = () => {
-        this.posts = PostInfo.GetPostsFromDocument(document);
+    preprocess = (context: PageContext) => {
+        this.posts = context.RUSKPage.items as Array<PostInfo>;
     }
 
-    execute = () => {
+    execute = (context: PageContext) => {
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var sigpos = post.postBodyElement.innerHTML.indexOf('________');
             var hasSignature = sigpos != -1;

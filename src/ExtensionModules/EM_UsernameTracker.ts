@@ -6,6 +6,7 @@ import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOpt
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { Log } from "../Utility/Log";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_UsernameTracker - Extension module for RBKweb.
@@ -57,9 +58,9 @@ export class UsernameTracker implements ExtensionModule {
 
     posts: Array<PostInfo>;
 
-    preprocess = () => {
+    preprocess = (context: PageContext) => {
         try {
-            this.posts = PostInfo.GetPostsFromDocument(document);
+            this.posts = context.RUSKPage.items as Array<PostInfo>;
             var updated = false;
             this.posts.forEach(function(post: PostInfo, idx, posts) {
                 var username = post.posterNickname;
@@ -77,7 +78,7 @@ export class UsernameTracker implements ExtensionModule {
         }
     }
 
-    execute = () => {
+    execute = (context: PageContext) => {
         try {
             this.posts.forEach(function(post: PostInfo, idx, posts) {
                 var username = post.posterNickname;

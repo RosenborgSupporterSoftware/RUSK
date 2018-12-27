@@ -4,6 +4,8 @@ import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
+import { Log } from "../Utility/Log";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_InboxAlert - Extension module for RBKweb.
@@ -49,14 +51,21 @@ export class InboxAlert implements ExtensionModule {
         this.cfg = config;
     }
 
-    preprocess = async () => {
-        let request = await fetch(chrome.runtime.getURL("/data/pmAlert.css"));
-        let text = await request.text();
-        let css = this.hydrateTemplate(text);
-        chrome.runtime.sendMessage({ css: css });
+    preprocess = (context: PageContext) => {
+        fetch(chrome.runtime.getURL("/data/pmAlert.css"))
+            .then(function(result) {
+                return result.text();
+            }.bind(this))
+            .then(function(text) {
+                let css = this.hydrateTemplate(text);
+                chrome.runtime.sendMessage({ css: css });
+            }.bind(this))
+            .catch(function(err) {
+                Log.Error("InboxAlert css error: " + err.message + " - " + err.stack);
+            }.bind(this));
     }
 
-    execute = () => {
+    execute = (context: PageContext) => {
         var icon = document.body.querySelector('img[src$="icon_mini_message.gif"]') as HTMLImageElement;
         if (icon) {
             var alt = icon.alt;

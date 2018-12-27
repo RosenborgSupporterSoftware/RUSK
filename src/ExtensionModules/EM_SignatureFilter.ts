@@ -5,6 +5,7 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_SignatureFilter - Extension module for RBKweb.
@@ -59,8 +60,8 @@ export class SignatureFilter implements ExtensionModule {
 
     posts: Array<PostInfo>;
 
-    preprocess = () => {
-        this.posts = PostInfo.GetPostsFromDocument(document);
+    preprocess = (context: PageContext) => {
+        this.posts = context.RUSKPage.items as Array<PostInfo>;
         var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
         if (pbutton.textContent == "Profil")
             this.i18n = this.i18n_no;
@@ -80,18 +81,17 @@ export class SignatureFilter implements ExtensionModule {
     HIDE_SIGNATURE: string = "Hide signature";
     SHOW_SIGNATURE: string = "Show signature";
 
-    execute = () => {
+    execute = (context: PageContext) => {
         // restructure post body to manipulate signature easier
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             try {
                 var body: HTMLTableDataCellElement = post.postBodyElement;
                 var elt: HTMLElement = body.firstElementChild as HTMLElement;
                 while (elt) {
-                    var index = elt.textContent.indexOf("_________________");
+                    var index = elt.outerHTML.indexOf("_________________");
                     if (index != -1) {
-                        var charidx = elt.outerHTML.indexOf("_________________");
-                        var signature = '<span class="postbody">' + elt.outerHTML.substring(charidx + 17);
-                        var textbody = elt.outerHTML.substring(0, charidx) + '</span>';
+                        var signature = '<span class="postbody">' + elt.outerHTML.substring(index + 17);
+                        var textbody = elt.outerHTML.substring(0, index) + '</span>';
                         var delimiter = '<span class="RUSKSignature postbody">' +
                             '<br>' +
                             '________________' +
@@ -101,13 +101,13 @@ export class SignatureFilter implements ExtensionModule {
                     }
                     elt = elt.nextElementSibling as HTMLElement;
                 }
-                var inSignature = false;
                 elt = body.firstElementChild as HTMLElement;
                 while (elt) {
-                    if (inSignature)
-                        elt.classList.add('RUSKSignature');
-                    else if (elt.classList.contains('RUSKSignature'))
-                        inSignature = true;
+                    if (elt.classList.contains('RUSKSignature')) break;
+                    elt = elt.nextElementSibling as HTMLElement;
+                }
+                while (elt) {
+                    elt.classList.add('RUSKSignature');
                     elt = elt.nextElementSibling as HTMLElement;
                 }
             } catch (e) {

@@ -6,6 +6,7 @@ import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { Log } from "../Utility/Log";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_Bookmarks - Extension module for RBKweb.
@@ -102,9 +103,10 @@ export class Bookmarks implements ExtensionModule {
 
     posts: Array<PostInfo>;
 
-    preprocess = () => {
+    preprocess = (context: PageContext) => {
+        this.posts = context.RUSKPage.items as Array<PostInfo>;
         try  {
-            this.posts = PostInfo.GetPostsFromDocument(document);
+            // this.posts = PostInfo.GetPostsFromDocument(document);
             var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
             if (pbutton.textContent == "Profil")
                 this.i18n = this.i18n_no;
@@ -194,7 +196,7 @@ export class Bookmarks implements ExtensionModule {
         }
     }
 
-    execute = () => {
+    execute = (context: PageContext) => {
         try {
             var threadTitleElt = (document.body.querySelector('a.maintitle') as HTMLAnchorElement);
             var threadTitle = threadTitleElt ? threadTitleElt.textContent : "";
