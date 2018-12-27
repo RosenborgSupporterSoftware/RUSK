@@ -148,6 +148,8 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_VOTEONTOPIC;
         if (query.match(/mode=smilies/))
             return RBKwebPageType.RBKweb_FORUM_SMILEYS;
+        if (query.match(/mode=topicreview/))
+            return RBKwebPageType.RBKweb_FORUM_REVIEW_IFRAME;
         if (query == "") // after pressing preview
             return RBKwebPageType.RBKweb_FORUM_EDITPOST;
 

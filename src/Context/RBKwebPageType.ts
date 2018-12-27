@@ -24,6 +24,7 @@
     RBKweb_FORUM_VOTEONTOPIC,       // http://www.rbkweb.no/forum/posting.php?mode=vote&t=1
     RBKweb_FORUM_POSTINGLANDINGPAGE,// http://www.rbkweb.no/forum/posting.php
     RBKweb_FORUM_SMILEYS,           // http://www.rbkweb.no/forum/posting.php?mode=smilies
+    RBKweb_FORUM_REVIEW_IFRAME,     // http://www.rbkweb.no/forum/posting.php?mode=topicreview
 
     RBKweb_FORUM_PM_INBOX,          // http://www.rbkweb.no/forum/privmsg.php?folder=inbox
     RBKweb_FORUM_PM_SENTBOX,        // http://www.rbkweb.no/forum/privmsg.php?folder=sentbox
