@@ -78,6 +78,20 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(false)
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("EmbedMP4")
+                    .WithLabel("Gjør om mp4-linker til videoavspillere")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("EmbedWebm")
+                    .WithLabel("Gjør om webm-linker til videoavspillere")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+            )
             .Build();
 
     posts: Array<PostInfo>;
@@ -90,6 +104,8 @@ export class MediaEmbedder implements ExtensionModule {
     embedInstagram: boolean;
     instagramCaption: boolean;
     instagramOnlyPicture: boolean;
+    embedMp4: boolean;
+    embedWebm: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
@@ -100,6 +116,8 @@ export class MediaEmbedder implements ExtensionModule {
         this.embedInstagram = this.getConfigBool("EmbedInstagram");
         this.instagramCaption = this.getConfigBool("InstagramCaption");
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
+        this.embedMp4 = this.getConfigBool("EmbedMP4");
+        this.embedWebm = this.getConfigBool("EmbedWebm");
     }
 
     preprocess = (context: PageContext) => {
@@ -130,13 +148,13 @@ export class MediaEmbedder implements ExtensionModule {
                         }
                         else if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
                             // FIXME: support t=NNN for time-start
+                            // FIXME: use oembed instead?
                             // console.log("found: " + href);
                             var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/\?#]*)/);
                             if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([^\.\?#]*)/);
                             if (!match) match = href.match(/https?:\/\/(youtu)\.be\/([^\/\?#]*)/);
                             if (match) {
                                 var code = match[2];
-                                //console.log("youtube code: " + code);
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
                                     '<object width="460" height="270" data="https://www.youtube.com/embed/' + code +
                                              '" frameborder="0" allow="encrypted-media"></object>');
@@ -210,6 +228,20 @@ export class MediaEmbedder implements ExtensionModule {
                                          }.bind(this));
                                 }
                             }
+                        }
+                        else if (this.embedMp4 && href.match(/.*\.mp4$/)) {
+                            anchor.insertAdjacentHTML('afterend', '<br>' +
+                                '<video controls width="460">' +
+                                '<source src="' + anchor.href + '" type="video/mp4">' +
+                                'Sorry, your browser does not support embedding with <tt>&lt;video&gt;</tt>.' +
+                                '</video>');
+                        }
+                        else if (this.embedWebm && href.match(/.*\.webm$/)) {
+                            anchor.insertAdjacentHTML('afterend', '<br>' +
+                                '<video controls width="460">' +
+                                '<source src="' + anchor.href + '" type="video/webm">' +
+                                'Sorry, your browser does not support embedding with <tt>&lt;video&gt;</tt>.' +
+                                '</video>');
                         }
                     }
                 } catch (e) {
