@@ -6,6 +6,7 @@ import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOpt
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
 import * as autosize from "autosize";
+import { Log } from "../Utility/Log";
 
 /**
  * EM_EnhancePosting - Extension module for RBKweb.
@@ -24,7 +25,8 @@ export class EnhancePosting implements ExtensionModule {
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_EDITPOST,
         RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC,
-        RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC
+        RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC,
+        RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
 
     runBefore: Array<string> = ['late-extmod'];
@@ -53,6 +55,8 @@ export class EnhancePosting implements ExtensionModule {
         }
         return this._btn;
     }
+
+    THREAD_VISITS: string = "threadvisits";
 
     configSpec = () =>
         ConfigBuilder
@@ -85,20 +89,62 @@ export class EnhancePosting implements ExtensionModule {
                     .WithDefaultValue(true)
                     .WithVisibility(ConfigurationOptionVisibility.Always)
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName(this.THREAD_VISITS)
+                    .WithSettingType(SettingType.text)
+                    .WithLabel("Map over de N siste trådene man har besøkt")
+                    .WithDefaultValue("{}")
+                    .WithVisibility(ConfigurationOptionVisibility.Never)
+            )
             .Build();
+
+    topicIds: Array<number>;
+    topicTitles: Array<string>;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+        var visitstr = this.cfg.GetSetting(this.THREAD_VISITS) as string;
+        if (visitstr) {
+            var obj = JSON.parse(visitstr);
+            if (obj.ids) this.topicIds = obj.ids as Array<number>;
+            else this.topicIds = new Array<number>();
+            if (obj.titles) this.topicTitles = obj.titles as Array<string>;
+            else this.topicTitles = new Array<string>();
+        }
     }
 
-    preprocess = () => {
+    preprocess = (context: PageContext) => {
+        if (context.PageType == RBKwebPageType.RBKweb_FORUM_POSTLIST) {
+            try {
+                var threadanchor = document.body.querySelector('a.maintitle') as HTMLAnchorElement;
+                var topicidmatch = threadanchor.href.match(/\bt=([0-9]+)\b/);
+                if (threadanchor && topicidmatch) {
+                    var topicTitle = threadanchor.textContent;
+                    var topicId = +topicidmatch[1];
+                    // Log.Debug('picked up thread id=' + topicId + ', title="' + topicTitle + '"');
+                    if (this.topicIds.indexOf(topicId) == -1) {
+                        if (this.topicIds.length > 10) this.topicIds.unshift();
+                        this.topicIds.push(topicId);
+                        if (this.topicTitles.length > 10) this.topicTitles.unshift();
+                        this.topicTitles.push(topicTitle);
+                        this.storeThreadVisits();
+                    }
+                }
+            } catch (e) {
+                Log.Error("exception: " + e.message + " - " + e.stack);
+            }
+        }
     }
 
     execute = (context: PageContext) => {
-        this.setPostButtonState();
-        this.autoSize();
-        this.setFocus(context.PageType == RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC);
-        this.setupHotkeys();
+        if (context.PageType != RBKwebPageType.RBKweb_FORUM_POSTLIST) {
+            this.setPostButtonState();
+            this.autoSize();
+            this.setFocus(context.PageType == RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC);
+            this.setupHotkeys();
+            this.setupTitle();
+        }
     };
 
     private setupHotkeys(): void {
@@ -123,6 +169,26 @@ export class EnhancePosting implements ExtensionModule {
         });
     }
 
+    private setupTitle(): void {
+        try {
+            var iframe = document.body.querySelector('iframe') as HTMLIFrameElement;
+            var threadidmatch = iframe.src.match(/\bt=([0-9]+)\b/);
+            if (threadidmatch) {
+                var threadId = +threadidmatch[1];
+                var titleidx = this.topicIds.indexOf(threadId);
+                if (titleidx != -1) {
+                    var title = this.topicTitles[titleidx];
+                    var anchorelt = document.body.querySelector('span.nav a[href="index.php"]') as HTMLAnchorElement;
+                    var spanelt = anchorelt.closest('span');
+                    spanelt.insertAdjacentHTML('beforeend', ' -> ' +
+                        '<a href="viewtopic.php?t=' + threadId + '" class="nav">' + title + '</a>');
+                }
+            }
+        } catch (e) {
+            Log.Error("exception: " + e.message + " - " + e.stack);
+        }
+    }
+
     private setPostButtonState() {
         this.postButton.disabled = (this.textArea.value.length == 0);
     }
@@ -138,4 +204,23 @@ export class EnhancePosting implements ExtensionModule {
     private submitPost() {
         this.postButton.click();
     }
-};
+
+    private storeThreadVisits(): void {
+        var visitstr = JSON.stringify({ ids: this.topicIds, titles: this.topicTitles });
+        this.cfg.ChangeSetting(this.THREAD_VISITS, visitstr);
+    }
+
+    private getConfigItem(setting: string): string {
+        try {
+            for (let i = 0; i < this.cfg.settings.length; i++) {
+                if (this.cfg.settings[i].setting == setting) {
+                    return this.cfg.settings[i].value as string;
+                }
+            }
+            console.log("did not find setting '" + setting);
+        } catch (e) {
+            console.error("getConfigItem exception: " + e.message);
+        }
+    }
+
+}
