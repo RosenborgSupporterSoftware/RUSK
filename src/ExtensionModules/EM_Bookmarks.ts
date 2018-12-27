@@ -106,7 +106,6 @@ export class Bookmarks implements ExtensionModule {
     preprocess = (context: PageContext) => {
         this.posts = context.RUSKPage.items as Array<PostInfo>;
         try  {
-            // this.posts = PostInfo.GetPostsFromDocument(document);
             var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
             if (pbutton.textContent == "Profil")
                 this.i18n = this.i18n_no;
@@ -115,7 +114,7 @@ export class Bookmarks implements ExtensionModule {
         }
         try {
             var link = document.body.querySelector('a.gensmall[href="search.php?search_id=newposts') as HTMLAnchorElement;
-            if (link) {
+            if (link) { // index.php page
                 link.insertAdjacentHTML('beforebegin', '<a name="bookmarks" class="gensmall bookmarks">Bookmarks</a><br>');
                 var bookmarks = link.parentElement.querySelector('a[name="bookmarks"]') as HTMLAnchorElement;
                 var handler = function(ev) {
@@ -198,51 +197,52 @@ export class Bookmarks implements ExtensionModule {
 
     execute = (context: PageContext) => {
         try {
-            var threadTitleElt = (document.body.querySelector('a.maintitle') as HTMLAnchorElement);
-            var threadTitle = threadTitleElt ? threadTitleElt.textContent : "";
-            this.posts.forEach(function(post: PostInfo, key, parent) {
-                var cmenu = post.getContextMenu();
-                var bookmarked = this.bookmarkedPosts[""+post.postid] != undefined;
-    
-                if (Object.keys(this.bookmarkedPosts).length < this.maxBookmarks) {
-                    // disabled when having too many bookmarks
-                    cmenu.addAction(this.BOOKMARK_POST, !bookmarked, function() {
-                        if (this.accountNames[""+post.posterid] != post.posterNickname) {
-                            this.accountNames[""+post.posterid] = post.posterNickname;
-                            this.saveAccountNames();
-                        }
-                        if (this.threadNames[""+post.threadId] != threadTitle) {
-                            this.threadNames[""+post.threadId] = threadTitle;
-                            this.saveThreadNames();
-                        }
-                        var template = document.createElement('template') as HTMLTemplateElement;
-                        template.innerHTML = '<div>' + post.postBodyElement.innerHTML + '</div>';
-                        template.content.querySelectorAll('table').forEach(function(elt: HTMLTableElement, key, parent) {
-                            elt.outerHTML = "";
+            if (context.PageType == RBKwebPageType.RBKweb_FORUM_POSTLIST) {
+                var threadTitleElt = (document.body.querySelector('a.maintitle') as HTMLAnchorElement);
+                var threadTitle = threadTitleElt ? threadTitleElt.textContent : "";
+                this.posts.forEach(function(post: PostInfo, key, parent) {
+                    var cmenu = post.getContextMenu();
+                    var bookmarked = this.bookmarkedPosts[""+post.postid] != undefined;
+                    if (Object.keys(this.bookmarkedPosts).length < this.maxBookmarks) {
+                        // disabled when having too many bookmarks
+                        cmenu.addAction(this.BOOKMARK_POST, !bookmarked, function() {
+                            if (this.accountNames[""+post.posterid] != post.posterNickname) {
+                                this.accountNames[""+post.posterid] = post.posterNickname;
+                                this.saveAccountNames();
+                            }
+                            if (this.threadNames[""+post.threadId] != threadTitle) {
+                                this.threadNames[""+post.threadId] = threadTitle;
+                                this.saveThreadNames();
+                            }
+                            var template = document.createElement('template') as HTMLTemplateElement;
+                            template.innerHTML = '<div>' + post.postBodyElement.innerHTML + '</div>';
+                            template.content.querySelectorAll('table').forEach(function(elt: HTMLTableElement, key, parent) {
+                                elt.outerHTML = "";
+                            }.bind(this));
+                            var snippet = template.content.textContent;
+                            var idx = snippet.indexOf("________");
+                            if (idx != -1) snippet = snippet.substring(0, idx);
+                            snippet = snippet.trim();
+                            snippet = snippet.substring(0,50);
+                            this.bookmarkedPosts[""+post.postid] = {
+                                 // a: post.postid,
+                                 b: post.posterid,
+                                 c: post.threadId,
+                                 d: Math.trunc(post.postedDate.getTime() / 60000),
+                                 e: snippet
+                            };
+                            cmenu.getAction(this.BOOKMARK_POST).hide();
+                            cmenu.getAction(this.BOOKMARK_POST_DEL).show();
+                            this.saveBookmarkedPosts();
                         }.bind(this));
-                        var snippet = template.content.textContent;
-                        var idx = snippet.indexOf("________");
-                        if (idx != -1) snippet = snippet.substring(0, idx);
-                        snippet = snippet.trim();
-                        snippet = snippet.substring(0,50);
-                        this.bookmarkedPosts[""+post.postid] = {
-                             // a: post.postid,
-                             b: post.posterid,
-                             c: post.threadId,
-                             d: Math.trunc(post.postedDate.getTime() / 60000),
-                             e: snippet
-                        };
-                        cmenu.getAction(this.BOOKMARK_POST).hide();
-                        cmenu.getAction(this.BOOKMARK_POST_DEL).show();
-                        this.saveBookmarkedPosts();
+                    }
+                    cmenu.addAction(this.BOOKMARK_POST_DEL, bookmarked, function() {
+                        this.unstar(""+post.postid);
+                        cmenu.getAction(this.BOOKMARK_POST).show();
+                        cmenu.getAction(this.BOOKMARK_POST_DEL).hide();
                     }.bind(this));
-                }
-                cmenu.addAction(this.BOOKMARK_POST_DEL, bookmarked, function() {
-                    this.unstar(""+post.postid);
-                    cmenu.getAction(this.BOOKMARK_POST).show();
-                    cmenu.getAction(this.BOOKMARK_POST_DEL).hide();
                 }.bind(this));
-            }.bind(this));
+            }
         } catch (e) {
             console.error("execute error: " + e.message + " - " + e.stack);
         }
