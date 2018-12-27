@@ -54,7 +54,7 @@ export interface ExtensionModule {
     /**
      * Called when RUSK wants the module to preprocess the current page
      */
-    preprocess(): void;
+    preprocess(context: PageContext): void;
 
     // TODO: Metode for å gi fra seg config til rammeverket
 }

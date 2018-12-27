@@ -63,7 +63,7 @@ async function processPage(modules: Array<ExtensionModule>, context: PageContext
             for (let i = 0; i < modules.length; i++) {
                 modname = modules[i].name;
                 try {
-                    modules[i].preprocess();
+                    modules[i].preprocess(context);
                 } catch (e) {
                     chrome.runtime.sendMessage(new ModuleError(modules[i].name, "preprocess", e.message, e));
                 }
