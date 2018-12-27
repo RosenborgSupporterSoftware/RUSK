@@ -36,12 +36,15 @@
   "permissions": [
     "storage",
     "tabs",
+    "webRequest",
+    "webRequestBlocking",
     "http://*.rbkweb.no/*",
     "http://rbkweb.no/*",
     "http://www.rbkweb.com/*",
     "http://rbkweb.com/*",
     "http://www.rosenborg.info/*",
-    "http://rosenborg.info/*"
+    "http://rosenborg.info/*",
+    "https://publish.twitter.com/*"
   ],
   "web_accessible_resources": [
     "img/*",

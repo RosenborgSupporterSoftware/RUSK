@@ -37,8 +37,22 @@ export class MediaEmbedder implements ExtensionModule {
             )
             .WithConfigOption(opt =>
                 opt
+                    .WithSettingName("ReplaceYoutubeLinks")
+                    .WithLabel("Fjern youtube-link når youtube-player legges inn")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
                     .WithSettingName("EmbedTwitter")
                     .WithLabel("Gjør om tweet-linker til tweets")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("ReplaceTwitterLinks")
+                    .WithLabel("Fjern original twitter-link når tweet legges inn")
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
             )
@@ -65,6 +79,13 @@ export class MediaEmbedder implements ExtensionModule {
             )
             .WithConfigOption(opt =>
                 opt
+                    .WithSettingName("ReplaceInstagramLinks")
+                    .WithLabel("Fjern original instagram-link når Instagram-poster legges inn")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
                     .WithSettingName("InstagramCaption")
                     .WithLabel("Ha med caption på Instagram-poster")
                     .WithSettingType(SettingType.bool)
@@ -83,20 +104,26 @@ export class MediaEmbedder implements ExtensionModule {
 
     // configs
     embedYoutube: boolean;
+    replaceYoutubeLinks: boolean;
     embedTwitter: boolean;
+    replaceTwitterLinks: boolean;
     embedStreamable: boolean;
     replaceStreamableLinks: boolean;
     embedInstagram: boolean;
+    replaceInstagramLinks: boolean;
     instagramCaption: boolean;
     instagramOnlyPicture: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
         this.embedYoutube = this.getConfigBool("EmbedYoutube");
+        this.replaceYoutubeLinks = this.getConfigBool("ReplaceYoutubeLinks");
         this.embedTwitter = this.getConfigBool("EmbedTwitter");
+        this.replaceTwitterLinks = this.getConfigBool("ReplaceTwitterLinks");
         this.embedStreamable = this.getConfigBool("EmbedStreamable");
         this.replaceStreamableLinks = this.getConfigBool("ReplaceStreamableLinks");
         this.embedInstagram = this.getConfigBool("EmbedInstagram");
+        this.replaceInstagramLinks = this.getConfigBool("ReplaceInstagramLinks");
         this.instagramCaption = this.getConfigBool("InstagramCaption");
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
     }
@@ -106,6 +133,7 @@ export class MediaEmbedder implements ExtensionModule {
     }
 
     execute = () => {
+        document.body.insertAdjacentHTML('afterbegin', '<div id="RUSKActivations"></div>');
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var sigpos = post.postBodyElement.innerHTML.indexOf('________');
             var hasSignature = sigpos != -1;
@@ -139,18 +167,31 @@ export class MediaEmbedder implements ExtensionModule {
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
                                     '<object width="460" height="270" data="https://www.youtube.com/embed/' + code +
                                              '" frameborder="0" allow="encrypted-media"></object>');
-                                anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
+                                if (this.replaceYoutubeLinks)
+                                    anchor.classList.add("RUSKHiddenItem");
                             }
                         }
                         else if (this.embedTwitter && href.match(/https?:\/\/twitter\.com\/[^\/]*\/status\/([0-9]*).*/i)) {
-                            // console.log("found: " + href);
                             var match = href.match(/https?:\/\/twitter\.com\/([^\/]*)\/status\/([0-9]*).*/i);
                             if (match) {
-                                var account = match[1];
+                                //var account = match[1];
                                 var code = match[2];
-                                anchor.insertAdjacentHTML('afterend', '<br>' +
-                                    '<iframe id="tweet_' + code + '" border=0 frameborder=0 height=250 width=460 src="https://twitframe.com/show?url=' + encodeURI("https://twitter.com/" + account + "/status/" + code) + '"></iframe>');
-                                anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
+                                var oembedcodeurl = "https://publish.twitter.com/oembed?" +
+                                    "url=https://twitter.com/twitter/status/" + code +
+                                    "&maxwidth=460&omit_script=true&dnt=true";
+                                fetch(oembedcodeurl, { mode: 'cors' })
+                                    .then(function(response: Response) {
+                                        return response.json();
+                                    }.bind(this))
+                                    .then(function(data: Object) {
+                                        anchor.insertAdjacentHTML('afterend', '<br>' + data['html'] + '<br>');
+                                        if (this.replaceTwitterLinks)
+                                            anchor.classList.add("RUSKHiddenItem");
+                                        this.activateTweets();
+                                    }.bind(this))
+                                    .catch(function(err) {
+                                        console.error('Fetch error: ' + err.message + " - " + err.stack);
+                                    }.bind(this));
                             }
                         }
                         else if (this.embedStreamable && href.match(/https?:\/\/streamable\.com\/.*$/i)) {
@@ -204,7 +245,8 @@ export class MediaEmbedder implements ExtensionModule {
                                         .then(function(response: Response) { return response.json(); }.bind(this))
                                         .then(function(data) {
                                              anchor.insertAdjacentHTML('afterend', '<br>' + data.html + '<br>');
-                                             anchor.classList.add("RUSKHiddenItem");
+                                             if (this.replaceInstagramLinks)
+                                                 anchor.classList.add("RUSKHiddenItem");
                                              this.activateInstagrams();
                                          }.bind(this));
                                 }
@@ -216,37 +258,32 @@ export class MediaEmbedder implements ExtensionModule {
                 }
             }.bind(this));
         }.bind(this));
+    }
 
-        var tweets = document.body.querySelectorAll('iframe[id^="tweet_"]');
-        tweets.forEach(function(tweetframe: HTMLIFrameElement, key, parent) {
-            tweetframe.addEventListener('load', function() {
-                tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
-                                                     "https://twitframe.com");
-                var origheight = tweetframe.style.height;
-                var interval = setInterval(function() {
-                    if (tweetframe.style.height == origheight) {
-                        tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
-                                                               "https://twitframe.com");
-                    }
-                }, 500);
-                tweetframe.setAttribute("data-interval", "" + interval);
-            });
-        });
-
-        window.addEventListener("message", function(event) {
-            if (event.origin != "https://twitframe.com") return;
-            if (event.data && event.data.height && event.data.element.match(/^tweet_/)) {
-                var height = parseInt(event.data.height);
-                if (height == 139) return;
-                var iframe = document.getElementById(event.data.element) as HTMLIFrameElement;
-                var interval = iframe.getAttribute("data-interval");
-                if (interval) { clearInterval(parseInt(interval)); }
-                iframe.style.height = height + "px";
-            }
-        });
+    private activateTweets(): void {
+        var activations = document.getElementById('RUSKActivations') as HTMLDivElement;
+        if (activations.getAttribute("data-twitter")) return;
+        activations.setAttribute("data-twitter", "true");
+        (function(d, script) {
+            script = d.createElement('script');
+            script.type = 'text/javascript';
+            script.async = true;
+            script.src = 'https://platform.twitter.com/widgets.js';
+            script.onload = function() {
+                // remote script has loaded
+                if (typeof window['twttr'] !== "undefined") {
+                    console.log("calling widgets.load()")
+                    window['twttr'].widgets.load();
+                }
+            };
+            d.getElementsByTagName('head')[0].appendChild(script);
+        }(document));
     }
 
     private activateInstagrams(): void {
+        var activations = document.getElementById('RUSKActivations') as HTMLDivElement;
+        if (activations.getAttribute("data-instagram")) return;
+        activations.setAttribute("data-instagram", "true");
         (function(d, script) {
             script = d.createElement('script');
             script.type = 'text/javascript';

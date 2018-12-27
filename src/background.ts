@@ -128,3 +128,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     configStorage.StoreConfiguration(msg);
     chrome.runtime.sendMessage({ logMessage: 'Stored configuration to sync storage' });
 });
+
+// *************************************************************************
+// Make sure we get CORS-access to certain sites, by injecting the
+// "Allow-Access-Control-Origin: *" header into all responses we receive
+// from them.
+
+chrome.webRequest.onHeadersReceived.addListener(function(details: chrome.webRequest.WebResponseHeadersDetails) {
+    var idx = details.responseHeaders.findIndex((h) => {
+        return h.name.toLowerCase() == "access-control-allow-origin"; })
+    if (idx != -1)
+        details.responseHeaders[idx].value = "*";
+    else
+        details.responseHeaders.push({ name: "Access-Control-Allow-Origin", value: "*" });
+    details.responseHeaders.push({ name: "Access-Control-Allow-Methods", value: "GET, PUT, POST, DELETE, HEAD, OPTIONS"});
+    return { responseHeaders: details.responseHeaders };
+}, {
+    urls: ['https://publish.twitter.com/*']
+}, ["blocking", "responseHeaders"]);
