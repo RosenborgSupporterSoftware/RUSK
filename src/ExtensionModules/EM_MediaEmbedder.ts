@@ -92,6 +92,7 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
             )
+            /*
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName("EmbedM3U8")
@@ -99,6 +100,7 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
             )
+            */
             .Build();
 
     posts: Array<PostInfo>;
@@ -113,7 +115,7 @@ export class MediaEmbedder implements ExtensionModule {
     instagramOnlyPicture: boolean;
     embedMp4: boolean;
     embedWebm: boolean;
-    embedM3U8: boolean;
+    //embedM3U8: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
@@ -126,7 +128,7 @@ export class MediaEmbedder implements ExtensionModule {
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
         this.embedMp4 = this.getConfigBool("EmbedMP4");
         this.embedWebm = this.getConfigBool("EmbedWebm");
-        this.embedM3U8 = this.getConfigBool("EmbedM3U8");
+        //this.embedM3U8 = this.getConfigBool("EmbedM3U8");
     }
 
     preprocess = (context: PageContext) => {
@@ -252,12 +254,16 @@ export class MediaEmbedder implements ExtensionModule {
                                 'Sorry, your browser does not support embedding with <tt>&lt;video&gt;</tt>.' +
                                 '</video>');
                         }
+                        /*
                         else if (this.embedM3U8 && href.match(/.*\.m3u8\b/)) {
-                            anchor.insertAdjacentHTML('afterend', '<br>' +
-                                '<video controls width="460" src="' + anchor.href + '">' +
-                                'Sorry, your browser does not support embedding m3u8 with <tt>&lt;video&gt;</tt>.' +
-                                '</video>');
+                            this.activateM3U8();
+                            //anchor.insertAdjacentHTML('afterend', '<br>' +
+                            //    '<video controls width="460">' +
+                            //    '<source src="' + anchor.href + '" type="application/x-mpegURL">' +
+                            //    'Sorry, your browser does not support embedding .m3u8 with the video tag.' +
+                            //    '</video>');
                         }
+                        */
                     }
                 } catch (e) {
                     console.error("execute exception: " + e.message);
