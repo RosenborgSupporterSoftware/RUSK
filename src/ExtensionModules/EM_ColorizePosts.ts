@@ -238,7 +238,7 @@ export class ColorizePosts implements ExtensionModule {
     private determineSelectedItem(posts: Array<PostInfo>): void {
         if (posts.length == 0) return;
 
-        let urlMatch = window.location.href.match(/^.*\/forum\/viewtopic\.php\?p=(\d+)#\1$/);
+        let urlMatch = window.location.href.match(/^.*\/forum\/viewtopic\.php\?p=(\d+)(&highlight=)?#\1$/);
         if (urlMatch) {
             let target = +urlMatch[1];
             for (let i = 0; i < posts.length; i++) {
