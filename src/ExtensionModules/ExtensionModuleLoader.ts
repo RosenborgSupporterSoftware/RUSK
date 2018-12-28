@@ -24,6 +24,7 @@ import { RelativeForumWidth } from "./EM_RelativeForumWidth"
 import { QuickReply } from "./EM_QuickReply";
 import { Colorize } from "./EM_Colorize";
 import { KeyboardNavigation } from "./EM_KeyboardNavigation";
+import { ConfigUI } from "./EM_ConfigUI";
 
 /**
  * ExtensionModuleLoader
@@ -33,6 +34,7 @@ import { KeyboardNavigation } from "./EM_KeyboardNavigation";
 // TODO: Last inn fra generert JSON-fil med liste over moduler (når den eksisterer)
 export default function loadModules(path: string): Array<ExtensionModule> {
     let allModules = [
+        new ConfigUI(),
         new Empowerment(),
         new KeyboardNavigation(),
         new RelativeForumWidth(),

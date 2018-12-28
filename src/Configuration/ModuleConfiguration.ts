@@ -67,6 +67,9 @@ export class ModuleConfiguration {
         let modConf = module.configSpec();
         if (obj == null) return modConf;
 
+        if ('moduleEnabled' in obj) {
+            modConf.moduleEnabled = obj.moduleEnabled;
+        }
         if (obj.settings) {
             for (let i = 0; i < obj.settings.length; i++) {
                 let setting = obj.settings[i];

@@ -1,0 +1,11 @@
+{{#if (eq setting.type "ST_COLOR")}}
+  {{module-setting-color setting=setting}}
+{{/if}}
+{{#if (eq setting.type "ST_TEXT")}}
+  {{module-setting-text setting=setting}}
+{{/if}}
+{{#if (eq setting.type "ST_BOOL")}}
+  {{module-setting-bool setting=setting}}
+{{/if}}
+
+

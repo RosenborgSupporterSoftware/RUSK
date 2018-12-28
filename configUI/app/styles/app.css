@@ -1,0 +1,91 @@
+div.colorbox {
+  border: 2px solid black;
+  width: 50px;
+  height: 25px;
+  /* background-color: lightgreen; */
+}
+
+td.configValue {
+  margin: auto;
+}
+
+input[type=color] {
+  border: none;
+  width: 50px;
+  height: 25px;
+  -webkit-appearance: none;
+  padding: 0px;
+  /*border-radius: 0px;
+  height: calc(2.0rem + 2px)!important; */
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  width: 50px;
+  height: 25px;
+}
+input[type="color"]::-webkit-color-swatch {
+  padding: 0;
+  border: 1px solid black;
+  width: 50px;
+  height: 25px;
+}
+
+div.config {
+  /* margin-top: 100px !important; */
+  top: 100px;
+  position: absolute;
+}
+
+a.closebutton {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+}
+
+a.closebutton i {
+  color: #FF0000;
+}
+
+.red {
+  color: #FF0000;
+}
+
+td.configValue {
+  padding: 3px;
+}
+
+ul.hotkeylist {
+  border: 1px solid #DDDDDD;
+  /* background-color: #FAFAFA; */
+  border-radius: 5px;
+  margin: 3px;
+  padding-inline-start: 5px;
+}
+
+ul.hotkeylist li {
+  list-style-type: none;
+  margin: 0px 3px;
+  padding: 2px;
+}
+
+div.keycombo {
+  border: 1px solid #AAAAFF;
+  border-radius: 5px;
+  background-color: #EEEEFF;
+  /* margin: 3px 1px; */
+  padding: 3px 2px;
+  display: inline-block;
+}
+
+div.keycombo:hover {
+  background-color: #FEFEFF;
+  cursor: pointer;
+}
+
+span.hotkey-key {
+  border: 1px solid #CACACA;
+  border-radius: 3px;
+  background-color: #EFEFEF;
+  padding: 1px 5px;
+}

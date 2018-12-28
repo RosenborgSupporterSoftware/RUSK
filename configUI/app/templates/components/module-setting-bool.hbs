@@ -1,0 +1,8 @@
+{{!-- A setting that is used to specify a bool value --}}
+
+{{x-toggle
+  value=setting.value
+  onToggle=(action (mut setting.value))
+  theme="light"
+  size="small"
+}}

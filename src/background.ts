@@ -50,8 +50,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(async (req, sender, reply) => {
     if (req.getConfigFor) {
         if (typeof req.getConfigFor == "string") {
-            let cfg = ConfigManager.Instance.GetConfigForModule(req.getConfigFor);
-            reply([cfg]);
+            if (req.getConfigFor == "all") {
+                let cfg = ConfigManager.Instance.GetAllConfigAsJSON();
+                reply(cfg);
+            } else {
+                let cfg = ConfigManager.Instance.GetConfigForModule(req.getConfigFor);
+                reply([cfg]);
+            }
         }
         if (Array.isArray(req.getConfigFor)) {
             // Do array things
@@ -64,6 +69,23 @@ chrome.runtime.onMessage.addListener(async (req, sender, reply) => {
     }
     if (req.storeConfigFor) {
         ConfigManager.Instance.SetConfigForModule(req.storeConfigFor, req.config);
+        reply('ok');
+    }
+    if (req.setConfigState) {
+        switch (req.setConfigState) {
+            case "closed":
+                chrome.tabs.sendMessage(sender.tab.id, { closeConfigOverlay: true }, resp => {
+                })
+                break;
+        }
+        reply("ok");
+    }
+});
+
+// Display config UI
+chrome.runtime.onMessage.addListener(async (req, sender, reply) => {
+    if (req.openOptionsPage) {
+        chrome.runtime.openOptionsPage();
     }
 });
 

@@ -58,9 +58,12 @@ function initPage(modules: Array<ExtensionModule>, context: PageContext): void {
                 if (configs[j].moduleName == modules[i].name) {
                     try {
                         let realConf = ModuleConfiguration.FromStorageObject(configs[j], modules[i]);
-                        let ui = modules[i].init(realConf);
-                        if (ui != null) {
-                            uimods.push(ui);
+                        if (realConf.moduleEnabled) {
+
+                            let ui = modules[i].init(realConf);
+                            if (ui != null) {
+                                uimods.push(ui);
+                            }
                         }
                     } catch (e) {
                         chrome.runtime.sendMessage(new ModuleError(modules[i].name, "init", e.message, e));

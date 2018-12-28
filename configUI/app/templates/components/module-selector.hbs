@@ -1,0 +1,22 @@
+<ul class="list-group">
+  <div class="card-header">
+    Moduler
+  </div>
+  {{#each sortedModules as |mod|}}
+    {{#link-to
+      "index.module"
+      mod.moduleName
+      class="list-group-item list-group-item-action"
+    }}
+      {{#if mod.moduleEnabled}}
+        {{fa-icon "toggle-on"}}
+      {{else}}
+        {{fa-icon "toggle-off"}}
+      {{/if}}
+      {{mod.displayName}}
+      {{#if mod.isDirty}}
+        *
+      {{/if}}
+    {{/link-to}}
+  {{/each}}
+</ul>

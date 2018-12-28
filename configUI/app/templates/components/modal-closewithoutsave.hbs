@@ -1,0 +1,25 @@
+{{#bs-modal
+  open=unsavedModalOpen
+  onHide=(action "cancelCloseConfig")
+  closeTitle="Avbryt"
+as |modal|
+}}
+  {{#modal.header}}
+    <h4 class="modal-title">{{fa-icon "exclamation-circle" class="red"}} Du har ulagrede endringer</h4>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    <p>Du har gjort endringer på følgende moduler som ikke er lagret:</p>
+    <ul>
+      {{#each configService.dirtyModules as |module|}}
+        <li>{{module.displayName}}</li>
+      {{/each}}
+    </ul>
+    <p>Er du sikker på at du vil forkaste disse endringene?</p>
+  {{/modal.body}}
+
+  {{#modal.footer as |footer|}}
+    {{#bs-button onClick=(action "cancelCloseConfig") type="secondary"}}Oops, ta meg tilbake!{{/bs-button}}
+    {{#bs-button onClick=(action "performCloseConfig") type="danger"}}Det er greit{{/bs-button}}
+  {{/modal.footer}}
+{{/bs-modal}}

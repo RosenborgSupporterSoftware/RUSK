@@ -1,0 +1,26 @@
+<div class="keycombo">
+  {{#if keycombo.shiftKey}}
+    <span class="hotkey-key">
+      &nbsp;Shift&nbsp;
+    </span>
+    &nbsp;+
+  {{/if}}
+
+  {{#if keycombo.altKey}}
+    <span class="hotkey-key">
+      &nbsp;Alt&nbsp;
+    </span>
+    &nbsp;+
+  {{/if}}
+
+  {{#if keycombo.ctrlKey}}
+    <span class="hotkey-key">
+      &nbsp;Ctrl&nbsp;
+    </span>
+    &nbsp;+
+  {{/if}}
+
+  <span class="hotkey-key">
+    &nbsp;{{keycombo.key}}&nbsp;
+  </span>
+</div>

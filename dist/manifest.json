@@ -6,7 +6,7 @@
   "version": "0.0.9",
 
   "options_ui": {
-    "page": "options.html",
+    "page": "index.html",
     "chrome_style": true
   },
 
@@ -19,7 +19,7 @@
 
   "page_action": {
     "default_icon": "rbkweb_icon_32.png",
-    "default_popup": "popup.html"
+    "default_popup": "index.html"
   },
 
   "content_scripts": [
@@ -45,7 +45,9 @@
   ],
   "web_accessible_resources": [
     "img/*",
-    "data/*"
+    "data/*",
+    "index.html",
+    "assets/*"
    ],
 
   "background": {

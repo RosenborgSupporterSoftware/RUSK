@@ -1,0 +1,279 @@
+{
+    "RUSK-ModConf-Brukertips": {
+        "enabled": true,
+        "moduleDescription": "Denne modulen viser enkle brukertips oppe til høyre på RBKweb-siden, rett under sitatene.",
+        "moduleName": "Brukertips",
+        "displayName": "Brukertips",
+        "settings": []
+    },
+    "RUSK-ModConf-Empowerment": {
+        "displayName": "Empowerment",
+        "enabled": true,
+        "moduleDescription": "Denne modulen viser på RBKweb at RUSK er aktiv",
+        "moduleName": "Empowerment",
+        "settings": []
+    },
+    "RUSK-ModConf-EnhancePosting": {
+        "enabled": true,
+        "moduleDescription": "Denne modulen gjør små forbedringer når du skal legge inn eller redigere et innlegg på forumet.",
+        "moduleName": "EnhancePosting",
+        "displayName": "Forbedret posting",
+        "settings": [
+            {
+                "isShared": false,
+                "settingName": "resize",
+                "value": true
+            },
+            {
+                "isShared": false,
+                "settingName": "autofocus",
+                "value": true
+            },
+            {
+                "isShared": false,
+                "settingName": "posthotkey",
+                "value": true
+            }
+        ]
+    },
+    "RUSK-ModConf-Fanetittel": {
+        "displayName": "Fanetittel",
+        "enabled": true,
+        "moduleDescription": "Denne modulen fjerner fanetittel-prefix fra RBKweb-sider.",
+        "moduleName": "Fanetittel",
+        "settings": []
+    },
+    "RUSK-ModConf-Fargelegging av forum": {
+        "displayName": "Fargelegging av forum",
+        "enabled": true,
+        "moduleDescription": "Denne modulen fargelegger forum på RBKweb i henhold til status.",
+        "moduleName": "Fargelegging av forum",
+        "settings": [
+            {
+                "isShared": true,
+                "setting": "UnreadColorEven",
+                "value": "lightgreen"
+            },
+            {
+                "isShared": true,
+                "setting": "UnreadColorOdd",
+                "value": "lightgreen"
+            },
+            {
+                "isShared": true,
+                "setting": "ReadColorEven",
+                "value": "white"
+            },
+            {
+                "isShared": true,
+                "setting": "ReadColorOdd",
+                "value": "white"
+            },
+            {
+                "isShared": true,
+                "setting": "SelectedItemColor",
+                "value": "DDE7C7"
+            }
+        ]
+    },
+    "RUSK-ModConf-Fargelegging av innlegg": {
+        "displayName": "Fargelegging av innlegg",
+        "enabled": true,
+        "moduleDescription": "Denne modulen fargelegger innlegg på RBKweb i henhold til status.",
+        "moduleName": "Fargelegging av innlegg",
+        "settings": [
+            {
+                "isShared": true,
+                "settingName": "UnreadColorEven",
+                "value": "lightgreen"
+            },
+            {
+                "isShared": true,
+                "settingName": "UnreadColorOdd",
+                "value": "lightgreen"
+            },
+            {
+                "isShared": true,
+                "settingName": "ReadColorEven",
+                "value": "white"
+            },
+            {
+                "isShared": true,
+                "settingName": "ReadColorOdd",
+                "value": "white"
+            },
+            {
+                "isShared": true,
+                "settingName": "SelectedItemColor",
+                "value": "DDE7C7"
+            }
+        ]
+    },
+    "RUSK-ModConf-Fargelegging av tråder": {
+        "displayName": "Fargelegging av tråder",
+        "enabled": true,
+        "moduleDescription": "Denne modulen fargelegger tråder på RBKweb i henhold til status.",
+        "moduleName": "Fargelegging av tråder",
+        "settings": [
+            {
+                "isShared": true,
+                "settingName": "UnreadColorEven",
+                "value": "lightgreen"
+            },
+            {
+                "isShared": true,
+                "settingName": "UnreadColorOdd",
+                "value": "lightgreen"
+            },
+            {
+                "isShared": true,
+                "settingName": "ReadColorEven",
+                "value": "white"
+            },
+            {
+                "isShared": true,
+                "settingName": "ReadColorOdd",
+                "value": "white"
+            },
+            {
+                "isShared": true,
+                "settingName": "SelectedItemColor",
+                "value": "DDE7C7"
+            }
+        ]
+    },
+    "RUSK-ModConf-HighlightColor": {
+        "enabled": true,
+        "moduleDescription": "Denne modulen endrer farge for utheving av f.eks. søkeresultater.",
+        "moduleName": "HighlightColor",
+        "displayName": "Fargelegg søkeord",
+        "settings": [
+            {
+                "isShared": false,
+                "settingName": "color",
+                "value": "888888"
+            }
+        ]
+    },
+    "RUSK-ModConf-ImageCache": {
+        "displayName": "ImageCache",
+        "enabled": true,
+        "moduleDescription": "Denne modulen bruker lokalt cachede ikoner for RBKweb.",
+        "moduleName": "ImageCache",
+        "settings": []
+    },
+    "RUSK-ModConf-InboxAlert": {
+        "displayName": "Inbox Alert",
+        "enabled": true,
+        "moduleDescription": "Denne modulen legger inn et ekstra (mer synlig) varsel dersom du har private meldinger.",
+        "moduleName": "InboxAlert",
+        "settings": []
+    },
+    "RUSK-ModConf-Kampoversikt": {
+        "displayName": "Kampoversikt",
+        "enabled": true,
+        "moduleDescription": "Denne modulen forbedrer kampoversikten på RBKweb.",
+        "moduleName": "Kampoversikt",
+        "settings": [
+            {
+                "isShared": false,
+                "settingName": "displayWeekday",
+                "value": true
+            },
+            {
+                "isShared": false,
+                "settingName": "colorizeResult",
+                "value": true
+            }
+        ]
+    },
+    "RUSK-ModConf-MediaEmbedder": {
+        "displayName": "Media Embedder",
+        "enabled": true,
+        "moduleDescription": "Denne modulen embedder media-linker direkte i poster.",
+        "moduleName": "MediaEmbedder",
+        "settings": [
+            {
+                "isShared": true,
+                "setting": "EmbedYoutube",
+                "value": true
+            },
+            {
+                "isShared": true,
+                "setting": "EmbedTwitter",
+                "value": true
+            }
+        ]
+    },
+    "RUSK-ModConf-PollEditor": {
+        "displayName": "PollEditor",
+        "enabled": true,
+        "moduleDescription": "Denne modulen optimaliserer poll-editering",
+        "moduleName": "PollEditor",
+        "settings": [
+            {
+                "isShared": false,
+                "setting": "polls",
+                "value": "{}"
+            }
+        ]
+    },
+    "RUSK-ModConf-Signaturfilter": {
+        "displayName": "Signaturfilter",
+        "enabled": true,
+        "moduleDescription": "En modul som lar deg fjerne signaturer fra brukerinnlegg.",
+        "moduleName": "Signaturfilter",
+        "settings": []
+    },
+    "RUSK-ModConf-ThreadTitleLinks": {
+        "displayName": "ThreadTitleLinks",
+        "enabled": true,
+        "moduleDescription": "Denne modulen gjør at linker for tråder med nytt innhold flytter deg til der de nye postene er.",
+        "moduleName": "ThreadTitleLinks",
+        "settings": []
+    },
+    "RUSK-ModConf-TopicFilter": {
+        "enabled": true,
+        "moduleDescription": "Denne modulen filtrerer forumtråder",
+        "moduleName": "TopicFilter",
+        "displayName": "Trådfiltrering",
+        "settings": [
+            {
+                "isShared": false,
+                "setting": "hideThreads",
+                "value": "[]"
+            }
+        ]
+    },
+    "RUSK-ModConf-UserFilter": {
+        "enabled": true,
+        "moduleDescription": "Denne modulen filtrerer forumbrukere",
+        "moduleName": "UserFilter",
+        "displayName": "Brukerfilter",
+        "settings": [
+            {
+                "isShared": false,
+                "settingName": "forumTrolls",
+                "value": "[]"
+            },
+            {
+                "isShared": false,
+                "settingName": "threadTrolls",
+                "value": "{}"
+            }
+        ]
+    },
+    "RUSK-ModConf-UsernameTracker": {
+        "displayName": "UsernameTracker",
+        "enabled": true,
+        "moduleDescription": "Varsle endrede brukernavn",
+        "moduleName": "UsernameTracker",
+        "settings": [
+            {
+                "isShared": false,
+                "setting": "knownUsernames",
+                "value": "{\"2\":\"2mas\",\"6\":\"Eru\",\"12\":\"SunsetSalami\",\"26\":\"Hedon\",\"31\":\"haavarl\",\"467\":\"FanFraSør\",\"626\":\"TomH\",\"671\":\"RBKSandvika\",\"726\":\"oyvindh\",\"806\":\"Hentesveis\",\"867\":\"snegle\",\"887\":\"Bakklandia\",\"915\":\"Totto_Dahlum\",\"1004\":\"25\",\"1013\":\"Henning\",\"1063\":\"ace\",\"1105\":\"Zorac\",\"1144\":\"Keenoir\",\"1146\":\"doffen\",\"1160\":\"nastynick\",\"1190\":\"attach\",\"1205\":\"Torbjørn\",\"1217\":\"Strand\",\"1234\":\"Jonas\",\"1279\":\"RbkUrge\",\"1332\":\"O-Rex\",\"1345\":\"quentez\",\"1347\":\"Largactyl\",\"1382\":\"EvileyeS\",\"1423\":\"kristobal\",\"1515\":\"dags\",\"1544\":\"Batigol\",\"1575\":\"Forumsjef\",\"1578\":\"RBK-Nr1\",\"1580\":\"senador\",\"1609\":\"Roamer\",\"1615\":\"tr0ndern\",\"1626\":\"ola.\",\"1665\":\"This Is Anfield\",\"1674\":\"gm\",\"1733\":\"Hedning\",\"1752\":\"puckno\",\"1757\":\"bigfoot\",\"1798\":\"mirar\",\"1920\":\"Lomaxx\",\"1925\":\"bolgebah\",\"1978\":\"Konesseur\",\"2005\":\"josinho\",\"2120\":\"Kjello\",\"2139\":\"mortenlj77\",\"2186\":\"Aristoteles\",\"2208\":\"Ingeman\",\"2303\":\"pingvin\",\"2330\":\"Ballahl\",\"2400\":\"spællåtmæ\",\"2470\":\"robbie\",\"2637\":\"Guinness\",\"2652\":\"Stubbelur\",\"2763\":\"v_olden\",\"2773\":\"nieuwlaat\",\"2781\":\"krist2\",\"2788\":\"shadwell\",\"2821\":\"1972 Miami Dolphins\",\"2826\":\"Diabolic\",\"2850\":\"nidaros997\",\"3172\":\"PauloSilas\",\"3175\":\"Bye\",\"3212\":\"toreinar\",\"3413\":\"Sløvsekken\",\"3659\":\"AVR\",\"3828\":\"chrisis87\",\"3936\":\"muppet\",\"3944\":\"kevinpieter\",\"3971\":\"toki\",\"4237\":\"RBKrosenborg\",\"4625\":\"Clasiker\",\"5526\":\"zaphod81\",\"5548\":\"moomoo\",\"5559\":\"LanoX\",\"5572\":\"anders1\",\"5596\":\"Keyser Soze\",\"5598\":\"hello\",\"5610\":\"Rånny\",\"5616\":\"smogli\",\"5649\":\"niccolai\",\"5661\":\"nin\",\"5761\":\"Oppmannen\",\"5764\":\"Cyrilp\",\"5802\":\"abjoern\",\"5833\":\"Talentløs\",\"5842\":\"gisp!\",\"5900\":\"LarsG\",\"5907\":\"Macha\",\"5931\":\"kris0stby\",\"5957\":\"kkakk\",\"5958\":\"Demolith\",\"5970\":\"Bagh\",\"5982\":\"VTB\",\"6011\":\"Rexalor\",\"6012\":\"vegardj\",\"6029\":\"Christian1917\",\"6057\":\"Ståle\",\"6058\":\"EGA\",\"6061\":\"Søtvatten\",\"6077\":\"Vollrik\",\"6080\":\"EspN\",\"6177\":\"Kai88\",\"6191\":\"BjarneS\",\"6199\":\"SteinarG\",\"6260\":\"otters\",\"6276\":\"Knowrud\",\"6289\":\"larsarus\",\"6313\":\"Erayzer\",\"6315\":\"kablap\",\"6322\":\"copenhagen\",\"6328\":\"Ivar\",\"6333\":\"Zeno\",\"6350\":\"Whoppa\",\"6353\":\"PerO\",\"6356\":\"Churchill\",\"6360\":\"Dew\",\"6369\":\"KitWalker\",\"6370\":\"Huber\",\"6372\":\"SeG\",\"6377\":\"Skeptix\",\"6391\":\"WT62\",\"6408\":\"eksil\",\"6409\":\"Jondahl\",\"6410\":\"Vegard2711\",\"6411\":\"vegran\",\"6440\":\"Sjiraff\",\"6471\":\"steinmetz\",\"6483\":\"TottoD\",\"6496\":\"Johnny Rainbow\",\"6500\":\"OrionPax\",\"6511\":\"jacsonø\",\"6538\":\"Attaboy\",\"6615\":\"Mustrum Ridcully\",\"6624\":\"Hakkespett\",\"6647\":\"dembaba\",\"6653\":\"RBK19051917\",\"6679\":\"Zorbeltuss\",\"6699\":\"SvennO\",\"6705\":\"Ratatosk\",\"6708\":\"WanAn\",\"6742\":\"Brødsmula\",\"6749\":\"sveininge\",\"6769\":\"zinedinestrand\",\"6782\":\"gollumLAD legend\",\"6786\":\"libido\",\"6814\":\"ricko11\",\"6826\":\"thomas_katt\",\"6827\":\"Megafritz\",\"6835\":\"Sliter\",\"6846\":\"Bananskrue\",\"6858\":\"Thulian\",\"6866\":\"sidney\",\"6873\":\"Noah FC\",\"6881\":\"Strominho\",\"6899\":\"number10\",\"6908\":\"MkBerg\",\"7000\":\"Montana\",\"7010\":\"Sletto\",\"7122\":\"Der Kaiser\",\"7134\":\"jubajuba\",\"7143\":\"Skammels!\",\"7154\":\"machiavelli\",\"7163\":\"Gla'trønder\",\"7188\":\"Hodor\",\"7212\":\"SHJINNJWÆST\",\"7226\":\"waterfalls\",\"7303\":\"Kamerat Ola\",\"7437\":\"Borden\",\"7439\":\"angvik\",\"7455\":\"£irik\",\"7459\":\"Jan Erik\",\"7472\":\"1960\",\"7509\":\"Blix Z\",\"7520\":\"Numsk\",\"7541\":\"gurgla\",\"7555\":\"avtrekkeren\",\"7572\":\"marco83\",\"7579\":\"kentosd\",\"7607\":\"DarthJohansen\",\"7619\":\"Vector\",\"7622\":\"BalleK\",\"7637\":\"Zarm93\",\"7690\":\"trollmannen\",\"7712\":\"håpløs\",\"7745\":\"BadMongo\",\"7746\":\"Indreløper\",\"7768\":\"Rosalind standarn\",\"7775\":\"kristoffer99\",\"7801\":\"Fusion\",\"7806\":\"Bart1\",\"7811\":\"kjoersvik\",\"7957\":\"Nordens Lokomotiv\",\"7996\":\"ballbingen\",\"8028\":\"kkhassel\",\"8032\":\"Captain\",\"8070\":\"Lord Oakley\",\"8080\":\"oskisjunior\",\"8087\":\"Tyholt\",\"8121\":\"Hulken\",\"8169\":\"bommel1\",\"8195\":\"Grieg78\",\"8235\":\"Putte\",\"8255\":\"Torgeir\",\"8356\":\"Vår Herre\",\"8401\":\"Yv89\",\"8415\":\"Thockey\",\"8478\":\"Pappelg\",\"8497\":\"Dr.Ible\",\"8510\":\"trolltunga\",\"8515\":\"IskaldDahls\",\"8530\":\"Knurt Rotleifsen\",\"8531\":\"kenfred\",\"8543\":\"50prosenNT\",\"8572\":\"NilsArneEggenErKongen\",\"8598\":\"Frøken Fransen\",\"8620\":\"Killian\",\"8623\":\"adammuelta\",\"8625\":\"queylotrie\"}"
+            }
+        ]
+    }
+}
