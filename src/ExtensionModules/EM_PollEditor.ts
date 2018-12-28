@@ -49,7 +49,7 @@ export class PollEditor implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        var pollscfg = this.getConfigItem("polls");
+        var pollscfg = this.cfg.GetSetting("polls") as string;
         this.polls = JSON.parse(pollscfg);
     }
 
@@ -178,19 +178,6 @@ export class PollEditor implements ExtensionModule {
             }.bind(this));
         } catch (e) {
             console.log("exception: " + e.message);
-        }
-    }
-
-    private getConfigItem(setting: string): string {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as string;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
         }
     }
 

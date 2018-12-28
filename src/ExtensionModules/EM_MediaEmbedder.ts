@@ -119,16 +119,16 @@ export class MediaEmbedder implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.embedYoutube = this.getConfigBool("EmbedYoutube");
-        this.embedTwitter = this.getConfigBool("EmbedTwitter");
-        this.embedStreamable = this.getConfigBool("EmbedStreamable");
-        this.replaceStreamableLinks = this.getConfigBool("ReplaceStreamableLinks");
-        this.embedInstagram = this.getConfigBool("EmbedInstagram");
-        this.instagramCaption = this.getConfigBool("InstagramCaption");
-        this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
-        this.embedMp4 = this.getConfigBool("EmbedMP4");
-        this.embedWebm = this.getConfigBool("EmbedWebm");
-        //this.embedM3U8 = this.getConfigBool("EmbedM3U8");
+        this.embedYoutube = this.cfg.GetSetting("EmbedYoutube") as boolean;
+        this.embedTwitter = this.cfg.GetSetting("EmbedTwitter") as boolean;
+        this.embedStreamable = this.cfg.GetSetting("EmbedStreamable") as boolean;
+        this.replaceStreamableLinks = this.cfg.GetSetting("ReplaceStreamableLinks") as boolean;
+        this.embedInstagram = this.cfg.GetSetting("EmbedInstagram") as boolean;
+        this.instagramCaption = this.cfg.GetSetting("InstagramCaption") as boolean;
+        this.instagramOnlyPicture = this.cfg.GetSetting("InstagramOnlyPicture") as boolean;
+        this.embedMp4 = this.cfg.GetSetting("EmbedMP4") as boolean;
+        this.embedWebm = this.cfg.GetSetting("EmbedWebm") as boolean;
+        //this.embedM3U8 = this.cfg.GetSetting("EmbedM3U8") as boolean;
     }
 
     preprocess = (context: PageContext) => {
@@ -314,18 +314,5 @@ export class MediaEmbedder implements ExtensionModule {
             };
             d.getElementsByTagName('head')[0].appendChild(script);
         }(document));
-    }
-
-    private getConfigBool(setting: string): boolean {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as boolean;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
     }
 }

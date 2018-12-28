@@ -79,11 +79,10 @@ export class Bookmarks implements ExtensionModule {
         this.cfg = config;
         this.starredPNG = chrome.runtime.getURL('/img/starred.png');
         this.unstarredPNG = chrome.runtime.getURL('/img/unstarred.png');
-        this.bookmarkedThreads = JSON.parse(this.getConfigString("bookmarkedThreads"));
-        this.bookmarkedPosts = JSON.parse(this.getConfigString("bookmarkedPosts"));
-        //console.log("posts: " + this.getConfigString("bookmarkedPosts"));
-        this.accountNames = JSON.parse(this.getConfigString('accountNames'));
-        this.threadNames = JSON.parse(this.getConfigString('threadNames'));
+        this.bookmarkedThreads = JSON.parse(this.cfg.GetSetting("bookmarkedThreads") as string);
+        this.bookmarkedPosts = JSON.parse(this.cfg.GetSetting("bookmarkedPosts") as string);
+        this.accountNames = JSON.parse(this.cfg.GetSetting('accountNames') as string);
+        this.threadNames = JSON.parse(this.cfg.GetSetting('threadNames') as string);
     }
 
     i18n_no = {
@@ -273,34 +272,6 @@ export class Bookmarks implements ExtensionModule {
     private star(id: string, tag: HTMLAnchorElement): void {
         this.bookmarkedPosts[id] = this.unstarred[id];
         this.saveBookmarkedPosts();
-    }
-
-    private getConfigBool(setting: string): boolean {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as boolean;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-        return false;
-    }
-
-    private getConfigString(setting: string): string {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as string;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-        return null;
     }
 
     private timeString(date: Date): string {

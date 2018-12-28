@@ -54,8 +54,8 @@ export class SignatureFilter implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.hideSignatures = this.getConfigBool("HideSignatures");
-        this.hideUserSignatures = JSON.parse(this.getConfigString("HideSignatureUsers"));
+        this.hideSignatures = this.cfg.GetSetting("HideSignatures") as boolean;
+        this.hideUserSignatures = JSON.parse(this.cfg.GetSetting("HideSignatureUsers") as string);
     }
 
     posts: Array<PostInfo>;
@@ -160,34 +160,6 @@ export class SignatureFilter implements ExtensionModule {
                 }.bind(this));
             }.bind(this));
         }.bind(this));
-    }
-
-    private getConfigBool(setting: string): boolean {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as boolean;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-        return false;
-    }
-
-    private getConfigString(setting: string): string {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as string;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-        return null;
     }
 
     private saveHideUserSignatures(): void {
