@@ -174,7 +174,7 @@ export class ColorizeThreads implements ExtensionModule {
         localStorage.setItem('ruskLastEnterThreadSource', window.location.href);
         if (this.currentlySelectedItem == null) return;
 
-        window.location.href = this.currentlySelectedItem.latestUrl;
+        window.location.href = this.currentlySelectedItem.latestPageUrl;
     }
 
     private goUp() {

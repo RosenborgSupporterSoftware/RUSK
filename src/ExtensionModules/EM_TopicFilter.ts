@@ -8,6 +8,7 @@ import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOpt
 import { PageContext } from "../Context/PageContext";
 import { ThreadInfo } from "../Utility/ThreadInfo";
 import { ContextMenu } from "../Utility/ContextMenu";
+import { Log } from "../Utility/Log";
 
 /**
  * EM_TopicFilter - Extension module for RBKweb.
@@ -49,12 +50,14 @@ export class TopicFilter implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.hideThreads = JSON.parse(this.getConfigItem("hideThreads") || "{}");
+        var cfgstring = this.getConfigItem("hideThreads");
+        this.hideThreads = JSON.parse(cfgstring || "[]");
     }
 
-    preprocess = () => {
+    preprocess = (context: PageContext) => {
         try {
-            this.topics = ThreadInfo.GetThreadsFromDocument(document);
+            this.topics = context.RUSKPage.items as Array<ThreadInfo>;
+            // this.topics = ThreadInfo.GetThreadsFromDocument(document);
         } catch (e) {
             console.log("topics scrape exception: " + e.message);
         }
@@ -133,10 +136,13 @@ export class TopicFilter implements ExtensionModule {
         var hiddencount = 0;
         this.topics.forEach(function(topic: ThreadInfo, idx, topics) {
             var menu = topic.getContextMenu();
-            var visible = this.hideThreads.indexOf(topic.threadid);
+            var idx = this.hideThreads.indexOf(topic.threadid);
+            var visible = idx == -1;
             if (!visible) {
                 hiddencount += 1;
                 topic.rowElement.classList.add("RUSKHiddenItem");
+                if (topic.isUnread)
+                    topic.markAsRead();
             }
             menu.addAction(this.tr(this.HIDE_THREAD), visible, function() {
                 try {
@@ -154,8 +160,14 @@ export class TopicFilter implements ExtensionModule {
             }.bind(this));
             menu.addAction(this.tr(this.SHOW_THREAD), !visible, function() {
                 try {
-                    this.hideThreads = this.hideThreads.filter((num) => { return num != topic.threadid });
-                    this.saveHideThreads();
+                    var idx = this.hideThreads.indexOf(topic.threadid);
+                    if (idx != -1) {
+                        this.hideThreads[idx] = this.hideThreads[this.hideThreads.length-1];
+                        this.hideThreads.pop();
+                        this.saveHideThreads();
+                    } else {
+                        Log.Error("no thread " + topic.threadid + ' in hidethreads: ' + JSON.stringify(this.hideThreads));
+                    }
                     var count = 0;
                     this.topics.forEach(function(thread, idx, threads) {
                         if (this.hideThreads.indexOf(thread.threadid) != -1) { count += 1; }

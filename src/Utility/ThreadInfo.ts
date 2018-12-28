@@ -35,7 +35,7 @@ export class ThreadInfo implements IRUSKPageItem {
     }
 
     get url(): string {
-        return this.latestUrl;  // FIXME: Vi burde ha en property som er link til "den fornuftige" siden å gå til når vi tracker uleste
+        return this.latestPageUrl;  // FIXME: Vi burde ha en property som er link til "den fornuftige" siden å gå til når vi tracker uleste
     }
 
     isHidden: boolean;
@@ -57,7 +57,10 @@ export class ThreadInfo implements IRUSKPageItem {
     readonly baseUrl: string;
 
     /** The url of the last page of the thread */
-    readonly latestUrl: string;
+    readonly latestPageUrl: string;
+
+    /** The url of the last post of the thread */
+    readonly lastPostUrl: string;
 
     /** Gets a value that indicates if the thread contains unread messages */
     readonly isUnread: boolean;
@@ -109,7 +112,8 @@ export class ThreadInfo implements IRUSKPageItem {
         this.threadid = this.getThreadId(row);
         this.title = this.getTitle(row);
         this.baseUrl = this.getBaseUrl(row);
-        this.latestUrl = this.getLatestUrl(row);
+        this.latestPageUrl = this.getLatestPageUrl(row);
+        this.lastPostUrl = this.getLastPostUrl(row);
         this.isUnread = this.determineUnreadState(row);
         this.threadType = this.determineThreadType(row);
         this.isLocked = this.determineLockedState(row);
@@ -142,13 +146,18 @@ export class ThreadInfo implements IRUSKPageItem {
         return anchor.href;
     }
 
-    private getLatestUrl(row: HTMLTableRowElement): string {
+    private getLatestPageUrl(row: HTMLTableRowElement): string {
         var subPages = row.querySelectorAll('td > span.gensmall > a');
         if (subPages.length > 0) {
             // Vi har undersider
             return (subPages[subPages.length - 1] as HTMLAnchorElement).href;
         }
         return this.getBaseUrl(row);
+    }
+
+    private getLastPostUrl(row: HTMLTableRowElement): string {
+        var lastanchor = row.querySelector('td > span.postdetails > a[href^="viewtopic.php?p="]') as HTMLAnchorElement;
+        return lastanchor.href;
     }
 
     private determineUnreadState(row: HTMLTableRowElement): boolean {
@@ -259,16 +268,14 @@ export class ThreadInfo implements IRUSKPageItem {
     }
 
     public markAsRead(): void {
-        var hostmatch = this.latestUrl.match(/^(https?:\/\/[^\/]*\/)forum/);
-        var postmatch = this.latestUrl.match(/#([0-9]*)$/);
-        if (hostmatch && postmatch) {
-            var url = hostmatch[1] + 'forum/posting.php?mode=quote&p=' + postmatch[1];
-            fetch(url, { mode: 'cors', credentials: 'include' })
-                .then(function(response){ return response.text(); }.bind(this))
-                .then(function(text) { Log.Debug('marked thread ' + this.threadid + ' as read.');
-                    console.log("document: " + text);
-                }.bind(this))
-                .catch(function(err) { Log.Warning('failed on request to mark thread ' + this.threadid + ' as read.'); }.bind(this));
-        }
+        var url = this.latestPageUrl;
+        fetch(url, { mode: 'cors', credentials: 'include' })
+            .then(function(response){ return response.text(); }.bind(this))
+            .then(function(text) {
+                // Log.Debug('marked thread ' + this.threadid + ' as read.');
+            }.bind(this))
+            .catch(function(err) {
+                // Log.Warning('failed on request to mark thread ' + this.threadid + ' as read.');
+            }.bind(this));
     }
 }
