@@ -45,21 +45,21 @@ export class SeasonViews implements ExtensionModule {
                     .WithSettingName('MatchWinColor')
                     .WithSettingType(SettingType.color)
                     .WithLabel('Farve for vunnede kamper')
-                    .WithDefaultValue("limegreen")
+                    .WithDefaultValue("#32cd32")
             )
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName('MatchDrawColor')
                     .WithSettingType(SettingType.color)
                     .WithLabel('Farve for uavgjorte kamper')
-                    .WithDefaultValue("yellow")
+                    .WithDefaultValue("#ffff00")
             )
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName('MatchLossColor')
                     .WithSettingType(SettingType.color)
                     .WithLabel('Farve for tapte kamper')
-                    .WithDefaultValue("tomato")
+                    .WithDefaultValue("#ff6347")
             )
             .Build();
 
