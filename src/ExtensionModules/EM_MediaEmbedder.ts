@@ -92,6 +92,13 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("EmbedM3U8")
+                    .WithLabel("Gjør om m3u8-linker til videoavspillere")
+                    .WithSettingType(SettingType.bool)
+                    .WithDefaultValue(true)
+            )
             .Build();
 
     posts: Array<PostInfo>;
@@ -106,6 +113,7 @@ export class MediaEmbedder implements ExtensionModule {
     instagramOnlyPicture: boolean;
     embedMp4: boolean;
     embedWebm: boolean;
+    embedM3U8: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
@@ -118,6 +126,7 @@ export class MediaEmbedder implements ExtensionModule {
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
         this.embedMp4 = this.getConfigBool("EmbedMP4");
         this.embedWebm = this.getConfigBool("EmbedWebm");
+        this.embedM3U8 = this.getConfigBool("EmbedM3U8");
     }
 
     preprocess = (context: PageContext) => {
@@ -241,6 +250,12 @@ export class MediaEmbedder implements ExtensionModule {
                                 '<video controls width="460">' +
                                 '<source src="' + anchor.href + '" type="video/webm">' +
                                 'Sorry, your browser does not support embedding with <tt>&lt;video&gt;</tt>.' +
+                                '</video>');
+                        }
+                        else if (this.embedM3U8 && href.match(/.*\.m3u8\b/)) {
+                            anchor.insertAdjacentHTML('afterend', '<br>' +
+                                '<video controls width="460" src="' + anchor.href + '">' +
+                                'Sorry, your browser does not support embedding m3u8 with <tt>&lt;video&gt;</tt>.' +
                                 '</video>');
                         }
                     }
