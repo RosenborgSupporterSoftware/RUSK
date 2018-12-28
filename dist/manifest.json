@@ -36,12 +36,11 @@
   "permissions": [
     "storage",
     "tabs",
-    "http://*.rbkweb.no/*",
+    "webRequest",
+    "webRequestBlocking",
     "http://rbkweb.no/*",
-    "http://www.rbkweb.com/*",
-    "http://rbkweb.com/*",
-    "http://www.rosenborg.info/*",
-    "http://rosenborg.info/*"
+    "http://www.rbkweb.no/*",
+    "http://devimages.apple.com/*"
   ],
   "web_accessible_resources": [
     "img/*",

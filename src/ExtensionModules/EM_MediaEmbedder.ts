@@ -5,6 +5,7 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { PageContext } from "../Context/PageContext";
+import * as Hls from "../lib/hls.js";
 
 /**
  * EM_MediaEmbedder - Extension module for RBKweb.
@@ -92,7 +93,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
             )
-            /*
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName("EmbedM3U8")
@@ -100,7 +100,6 @@ export class MediaEmbedder implements ExtensionModule {
                     .WithSettingType(SettingType.bool)
                     .WithDefaultValue(true)
             )
-            */
             .Build();
 
     posts: Array<PostInfo>;
@@ -115,7 +114,7 @@ export class MediaEmbedder implements ExtensionModule {
     instagramOnlyPicture: boolean;
     embedMp4: boolean;
     embedWebm: boolean;
-    //embedM3U8: boolean;
+    embedM3U8: boolean;
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
@@ -128,7 +127,7 @@ export class MediaEmbedder implements ExtensionModule {
         this.instagramOnlyPicture = this.getConfigBool("InstagramOnlyPicture");
         this.embedMp4 = this.getConfigBool("EmbedMP4");
         this.embedWebm = this.getConfigBool("EmbedWebm");
-        //this.embedM3U8 = this.getConfigBool("EmbedM3U8");
+        this.embedM3U8 = this.getConfigBool("EmbedM3U8");
     }
 
     preprocess = (context: PageContext) => {
@@ -254,16 +253,14 @@ export class MediaEmbedder implements ExtensionModule {
                                 'Sorry, your browser does not support embedding with <tt>&lt;video&gt;</tt>.' +
                                 '</video>');
                         }
-                        /*
                         else if (this.embedM3U8 && href.match(/.*\.m3u8\b/)) {
+                            // NOTE: works only for 
+                            // [url]http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8[/url]
+                            // because of manifest.json and background.ts setup
+                            anchor.insertAdjacentHTML('afterend', '<br>' +
+                                '<video controls width="460" data-source="' + anchor.href + '"></video>');
                             this.activateM3U8();
-                            //anchor.insertAdjacentHTML('afterend', '<br>' +
-                            //    '<video controls width="460">' +
-                            //    '<source src="' + anchor.href + '" type="application/x-mpegURL">' +
-                            //    'Sorry, your browser does not support embedding .m3u8 with the video tag.' +
-                            //    '</video>');
                         }
-                        */
                     }
                 } catch (e) {
                     console.error("execute exception: " + e.message);
@@ -314,6 +311,30 @@ export class MediaEmbedder implements ExtensionModule {
             };
             d.getElementsByTagName('head')[0].appendChild(script);
         }(document));
+    }
+
+    private activateM3U8(): void {
+        setTimeout(function() {
+        try {
+            if (!Hls || !Hls.isSupported || !Hls.isSupported()) {
+                console.error("Hls problems!");
+            }
+            else {
+                document.body.querySelectorAll('video[data-source$=".m3u8"]').forEach(function(video: HTMLVideoElement, key, parent) {
+                    //console.log("playing video");
+                    var hls = new Hls();
+                    hls.loadSource(video.getAttribute('data-source'));
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        //console.log("pressing play");
+                        video.play();
+                    });
+                }.bind(this));
+            }
+        } catch (e) {
+            console.log('exception: ' + e.message + " - " + e.stack);
+        }
+        }.bind(this), 100);
     }
 
     private getConfigBool(setting: string): boolean {
