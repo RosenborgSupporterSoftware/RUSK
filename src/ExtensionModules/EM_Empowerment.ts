@@ -2,6 +2,7 @@ import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_Empowerment - Extension module for RBKweb.
@@ -32,10 +33,17 @@ export class Empowerment implements ExtensionModule {
         this.cfg = config;
     }
 
-    preprocess = () => {
+    preprocess = (context: PageContext) => {
     }
 
-    execute = () => {
+    execute = (context: PageContext) => {
+        if (context.Username) {
+            var ital = document.body.querySelector('font p font i') as HTMLElement;
+            if (ital.textContent.startsWith('Everyone can read')) {
+                var info = ital.closest('p') as HTMLParagraphElement;
+                info.classList.add('RUSKHiddenItem');
+            }
+        }
         var copyright = document.body.querySelector('a[href="http://www.rbkweb.no/copyright.shtml"]') as HTMLAnchorElement;
         if (copyright) {
             function brighten(color, amount) {
