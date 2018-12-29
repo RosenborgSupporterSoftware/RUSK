@@ -67,6 +67,14 @@ export class RelativeForumWidth implements ExtensionModule {
         // Banner image
         const bannerImg = document.querySelectorAll(' html  > body > table > tbody > tr > td > a > img')[0] as HTMLImageElement;
         bannerImg.setAttribute('width', '100%');
+
+        // Input fields
+        const subjectInput = document.getElementsByName('subject')[0] as HTMLInputElement;
+        if (subjectInput) subjectInput.style.width = "100%";
+        const textareaTable = document.querySelectorAll('tbody > tr > td > font > form > table > tbody > tr > td > span > table')[0] as HTMLTableElement;
+        if (textareaTable) textareaTable.style.width = "100%";
+        const textArea =  document.getElementsByName('message')[0] as HTMLTextAreaElement;
+        if (textArea) textArea.style.width = "100%";
     };
 
     private hydrateTemplate(template: string): string {
