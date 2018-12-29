@@ -9,7 +9,7 @@ import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
 
 /**
- * EM_Bookmarks - Extension module for RBKweb.
+ * EM_Bookmarks - modul for å tilby bokmerking av innlegg på RBKweb.
  */
 
 export class Bookmarks implements ExtensionModule {
@@ -31,7 +31,7 @@ export class Bookmarks implements ExtensionModule {
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
             .WithDisplayName(this.name)
-            .WithDescription("En modul som lar deg bookmark'e tråder og poster til en egen side.")
+            .WithDescription("En modul som lar deg legge bokmerke på innlegg til en egen liste.")
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName("threadNames")
@@ -88,7 +88,15 @@ export class Bookmarks implements ExtensionModule {
     i18n_no = {
         "Bookmarks": "Bokmerker",
         "Bookmark": "Sett bokmerke",
-        "Unbookmark": "Fjern bokmerke",
+        "Unbookmark": "Slett bokmerke",
+        "Author": "Forfatter",
+        "Thread title": "Trådtittel",
+        "Snippet": "Utdrag",
+        "Date": "Dato",
+        "Unstar": "Slett",
+        "Star": "Husk",
+        "RBKweb Forum Index": "Forum",
+        "Bookmarked posts": "Bokmerker"
     }
 
     i18n = {}
@@ -108,7 +116,8 @@ export class Bookmarks implements ExtensionModule {
         try {
             var link = document.body.querySelector('a.gensmall[href="search.php?search_id=newposts') as HTMLAnchorElement;
             if (link) { // index.php page
-                link.insertAdjacentHTML('beforebegin', '<a name="bookmarks" class="gensmall bookmarks">Bookmarks</a><br>');
+                link.insertAdjacentHTML('beforebegin', '<a name="bookmarks" class="gensmall bookmarks">' +
+                    this.tr('Bookmarks') + '</a><br>');
                 var bookmarks = link.parentElement.querySelector('a[name="bookmarks"]') as HTMLAnchorElement;
                 var handler = function(ev) {
                     if (!window.location.href.endsWith("#bookmarks"))
@@ -131,10 +140,10 @@ export class Bookmarks implements ExtensionModule {
                     var html = [];
                     html.push('<tr>');
                     html.push('<th class="thCornerElt">&nbsp;</th>');
-                    html.push('<th class="thTop">Author</th>');
-                    html.push('<th class="thTop">Thread title</th>');
-                    html.push('<th class="thTop">Snippet</th>');
-                    html.push('<th class="thTop">Date</th>');
+                    html.push('<th class="thTop">' + this.tr('Author') + '</th>');
+                    html.push('<th class="thTop">' + this.tr('Thread title') + '</th>');
+                    html.push('<th class="thTop">' + this.tr('Snippet') + '</th>');
+                    html.push('<th class="thTop">' + this.tr('Date') + '</th>');
                     html.push('</tr>');
                     Object.keys(this.bookmarkedPosts).forEach(function(key: string, idx, collection) {
                         var bookmark = this.bookmarkedPosts[key];
@@ -150,7 +159,7 @@ export class Bookmarks implements ExtensionModule {
                         var snippet = bookmark.e || "";
                         if (snippet.length >= 50) snippet = snippet + "...";
                         html.push('<tr>');
-                        html.push('<td class="row2" align="center"><a title="Unstar"><img name="starred" data-postid="' + postid + '" src="' + this.starredPNG + '" width="14" height="14"/></a></td>');
+                        html.push('<td class="row2" align="center"><a title="' + this.tr('Unstar') + '"><img name="starred" data-postid="' + postid + '" src="' + this.starredPNG + '" width="14" height="14"/></a></td>');
                         html.push('<td class="row2" align="center"><span class="name"><a href="profile.php?mode=viewprofile&u='+userid+'">' + this.accountNames[""+userid] + '</a></span></td>');
                         html.push('<td class="row2"><a class="topictitle" href="viewtopic.php?p=' + postid + '#' + postid + '">' + this.threadNames[""+threadid] + '</a></td>');
                         html.push('<td class="row2"><a class="gensmall" href="viewtopic.php?p=' + postid + '#' + postid + '">' + snippet + '</a></td>');
@@ -165,11 +174,11 @@ export class Bookmarks implements ExtensionModule {
                                 var postid = elt.getAttribute('data-postid');
                                 if (elt.src == this.starredPNG) {
                                     elt.src = this.unstarredPNG;
-                                    anchor.title = "Star";
+                                    anchor.title = this.tr("Star");
                                     this.unstar(postid, anchor);
                                 } else {
                                     elt.src = this.starredPNG;
-                                    anchor.title = "Unstar";
+                                    anchor.title = this.tr("Unstar");
                                     this.star(postid, anchor);
                                 }
                             } catch (e) {
@@ -198,7 +207,7 @@ export class Bookmarks implements ExtensionModule {
                     var bookmarked = this.bookmarkedPosts[""+post.postid] != undefined;
                     if (Object.keys(this.bookmarkedPosts).length < this.maxBookmarks) {
                         // disabled when having too many bookmarks
-                        cmenu.addAction(this.BOOKMARK_POST, !bookmarked, function() {
+                        cmenu.addAction(this.tr(this.BOOKMARK_POST), !bookmarked, function() {
                             if (this.accountNames[""+post.posterid] != post.posterNickname) {
                                 this.accountNames[""+post.posterid] = post.posterNickname;
                                 this.saveAccountNames();
@@ -224,15 +233,15 @@ export class Bookmarks implements ExtensionModule {
                                  d: Math.trunc(post.postedDate.getTime() / 60000),
                                  e: snippet
                             };
-                            cmenu.getAction(this.BOOKMARK_POST).hide();
-                            cmenu.getAction(this.BOOKMARK_POST_DEL).show();
+                            cmenu.getAction(this.tr(this.BOOKMARK_POST)).hide();
+                            cmenu.getAction(this.tr(this.BOOKMARK_POST_DEL)).show();
                             this.saveBookmarkedPosts();
                         }.bind(this));
                     }
-                    cmenu.addAction(this.BOOKMARK_POST_DEL, bookmarked, function() {
+                    cmenu.addAction(this.tr(this.BOOKMARK_POST_DEL), bookmarked, function() {
                         this.unstar(""+post.postid);
-                        cmenu.getAction(this.BOOKMARK_POST).show();
-                        cmenu.getAction(this.BOOKMARK_POST_DEL).hide();
+                        cmenu.getAction(this.tr(this.BOOKMARK_POST)).show();
+                        cmenu.getAction(this.tr(this.BOOKMARK_POST_DEL)).hide();
                     }.bind(this));
                 }.bind(this));
             }
@@ -245,11 +254,11 @@ export class Bookmarks implements ExtensionModule {
         contentTag.insertAdjacentHTML('beforebegin',
             '<table width="100%">' +
             '<tr>' +
-            '<td><a class="maintitle">Bookmarks</a></td>' +
+            '<td><a class="maintitle">' + this.tr('Bookmarks') + '</a></td>' +
             '<br>' +
             '</tr>' +
             '<tr>' +
-            '<td><a class="nav" href="index.php">RBKweb Forum Index</a> <span class="nav">-&gt;</span> <span class="nav">Bookmarked posts</span></td>' +
+            '<td><a class="nav" href="index.php">' + this.tr('RBKweb Forum Index') + '</a> <span class="nav">-&gt;</span> <span class="nav">' + this.tr('Bookmarked posts') + '</span></td>' +
             '<br>' +
             '</tr>' +
             '</table>');
