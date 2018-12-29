@@ -45,21 +45,21 @@ export class SeasonViews implements ExtensionModule {
                     .WithSettingName('MatchWinColor')
                     .WithSettingType(SettingType.color)
                     .WithLabel('Farve for vunnede kamper')
-                    .WithDefaultValue("limegreen")
+                    .WithDefaultValue("#32cd32")
             )
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName('MatchDrawColor')
                     .WithSettingType(SettingType.color)
                     .WithLabel('Farve for uavgjorte kamper')
-                    .WithDefaultValue("yellow")
+                    .WithDefaultValue("#ffff00")
             )
             .WithConfigOption(opt =>
                 opt
                     .WithSettingName('MatchLossColor')
                     .WithSettingType(SettingType.color)
                     .WithLabel('Farve for tapte kamper')
-                    .WithDefaultValue("tomato")
+                    .WithDefaultValue("#ff6347")
             )
             .Build();
 
@@ -68,8 +68,8 @@ export class SeasonViews implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.weekday = this.getConfigBool("displayWeekday");
-        this.colorize = this.getConfigBool("colorizeResult");
+        this.weekday = this.cfg.GetSetting("displayWeekday") as boolean;
+        this.colorize = this.cfg.GetSetting("colorizeResult") as boolean;
     }
 
     preprocess = async () => {
@@ -141,18 +141,4 @@ export class SeasonViews implements ExtensionModule {
 
         return template;
     }
- 
-    private getConfigBool(setting: string): boolean {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as boolean;
-                }
-            }
-            console.log("did not find setting '" + setting + "'");
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-    }
-
-};
+}

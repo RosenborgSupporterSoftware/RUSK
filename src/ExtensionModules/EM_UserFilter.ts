@@ -208,24 +208,10 @@ export class UserFilter implements ExtensionModule {
 
     }
 
-    private getConfigItem(setting: string): string {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    //console.log("found setting '" + setting);
-                    return this.cfg.settings[i].value as string;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-    }
-
     private getForumTrollConfig(): Set<number> {
         var trolls = new Set<number>();
         try {
-            var settings = this.getConfigItem("forumTrolls");
+            var settings = this.cfg.GetSetting("forumTrolls") as string;
             //console.log("loaded forumTrolls: " + settings);
             var trollids = JSON.parse(settings || "[]");
             trollids.forEach(function(troll, idx, trollids) {
@@ -241,7 +227,7 @@ export class UserFilter implements ExtensionModule {
     private getThreadTrollConfig(): Map<string, Object> {
         var threadtrolls = new Map<string, Object>();
         try {
-            var threadtrollstr = this.getConfigItem("threadTrolls");
+            var threadtrollstr = this.cfg.GetSetting("threadTrolls") as string;
             //console.log("loaded threadTrolls: " + threadtrollstr);
             var config = JSON.parse(threadtrollstr);
             var now = (new Date()).getTime();
@@ -340,4 +326,4 @@ export class UserFilter implements ExtensionModule {
         return template;
     }
 
-};
+}

@@ -53,8 +53,8 @@ export class AvatarFilter implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        this.hideAvatars = this.getConfigBool("HideAvatars");
-        this.hideUserAvatars = JSON.parse(this.getConfigString("HideAvatarUsers"));
+        this.hideAvatars = this.cfg.GetSetting("HideAvatars") as boolean;
+        this.hideUserAvatars = JSON.parse(this.cfg.GetSetting("HideAvatarUsers") as string);
     }
 
     posts: Array<PostInfo>;
@@ -131,34 +131,6 @@ export class AvatarFilter implements ExtensionModule {
                 }.bind(this));
             }
         }.bind(this));
-    }
-
-    private getConfigBool(setting: string): boolean {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as boolean;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-        return false;
-    }
-
-    private getConfigString(setting: string): string {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as string;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-        return null;
     }
 
     private saveHideUserAvatars(): void {

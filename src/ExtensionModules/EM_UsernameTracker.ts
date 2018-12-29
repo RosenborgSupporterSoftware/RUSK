@@ -44,7 +44,7 @@ export class UsernameTracker implements ExtensionModule {
     init = (config: ModuleConfiguration) => {
         try {
             this.cfg = config;
-            var dictstr = this.getConfigItem("knownUsernames");
+            var dictstr = this.cfg.GetSetting("knownUsernames") as string;
             this.names = JSON.parse(dictstr || "{}");
             var count = 0;
             for (var key in this.names) { count += 1; }
@@ -104,14 +104,6 @@ export class UsernameTracker implements ExtensionModule {
             }.bind(this));
         } catch (e) {
             console.error("exception: " + e.message + " - " + e.stack);
-        }
-    }
-
-    private getConfigItem(setting: string): string {
-        for (let i = 0; i < this.cfg.settings.length; i++) {
-            if (this.cfg.settings[i].setting == setting) {
-                return this.cfg.settings[i].value as string;
-            }
         }
     }
 

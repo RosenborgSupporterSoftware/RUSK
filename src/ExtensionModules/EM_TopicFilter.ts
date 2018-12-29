@@ -50,7 +50,7 @@ export class TopicFilter implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
-        var cfgstring = this.getConfigItem("hideThreads");
+        var cfgstring = this.cfg.GetSetting("hideThreads") as string;
         this.hideThreads = JSON.parse(cfgstring || "[]");
     }
 
@@ -198,21 +198,8 @@ export class TopicFilter implements ExtensionModule {
         }
     }
 
-    private getConfigItem(setting: string): string {
-        try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as string;
-                }
-            }
-            console.log("did not find setting '" + setting);
-        } catch (e) {
-            console.error("getConfigItem exception: " + e.message);
-        }
-    }
-
     private saveHideThreads(): void {
         var hidden = JSON.stringify(this.hideThreads);
         this.cfg.ChangeSetting("hideThreads", hidden);
     }
-};
+}

@@ -159,7 +159,8 @@ export class EnhancePosting implements ExtensionModule {
         autosize(this.textArea);
 
         this.textArea.addEventListener('autosize:resized', () => {
-            this.postButton.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
+            var options: ScrollIntoViewOptions = {  block: "nearest", inline: "nearest", behavior: "auto" };
+            this.postButton.scrollIntoView(options); //{ behavior: "instant", block: "nearest", inline: "nearest" });
         });
         this.textArea.addEventListener('keyup', () => {
             this.setPostButtonState();
