@@ -55,15 +55,8 @@ export class TopicFilter implements ExtensionModule {
     }
 
     preprocess = (context: PageContext) => {
-        try {
-            this.topics = context.RUSKPage.items as Array<ThreadInfo>;
-            // this.topics = ThreadInfo.GetThreadsFromDocument(document);
-        } catch (e) {
-            console.log("topics scrape exception: " + e.message);
-        }
-        var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
-        if (pbutton.textContent == "Profil")
-            this.i18n = this.i18n_no;
+        this.topics = context.RUSKPage.items as Array<ThreadInfo>;
+        if (context.Language == "norwegian") this.i18n = this.i18n_no;
     }
 
     i18n_no = {

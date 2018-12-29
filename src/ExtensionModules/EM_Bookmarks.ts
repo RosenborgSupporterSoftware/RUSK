@@ -104,13 +104,7 @@ export class Bookmarks implements ExtensionModule {
 
     preprocess = (context: PageContext) => {
         this.posts = context.RUSKPage.items as Array<PostInfo>;
-        try  {
-            var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
-            if (pbutton.textContent == "Profil")
-                this.i18n = this.i18n_no;
-        } catch (e) {
-            console.error("preprocess exception: " + e.message + " - " + e.stack);
-        }
+        if (context.Language == "norwegian") this.i18n = this.i18n_no;
         try {
             var link = document.body.querySelector('a.gensmall[href="search.php?search_id=newposts') as HTMLAnchorElement;
             if (link) { // index.php page

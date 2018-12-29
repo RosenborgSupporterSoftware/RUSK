@@ -54,6 +54,19 @@ export class PageContext {
         }
     }
 
+    private _language: string;
+
+    public get Language(): string {
+        return this._language || (this._language = this.getLanguage());
+    }
+
+    private getLanguage(): string {
+        var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
+        if (pbutton && pbutton.textContent == "Profil")
+            return "norwegian";
+        return "english";
+    }
+
     private getPageType(url: string): RBKwebPageType {
         return new UrlParser().ParsePageType(url);
     }

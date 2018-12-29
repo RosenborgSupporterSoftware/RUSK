@@ -81,37 +81,14 @@ export class UserFilter implements ExtensionModule {
             this.forumTrolls = this.getForumTrollConfig();
             this.threadTrolls = this.getThreadTrollConfig();
             this.dotdotdotURL = chrome.runtime.getURL("/img/dotdotdot.png");
-
-            fetch(chrome.runtime.getURL("/data/contextMenu.css")).then(function(response) {
-                return response.text();
-            }.bind(this)).then(function(text) {
-                let css = this.hydrateTemplate(text);
-                this.css_template = css;
-                //console.log("css: " + css);
-                this.css = css;
-                if (this.rendered)
-                    chrome.runtime.sendMessage({ css: this.css, from: 'UserFilter' });
-            }.bind(this));
         } catch (e) {
             console.log("init exception: " + e.message);
         }
     }
 
     preprocess = (context: PageContext) => {
-        try {
-            this.posts = context.RUSKPage.items as Array<PostInfo>;
-            if (this.css)
-                chrome.runtime.sendMessage({ css: this.css, from: 'UserFilter' });
-            else {
-                //console.log('no css loaded yet');
-                this.rendered = true;
-            }
-        } catch (e) {
-            console.error("UserFilter.preprocess: " + e.message);
-        }
-        var pbutton = document.body.querySelector('span.mainmenu a.mainmenu[href^="profile.php?mode=editprofile"]') as HTMLAnchorElement;
-        if (pbutton.textContent == "Profil")
-            this.i18n = this.i18n_no;
+        this.posts = context.RUSKPage.items as Array<PostInfo>;
+        if (context.Language == "norwegian") this.i18n = this.i18n_no;
     }
 
     execute = (context: PageContext) => {
@@ -313,17 +290,4 @@ export class UserFilter implements ExtensionModule {
         //console.log("storing threadTrolls: '" + dictstr + "'");
         this.cfg.ChangeSetting("threadTrolls", dictstr);
     }
-
-    private hydrateTemplate(template: string): string {
-        let keys = [], values = [];
-        // keys.push("$RUSKMatchWin$");
-        // values.push(this.cfg.GetSetting('MatchWinColor'));
-
-        for (let i = 0; i < keys.length; i++) {
-            template = template.replace(keys[i], values[i]);
-        }
-
-        return template;
-    }
-
 }
