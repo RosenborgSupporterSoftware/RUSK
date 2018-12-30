@@ -1,5 +1,3 @@
-import { IConfigurationStorage } from "./IConfigurationStorage";
-import { ChromeSyncStorage } from "./ChromeSyncStorage";
 import { ModuleConfiguration } from "./ModuleConfiguration";
 import loadModules from "../ExtensionModules/ExtensionModuleLoader";
 import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
@@ -13,8 +11,6 @@ export class ConfigManager {
     private static _instance: ConfigManager = null;
     private _moduleConfPrefix = 'RUSK-ModConf-';
 
-    private _storage: IConfigurationStorage = new ChromeSyncStorage();
-    //private _moduleConfigs: Array<[string, ModuleConfiguration]>; // Tuple of moduleName: Config
     private _moduleConfigs: Map<string, ModuleConfiguration>;
     private _allModules: Array<ExtensionModule> = loadModules("Nada");
 
@@ -35,7 +31,6 @@ export class ConfigManager {
 
     private init() {
         chrome.storage.sync.get(null, data => { // This gets ALL keys stored in sync storage
-            //this._moduleConfigs = new Array<[string, ModuleConfiguration]>();
             this._moduleConfigs = new Map<string, ModuleConfiguration>();
             for (let i = 0; i < Object.keys(data).length; i++) {
                 let key = Object.keys(data)[i];
@@ -44,7 +39,6 @@ export class ConfigManager {
                     let modname = key.substr(this._moduleConfPrefix.length);
                     let mod = this.getModule(modname);
                     if (mod == null) continue;  // The config is for a module we do not have. FIXME: Delete
-                    // this._moduleConfigs.push([key, ModuleConfiguration.FromStorageObject(data[key], mod)]);
                     let modConf = ModuleConfiguration.FromStorageObject(data[key], mod);
                     this._moduleConfigs.set(key, modConf);
                     if (modConf.IsDirty) {
@@ -65,10 +59,7 @@ export class ConfigManager {
         let storageKey = this._moduleConfPrefix + modname;
         let conf = this._moduleConfigs.get(storageKey);
         if (conf != null) return conf;
-        // for (let i = 0; i < this._moduleConfigs.size; i++) {
-        //     if (this._moduleConfigs.keys[i] == storageKey)
-        //         return this._moduleConfigs[i][1];
-        // }
+
         let mod = this.getModule(modname);
         if (mod != null) {
             console.log('Getting default configuration for module ' + modname);

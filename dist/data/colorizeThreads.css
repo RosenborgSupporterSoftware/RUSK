@@ -1,11 +1,23 @@
-.RUSKUnreadItem td {
-    background-color: $RUSKUnreadItem$ !important;
+.RUSKItem.RUSKReadItem.RUSKEvenRowItem td {
+    background-color: $RUSKReadItemEven$ !important;
 }
 
-.RUSKUnreadItem.RUSKSelectedItem td {
-    background-color: #EDEEC9 !important;
+.RUSKItem.RUSKReadItem.RUSKOddRowItem td {
+    background-color: $RUSKReadItemOdd$ !important;
 }
 
-.RUSKSelectedItem td {
-    background-color: #DDE7C7 !important;
+.RUSKItem.RUSKUnreadItem.RUSKEvenRowItem td {
+    background-color: $RUSKUnreadItemEven$ !important;
+}
+
+.RUSKItem.RUSKUnreadItem.RUSKOddRowItem td {
+    background-color: $RUSKUnreadItemOdd$ !important;
+}
+
+.RUSKItem.RUSKUnreadItem.RUSKSelectedItem td {
+    background-color: $RUSKSelectedUnread$ !important;
+}
+
+.RUSKItem.RUSKReadItem.RUSKSelectedItem td {
+    background-color: $RUSKSelectedRead$ !important;
 }

@@ -26,6 +26,13 @@ export class ColorizeThreads implements ExtensionModule {
     currentlySelectedItem: ThreadInfo = null;
     allThreads: Array<ThreadInfo> = null;
 
+    private _unreadColorEven: string;
+    private _unreadColorOdd: string;
+    private _readColorEven: string;
+    private _readColorOdd: string;
+    private _selectedUnread: string;
+    private _selectedRead: string;
+
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_TOPICLIST
     ];
@@ -80,10 +87,25 @@ export class ColorizeThreads implements ExtensionModule {
                     .WithDefaultValue('#DDE7C7')
                     .AsSharedSetting()
             )
+            .WithConfigOption(opt =>
+                opt
+                    .WithSettingName("SelectedUnreadItemColor")
+                    .WithLabel("Farge for valgt tråd")
+                    .WithSettingType(SettingType.color)
+                    .WithDefaultValue('#EDEEC9')
+                    .AsSharedSetting()
+            )
             .Build();
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        this._unreadColorEven = this.cfg.GetSetting("UnreadColorEven") as string;
+        this._unreadColorOdd = this.cfg.GetSetting("UnreadColorOdd") as string;
+        this._readColorEven = this.cfg.GetSetting("ReadColorEven") as string;
+        this._readColorOdd = this.cfg.GetSetting("ReadColorOdd") as string;
+        this._selectedRead = this.cfg.GetSetting("SelectedItemColor") as string;
+        this._selectedUnread = this.cfg.GetSetting("SelectedUnreadItemColor") as string;
     }
 
     preprocess = async () => {
@@ -237,13 +259,17 @@ export class ColorizeThreads implements ExtensionModule {
     }
 
     private hydrateTemplate(template: string): string {
-        let keys = [], values = [];
-        keys.push("$RUSKUnreadItem$");
-        values.push(this.cfg.GetSetting('UnreadColorEven'));
+        let replacements = new Map<string, string>();
+        replacements.set('$RUSKUnreadItemEven$', this._unreadColorEven);
+        replacements.set('$RUSKUnreadItemOdd$', this._unreadColorOdd);
+        replacements.set('$RUSKReadItemEven$', this._readColorEven);
+        replacements.set('$RUSKReadItemOdd$', this._readColorOdd);
+        replacements.set('$RUSKSelectedUnread$', this._selectedUnread);
+        replacements.set('$RUSKSelectedRead$', this._selectedRead);
 
-        for (let i = 0; i < keys.length; i++) {
-            template = template.replace(keys[i], values[i]);
-        }
+        replacements.forEach((val, key) => {
+            template = template.replace(key, val);
+        });
 
         return template;
     }
@@ -254,6 +280,8 @@ export class ColorizeThreads implements ExtensionModule {
         row.classList.add('RUSKItem');
         if (thread.isUnread) {
             row.classList.add('RUSKUnreadItem');
+        } else {
+            row.classList.add('RUSKReadItem');
         }
         if (thread.threadType == ThreadType.Announcement) {
             row.classList.add('RUSKAnnouncementItem');

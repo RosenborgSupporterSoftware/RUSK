@@ -1,4 +1,4 @@
-import { ConfigSetting, settingValueTypes, ConfigurationSetting } from "./ConfigurationSetting";
+import { ConfigSetting, settingValueTypes } from "./ConfigurationSetting";
 import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
 import { ColorChecker } from "../Utility/ColorChecker";
 
