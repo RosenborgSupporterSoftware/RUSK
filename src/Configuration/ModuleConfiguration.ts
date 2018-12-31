@@ -77,7 +77,7 @@ export class ModuleConfiguration {
                             modConf.SetDirtyState(true);
                         }
                     }
-                    modConf.changeSetting(setting, setting.value);
+                    modConf.changeSetting(setting.setting, setting.value);
                 } else {
                     modConf.SetDirtyState(true);
                 }
