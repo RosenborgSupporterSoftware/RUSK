@@ -88,40 +88,34 @@ export class AvatarFilter implements ExtensionModule {
             if (!this.hideAvatars && avatar) { // no need for context menu options when hiding all, or no avatar
                 var cmenu = post.getContextMenu();
                 cmenu.addAction(this.tr(this.HIDE_AVATAR), !hideAvatar, function() {
+                    this.hideUserAvatars.push(post.posterid);
+                    this.saveHideUserAvatars();
                     this.posts.forEach(function(thepost: PostInfo, idx, posts) {
                         try {
                             if (thepost.posterid != post.posterid) return;
-                            this.hideUserAvatars.push(post.posterid);
-                            this.saveHideUserAvatars();
-                            this.posts.forEach(function(thepost: PostInfo, key, parent) {
-                                if (thepost.posterid != post.posterid) return;
-                                var avatar = thepost.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
-                                if (avatar) avatar.style.display = "none";
-                                var menu = thepost.getContextMenu();
-                                menu.getAction(this.tr(this.HIDE_AVATAR)).hide(); // FIXME: make checkboxed menu option instead
-                                menu.getAction(this.tr(this.SHOW_AVATAR)).show();
-                            }.bind(this));
+                            var avatar = thepost.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
+                            if (avatar) avatar.style.display = "none";
+                            var menu = thepost.getContextMenu();
+                            menu.getAction(this.tr(this.HIDE_AVATAR)).hide(); // FIXME: make checkmarked menu option instead
+                            menu.getAction(this.tr(this.SHOW_AVATAR)).show();
                         } catch (e) {
                             Log.Error('avatar hide error: ' + e.message);
                         }
                     }.bind(this));
                 }.bind(this));
                 cmenu.addAction(this.tr(this.SHOW_AVATAR), hideAvatar, function() {
+                    var idx = this.hideUserAvatars.indexOf(post.posterid);
+                    this.hideUserAvatars[idx] = this.hideUserAvatars[this.hideUserAvatars.length-1];
+                    this.hideUserAvatars.pop();
+                    this.saveHideUserAvatars();
                     this.posts.forEach(function(thepost: PostInfo, idx, posts) {
                         try {
                             if (thepost.posterid != post.posterid) return;
-                            var idx = this.hideUserAvatars.indexOf(post.posterid);
-                            this.hideUserAvatars[idx] = this.hideUserAvatars[this.hideUserAvatars.length-1];
-                            this.hideUserAvatars.pop();
-                            this.saveHideUserAvatars();
-                            this.posts.forEach(function(thepost: PostInfo, key, parent) {
-                                if (thepost.posterid != post.posterid) return;
-                                var avatar = thepost.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
-                                if (avatar) avatar.style.display = "";
-                                var menu = thepost.getContextMenu();
-                                menu.getAction(this.tr(this.HIDE_AVATAR)).show();
-                                menu.getAction(this.tr(this.SHOW_AVATAR)).hide();
-                            }.bind(this));
+                            var avatar = thepost.rowElement.querySelector('span.postdetails img') as HTMLImageElement;
+                            if (avatar) avatar.style.display = "";
+                            var menu = thepost.getContextMenu();
+                            menu.getAction(this.tr(this.HIDE_AVATAR)).show();
+                            menu.getAction(this.tr(this.SHOW_AVATAR)).hide();
                         } catch (e) {
                             Log.Error('avatar show error: ' + e.message);
                         }
@@ -133,7 +127,7 @@ export class AvatarFilter implements ExtensionModule {
 
     private saveHideUserAvatars(): void {
         var arraystr = JSON.stringify(this.hideUserAvatars);
-        //console.log("storing avatar-hidden users: '" + arraystr + "'");
+        // console.log("storing avatar-hidden users: '" + arraystr + "'");
         this.cfg.ChangeSetting("HideAvatarUsers", arraystr);
     }
 }
