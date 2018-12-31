@@ -4,6 +4,7 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_RelativeForumWidth - Extension module for RBKweb.
@@ -41,31 +42,29 @@ export class RelativeForumWidth implements ExtensionModule {
         this.cfg = config;
     }
 
-    preprocess = async () => {
+    preprocess = async (context: PageContext) => {
         let request = await fetch(chrome.runtime.getURL("/data/forumWidth.css"));
         let text = await request.text();
         let css = this.hydrateTemplate(text);
         chrome.runtime.sendMessage({ css: css });
     }
 
-    execute = () => {
-        // Content table
-        const contentTable = document.querySelectorAll('html > body > table')[1] as HTMLTableElement;
-        contentTable.removeAttribute('width');
-        contentTable.classList.add("RUSKForumWidth");
+    execute = (context: PageContext) => {
+        // Banner and content tables
+        document.querySelectorAll('html > body > table').forEach(function(table: HTMLTableElement, ky, parent) {
+            table.align = "center";
+            table.style.minWidth = table.width;
+            table.removeAttribute('width');
+            table.classList.add("RUSKForumWidth");
+        }.bind(this));
 
         // Forum table 
         const forumTable = document.querySelectorAll('html > body > table > tbody > tr  > td > table')[1] as HTMLTableElement;
         forumTable.parentElement.removeAttribute('width');
         forumTable.setAttribute('width', '100%');
 
-        // Banner
-        const headerTable = document.querySelectorAll(' html  > body > table')[0] as HTMLImageElement;
-        headerTable.removeAttribute('width');
-        headerTable.classList.add("RUSKForumWidth");
-
         // Banner image
-        const bannerImg = document.querySelectorAll(' html  > body > table > tbody > tr > td > a > img')[0] as HTMLImageElement;
+        const bannerImg = document.querySelector(' html  > body > table > tbody > tr > td > a > img') as HTMLImageElement;
         bannerImg.setAttribute('width', '100%');
 
         // Input fields
