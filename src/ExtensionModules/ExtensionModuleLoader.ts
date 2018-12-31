@@ -23,6 +23,7 @@ import { AlternateSearchEngine } from "./EM_AlternateSearchEngine";
 import { Bookmarks } from "./EM_Bookmarks";
 import { ModPostTools } from "./EM_ModPostTools";
 import { SpawnWindow } from "./EM_SpawnWindow";
+import { RelativeForumWidth } from "./EM_RelativeForumWidth"
 
 /**
  * ExtensionModuleLoader
@@ -54,7 +55,8 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new AlternateSearchEngine(),
         new Bookmarks(),
         new SpawnWindow(),
-        new ModPostTools()
+        new ModPostTools(),
+        new RelativeForumWidth(),
     ];
 
     verifyModules(allModules);
