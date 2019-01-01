@@ -4,9 +4,15 @@
 
 Nye funksjoner:
 
+- Hurtigsvar-editor direkte i forumtråden, med selection-basert siteringsfunksjon.
+
 Bugfixes:
 
+- Fjernet knapper som ble med over når innlegg ble åpnet i nytt vindu.
+
 Optimaliseringer:
+
+- Konfigurert CSS injisers tidligere
 
 ## RUSK v0.0.8
 
