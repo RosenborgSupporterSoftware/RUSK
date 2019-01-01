@@ -66,8 +66,13 @@ export class SpawnWindow implements ExtensionModule {
                                    '</tbody></table></body>' +
                                    '</html>');
                 // some manual removals
-                (win.document.body.querySelector('div.RUSKContextMenu') as HTMLDivElement).outerHTML = "";
-                (win.document.body.querySelector('a[href^="posting.php?mode=quote"]') as HTMLAnchorElement).outerHTML = "";
+                (win.document.body.querySelector('div.RUSKContextMenu') as HTMLDivElement).remove();
+                var quote = win.document.body.querySelector('a[href^="posting.php?mode=quote"]') as HTMLAnchorElement;
+                if (quote) quote.remove();
+                var edit = win.document.body.querySelector('a[href^="posting.php?mode=editpost"]') as HTMLAnchorElement;
+                if (edit) edit.remove();
+                var quickr = win.document.body.querySelector('a[name="quickreply"]') as HTMLAnchorElement;
+                if (quickr) quickr.remove();
                 // some manual adjustments
                 (win.document.body.querySelector('td[width="100%"]') as HTMLTableDataCellElement).width = "";
                 win.document.body.querySelectorAll('span.postdetails').forEach(function(elt: HTMLSpanElement, idx, parent) {
