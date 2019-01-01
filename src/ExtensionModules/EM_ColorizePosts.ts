@@ -126,6 +126,9 @@ export class ColorizePosts implements ExtensionModule {
     private setupHotkeys(): void {
         // TODO: Dette er ondskap å gjøre her. Må få inn eget hotkey-regime.
         document.addEventListener("keypress", (ev) => {
+            let activeElement = document.activeElement;
+            if (activeElement.classList.contains('RUSKDivTextArea')) return;
+
             if (ev.code == "KeyJ") {
                 if (ev.shiftKey) {
                     // Go to next page
@@ -167,6 +170,9 @@ export class ColorizePosts implements ExtensionModule {
             }
         });
         document.addEventListener("keyup", (ev) => {
+            let activeElement = document.activeElement;
+            if (activeElement.classList.contains('RUSKDivTextArea')) return;
+
             // Captures lower level, "unprintable" keys unlike keypress above
             if (ev.code == "Delete") {
                 this.deleteSelected();
