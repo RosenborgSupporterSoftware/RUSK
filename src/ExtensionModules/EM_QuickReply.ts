@@ -81,7 +81,7 @@ export class QuickReply implements ExtensionModule {
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var menu = post.getContextMenu();
             console.log("user: " + context.Username);
-            if (true || (context.Username && context.Username != "")) {
+            if (context.Username && context.Username != "") {
                 var quote = post.rowElement.querySelector('a[href^="posting.php?mode=quote"]') as HTMLAnchorElement;
                 quote.insertAdjacentHTML('afterend', '&nbsp;' +
                     '<a name="quickreply"><img src="' + this.quickreplyPNG + '"/></a>');
