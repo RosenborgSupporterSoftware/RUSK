@@ -24,6 +24,7 @@ import { Bookmarks } from "./EM_Bookmarks";
 import { ModPostTools } from "./EM_ModPostTools";
 import { SpawnWindow } from "./EM_SpawnWindow";
 import { RelativeForumWidth } from "./EM_RelativeForumWidth"
+import { QuickReply } from "./EM_QuickReply";
 
 /**
  * ExtensionModuleLoader
@@ -54,6 +55,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new ColorizePosts(),
         new AlternateSearchEngine(),
         new Bookmarks(),
+        new QuickReply(),
         new SpawnWindow(),
         new ModPostTools(),
         new RelativeForumWidth(),
