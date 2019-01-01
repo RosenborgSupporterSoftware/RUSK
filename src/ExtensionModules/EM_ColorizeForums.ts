@@ -108,7 +108,7 @@ export class ColorizeForums implements ExtensionModule {
         let text = await request.text();
 
         let css = this.hydrateTemplate(text);
-        chrome.runtime.sendMessage({ css });
+        chrome.runtime.sendMessage({ css: css, from: this.name });
     }
 
     execute = (context: PageContext) => {

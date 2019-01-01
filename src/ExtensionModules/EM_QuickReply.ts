@@ -98,14 +98,14 @@ export class QuickReply implements ExtensionModule {
                             '</td>' +
                             '<td class="row2">' +
                             '<textarea name="editor" rows="6" cols="80">' + text + '</textarea>' +
-                            '<form id="RUSKQuickEditor" action="posting.php?mode=quote&p=' + post.postid + '" method="post">' +
+                            '<form style="display:none" id="RUSKQuickEditor" action="posting.php?mode=quote&p=' + post.postid + '" method="post">' +
                             '<input type="hidden" name="subject" value="">' +
                             '<input type="hidden" name="disable_html" value="off">' +
                             '<input type="hidden" name="attach_sig" value="on">' +
                             '<input type="hidden" name="mode" value="reply">' +
                             '<input type="hidden" name="t" value="' + post.threadId + '">' +
                             '<input type="hidden" name="preview" value="Preview">' +
-                            '<input type="hidden" name="addbbcode18" value="%23000000">' +
+                            '<input type="hidden" name="addbbcode18" value="#000000">' +
                             '<input type="hidden" name="addbbcode20" value="12">' +
                             '<input type="hidden" name="helpbox" value="">' +
                             '<input type="hidden" name="message" value="">' +

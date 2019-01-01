@@ -45,7 +45,7 @@ export class HighlightColor implements ExtensionModule {
         let request = await fetch(chrome.runtime.getURL("/data/highlightColor.css"));
         let text = await request.text();
         let css = this.hydrateTemplate(text);
-        chrome.runtime.sendMessage({ css: css });
+        chrome.runtime.sendMessage({ css: css, from: this.name });
     }
 
     execute = () => {

@@ -58,7 +58,7 @@ export class InboxAlert implements ExtensionModule {
             }.bind(this))
             .then(function(text) {
                 let css = this.hydrateTemplate(text);
-                chrome.runtime.sendMessage({ css: css });
+                chrome.runtime.sendMessage({ css: css, from: this.name });
             }.bind(this))
             .catch(function(err) {
                 Log.Error("InboxAlert css error: " + err.message + " - " + err.stack);

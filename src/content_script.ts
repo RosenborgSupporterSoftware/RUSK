@@ -40,6 +40,7 @@ async function processPage(modules: Array<ExtensionModule>, context: PageContext
         for (let i = 0; i < modules.length; i++) {
             modulenames.push(modules[i].name);
         }
+        chrome.runtime.sendMessage({ init_css: modulenames });
         chrome.runtime.sendMessage({ getConfigFor: modulenames }, configs => {
 
             // Init modules

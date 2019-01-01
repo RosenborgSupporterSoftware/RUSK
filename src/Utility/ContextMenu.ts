@@ -31,7 +31,7 @@ export class ContextMenu {
             let text = await request.text();
             if (text && text.length > 1) {
                 let css = this.hydrateTemplate(text);
-                chrome.runtime.sendMessage({ css: css });
+                chrome.runtime.sendMessage({ css: css, from: ContextMenu });
             }
         } catch (e) {
             console.error("error: " + e.message);

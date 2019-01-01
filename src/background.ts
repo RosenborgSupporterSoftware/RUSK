@@ -69,16 +69,33 @@ chrome.runtime.onMessage.addListener(async (req, sender, reply) => {
 
 // CSS insertion
 
+var module_css = {};
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.init_css) {
+        Object.keys(module_css).forEach(function(key: string, ix, keys) {
+            chrome.tabs.insertCSS(sender.tab.id, { code: module_css[key], cssOrigin: "user" }, () => {
+                // console.log('Initialized CSS for ' + key);
+            })
+        })
+        return;
+    }
     if (request.css) {
+        if (request.from) {
+            if (module_css[request.from] && module_css[request.from] == request.css) {
+                //console.log('Already injected CSS from ' + request.from);
+                return;
+            }
+            module_css[request.from] = request.css;
+        }
         chrome.tabs.insertCSS(sender.tab.id, {
             code: request.css,
             cssOrigin: "user"
         }, () => {
             if (request.from)
-                console.log('Inserted CSS from ' + request.from);
+                console.log('Inserted dynamic CSS from ' + request.from);
             else
-                console.log('Inserted CSS');
+                console.log('Inserted dynamic CSS');
         }); // Y U NO?!
     }
 });
