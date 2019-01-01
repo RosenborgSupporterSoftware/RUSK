@@ -33,7 +33,17 @@ export class QuickReply implements ExtensionModule {
         this.cfg = config;
     }
 
-    i18n_no = {}
+    i18n_no = {
+        'Quick Reply': 'Hurtigsvar',
+        'Use HTML': 'Tillat HTML',
+        'Use BBcode': 'Bruk BBcode',
+        'Use Smileys': 'Bruk smileys',
+        'Attach Signature': 'Inkludr signatur',
+        'Quote Selection': 'Siter musseleksjon',
+        'Abort': 'Avbryt',
+        'Full Editor': 'Editor',
+        'Post': 'Post'
+    }
 
     i18n = {}
 
@@ -58,7 +68,6 @@ export class QuickReply implements ExtensionModule {
 
     execute = (context: PageContext) => {
         addEventListener('mouseup', function(ev) {
-            console.log("mouseup");
             this.lastSelectionPost = this.selectionPost;
             this.lastSelectionText = this.selectionText;
             var post = this.getSelPost();
@@ -66,7 +75,6 @@ export class QuickReply implements ExtensionModule {
                 var text = this.getSelText();
                 this.selectionPost = post;
                 this.selectionText = text;
-                console.log("text: " + text);
             }
             else {
                 this.selectionPost = null;
@@ -80,11 +88,10 @@ export class QuickReply implements ExtensionModule {
 
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var menu = post.getContextMenu();
-            console.log("user: " + context.Username);
             if (context.Username && context.Username != "") {
                 var quote = post.rowElement.querySelector('a[href^="posting.php?mode=quote"]') as HTMLAnchorElement;
                 quote.insertAdjacentHTML('afterend', '&nbsp;' +
-                    '<a name="quickreply"><img src="' + this.quickreplyPNG + '"/></a>');
+                    '<a name="quickreply" title="' + this.tr('Quick Reply') + '"><img src="' + this.quickreplyPNG + '"/></a>');
                 var quick = post.rowElement.querySelector('a[name="quickreply"]') as HTMLAnchorElement;
                 //menu.addAction(this.tr("Quick reply"), true, function() {
                 quick.addEventListener('click', function(ev) {
@@ -102,10 +109,10 @@ export class QuickReply implements ExtensionModule {
                             '<tr id="RUSKQuickEditor" class="quickeditor">' +
                             '<td class="row1">' +
                             '<span class="gensmall">' +
-                            '<input type="checkbox" name="html_on" checked>Use HTML</input><br>' +
-                            '<input type="checkbox" name="bbcode_on" checked>Use BBcode</input><br>' +
-                            '<input type="checkbox" name="smileys_on" checked>Use Smileys</input><br>' +
-                            '<input type="checkbox" name="signature_on" checked>Attach signature</input><br>' +
+                            '<input type="checkbox" name="html_on" checked>' + this.tr('Use HTML') + '</input><br>' +
+                            '<input type="checkbox" name="bbcode_on" checked>' + this.tr('Use BBcode') + '</input><br>' +
+                            '<input type="checkbox" name="smileys_on" checked>' + this.tr('Use Smileys') + '</input><br>' +
+                            '<input type="checkbox" name="signature_on" checked>' + this.tr('Attach Signature') + '</input><br>' +
                             '</span>' +
                             '</td>' +
                             '<td class="row2">' +
@@ -126,12 +133,12 @@ export class QuickReply implements ExtensionModule {
                             '</form>' +
                             '<div width="100%">' +
                             '<span>' +
-                            '<input name="quote" disabled="true" type="button" class="RUSKQuoteSelection RUSKQuickReplyButton" value="Quote selection"/>&nbsp;' +
+                            '<input name="quote" disabled="true" type="button" class="RUSKQuoteSelection RUSKQuickReplyButton" value="' + this.tr('Quote Selection') + '"/>&nbsp;' +
                             '</span>' +
                             '<span style="float:right;">' +
-                            '<input name="cancel" type="button" class="RUSKQuickReplyButton" value="Abort"/>&nbsp;' +
-                            '<input name="editor" type="button" class="RUSKQuickReplyButton" value="Full Editor"/>&nbsp;' +
-                            '<input name="submit" type="button" class="RUSKQuickReplyButton" value="Post"/>' +
+                            '<input name="cancel" type="button" class="RUSKQuickReplyButton" value="' + this.tr('Abort') + '"/>&nbsp;' +
+                            '<input name="editor" type="button" class="RUSKQuickReplyButton" value="' + this.tr('Full Editor') + '"/>&nbsp;' +
+                            '<input name="submit" type="button" class="RUSKQuickReplyButton" value="' + this.tr('Post') + '"/>' +
                             '</span>' +
                             '</div>' +
                             '</td>' +
