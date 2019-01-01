@@ -48,9 +48,12 @@ export class QuickReply implements ExtensionModule {
     selectionPost: PostInfo;
     selectionText: string;
 
+    quickreplyPNG: string;
+
     preprocess = (context: PageContext) => {
         this.posts = context.RUSKPage.items as Array<PostInfo>;
         if (context.Language == "norwegian") this.i18n = this.i18n_no;
+        this.quickreplyPNG = chrome.runtime.getURL('/img/' + context.Language + '/icon_quickreply.png');
     }
 
     execute = (context: PageContext) => {
@@ -69,7 +72,7 @@ export class QuickReply implements ExtensionModule {
                 this.selectionPost = null;
                 this.selectionText = null;
             }
-            var enable = (this.selectionText != null);
+            var enable = (this.selectionText != null && this.selectionText.trim() != "");
             document.body.querySelectorAll('input.RUSKQuoteSelection').forEach(function(elt: HTMLInputElement, idx, parent) {
                 elt.disabled = enable ? false : true;
             }.bind(this));
@@ -79,32 +82,39 @@ export class QuickReply implements ExtensionModule {
             var menu = post.getContextMenu();
             console.log("user: " + context.Username);
             if (true || (context.Username && context.Username != "")) {
-                menu.addAction(this.tr("Quick reply"), true, function() {
+                var quote = post.rowElement.querySelector('a[href^="posting.php?mode=quote"]') as HTMLAnchorElement;
+                quote.insertAdjacentHTML('afterend', '&nbsp;' +
+                    '<a name="quickreply"><img src="' + this.quickreplyPNG + '"/></a>');
+                var quick = post.rowElement.querySelector('a[name="quickreply"]') as HTMLAnchorElement;
+                //menu.addAction(this.tr("Quick reply"), true, function() {
+                quick.addEventListener('click', function(ev) {
                     var text = "";
                     if (this.lastSelectionText) {
                         text = '[quote="' + this.lastSelectionPost.posterNickname + '"]' + this.lastSelectionText + '[/quote]\n';
                     }
-                    var probe = post.rowElement.nextElementSibling.nextElementSibling as HTMLTableRowElement;
-                    if (probe && probe.classList.contains('quickeditor')) {
-                        // nada
-                        console.log('editor already open');
+                    var editor = document.getElementById('RUSKQuickEditor') as HTMLTableRowElement;
+                    if (editor) { 
+                        editor.remove();
+                        post.buttonRowElement.insertAdjacentElement('afterend', editor);
                     }
                     else {
                         post.rowElement.nextElementSibling.insertAdjacentHTML('afterend',
-                            '<tr class="quickeditor">' +
+                            '<tr id="RUSKQuickEditor" class="quickeditor">' +
                             '<td class="row1">' +
                             '<span class="gensmall">' +
-                            '<input type="checkbox" name="html_on" value="true">HTML</input><br>' +
-                            '<input type="checkbox" name="bbcode_on" value="on">BBcode</input><br>' +
-                            '<input type="checkbox" name="signature_on" value="on">Signature</input><br>' +
-                            '<input type="checkbox" name="smileys_on" value="on">Smileys</input><br>' +
+                            '<input type="checkbox" name="html_on" checked>Use HTML</input><br>' +
+                            '<input type="checkbox" name="bbcode_on" checked>Use BBcode</input><br>' +
+                            '<input type="checkbox" name="smileys_on" checked>Use Smileys</input><br>' +
+                            '<input type="checkbox" name="signature_on" checked>Attach signature</input><br>' +
                             '</span>' +
                             '</td>' +
                             '<td class="row2">' +
-                            '<textarea name="editor" rows="6" cols="80">' + text + '</textarea>' +
+                            '<div name="editor" height="60px" border="1" class="gensmall RUSKDivTextArea" contenteditable="true">' + text + '</div>' +
                             '<form style="display:none;" id="RUSKQuickEditor" action="posting.php?mode=quote&p=' + post.postid + '" method="post">' +
                             '<input type="hidden" name="subject" value="">' +
-                            '<input type="hidden" name="disable_html" value="off">' +
+                            '<input type="hidden" name="disable_html" value="on">' +
+                            '<input type="hidden" name="disable_smilies" value="on">' +
+                            '<input type="hidden" name="disable_bbcode" value="on">' +
                             '<input type="hidden" name="attach_sig" value="on">' +
                             '<input type="hidden" name="mode" value="reply">' +
                             '<input type="hidden" name="t" value="' + post.threadId + '">' +
@@ -116,18 +126,18 @@ export class QuickReply implements ExtensionModule {
                             '</form>' +
                             '<div width="100%">' +
                             '<span>' +
-                            '<input name="quote" disabled="true" type="button" class="RUSKQuoteSelection" value="Quote selection"/>&nbsp;' +
+                            '<input name="quote" disabled="true" type="button" class="RUSKQuoteSelection RUSKQuickReplyButton" value="Quote selection"/>&nbsp;' +
                             '</span>' +
                             '<span style="float:right;">' +
-                            '<input name="cancel" type="button" value="Abort"/>&nbsp;' +
-                            '<input name="editor" type="button" value="Full Editor"/>&nbsp;' +
-                            '<input name="submit" type="button" value="Post"/>' +
+                            '<input name="cancel" type="button" class="RUSKQuickReplyButton" value="Abort"/>&nbsp;' +
+                            '<input name="editor" type="button" class="RUSKQuickReplyButton" value="Full Editor"/>&nbsp;' +
+                            '<input name="submit" type="button" class="RUSKQuickReplyButton" value="Post"/>' +
                             '</span>' +
                             '</div>' +
                             '</td>' +
                             '</tr>');
                         var quickeditor = post.rowElement.nextElementSibling.nextElementSibling as HTMLTableRowElement;
-                        var editarea = quickeditor.querySelector('textarea') as HTMLTextAreaElement;
+                        var editarea = quickeditor.querySelector('div[name="editor"]') as HTMLDivElement;
                         quickeditor.querySelector('input[name="quote"]').addEventListener('click',
                             function(ev) {
                                 if (this.selectionPost) {
@@ -142,14 +152,44 @@ export class QuickReply implements ExtensionModule {
                         quickeditor.querySelector('input[name="editor"]').addEventListener('click',
                             function(ev) {
                                 var form = quickeditor.querySelector('form') as HTMLFormElement;
-                                var textarea = quickeditor.querySelector('textarea') as HTMLTextAreaElement;
+                                var htmlon = quickeditor.querySelector('input[name="html_on"]') as HTMLInputElement;
+                                if (htmlon.checked)
+                                    form.querySelector('input[name="disable_html"]').remove();
+                                var bbcodeon = quickeditor.querySelector('input[name="bbcode_on"]') as HTMLInputElement;
+                                if (bbcodeon.checked)
+                                    form.querySelector('input[name="disable_bbcode"]').remove();
+                                var smileyson = quickeditor.querySelector('input[name="smileys_on"]') as HTMLInputElement;
+                                if (smileyson.checked)
+                                    form.querySelector('input[name="disable_smilies"]').remove();
+                                var signatureon = quickeditor.querySelector('input[name="signature_on"]') as HTMLInputElement;
+                                if (!signatureon.checked)
+                                    form.querySelector('input[name="attach_sig"]').remove();
                                 var messageelt = quickeditor.querySelector('input[name="message"]') as HTMLInputElement;
-                                messageelt.value = textarea.textContent;
+                                messageelt.value = editarea.textContent;
                                 form.submit();
                             }.bind(this));
                         quickeditor.querySelector('input[name="submit"]').addEventListener('click',
                             function(ev) {
-                                console.log('not implemented yet, and will not be implemented before all else works 100%');
+                                var form = quickeditor.querySelector('form') as HTMLFormElement;
+                                var htmlon = quickeditor.querySelector('input[name="html_on"]') as HTMLInputElement;
+                                if (htmlon.checked)
+                                    form.querySelector('input[name="disable_html"]').remove();
+                                var bbcodeon = quickeditor.querySelector('input[name="bbcode_on"]') as HTMLInputElement;
+                                if (bbcodeon.checked)
+                                    form.querySelector('input[name="disable_bbcode"]').remove();
+                                var smileyson = quickeditor.querySelector('input[name="smileys_on"]') as HTMLInputElement;
+                                if (smileyson.checked)
+                                    form.querySelector('input[name="disable_smilies"]').remove();
+                                var signatureon = quickeditor.querySelector('input[name="signature_on"]') as HTMLInputElement;
+                                if (!signatureon.checked)
+                                    form.querySelector('input[name="attach_sig"]').remove();
+                                var messageelt = quickeditor.querySelector('input[name="message"]') as HTMLInputElement;
+                                messageelt.value = editarea.textContent;
+                                var command = form.querySelector('input[name="preview"]') as HTMLInputElement;
+                                command.name = "post";
+                                command.value = "Submit";
+                                form.action = "posting.php";
+                                form.submit();
                             }.bind(this));
                     }
                 }.bind(this));

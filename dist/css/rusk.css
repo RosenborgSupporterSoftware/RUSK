@@ -5,6 +5,20 @@ div.RUSKPrivateMessageAlert {
     font-weight: bold;
 }
 
+div.RUSKDivTextArea {
+    border: 1px solid black !important;
+    margin: 1px;
+    padding: 0px;
+    resize: vertical;
+    min-height: 60px;
+    overflow-y: scroll;
+}
+
+input.RUSKQuickReplyButton:disabled {
+    color: lightgrey;
+}
+
+/* UserFilter */
 a.trollbutton {
     border-radius: 5px;
     color: #000000;
