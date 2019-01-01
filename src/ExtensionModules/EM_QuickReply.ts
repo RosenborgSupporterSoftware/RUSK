@@ -69,6 +69,10 @@ export class QuickReply implements ExtensionModule {
                 this.selectionPost = null;
                 this.selectionText = null;
             }
+            var enable = (this.selectionText != null);
+            document.body.querySelectorAll('input.RUSKQuoteSelection').forEach(function(elt: HTMLInputElement, idx, parent) {
+                elt.disabled = enable ? false : true;
+            }.bind(this));
         }.bind(this));
 
         this.posts.forEach(function(post: PostInfo, idx, posts) {
@@ -98,7 +102,7 @@ export class QuickReply implements ExtensionModule {
                             '</td>' +
                             '<td class="row2">' +
                             '<textarea name="editor" rows="6" cols="80">' + text + '</textarea>' +
-                            '<form style="display:none" id="RUSKQuickEditor" action="posting.php?mode=quote&p=' + post.postid + '" method="post">' +
+                            '<form style="display:none;" id="RUSKQuickEditor" action="posting.php?mode=quote&p=' + post.postid + '" method="post">' +
                             '<input type="hidden" name="subject" value="">' +
                             '<input type="hidden" name="disable_html" value="off">' +
                             '<input type="hidden" name="attach_sig" value="on">' +
@@ -112,7 +116,7 @@ export class QuickReply implements ExtensionModule {
                             '</form>' +
                             '<div width="100%">' +
                             '<span>' +
-                            '<input name="quote" type="button" value="Quote selection"/>&nbsp;' +
+                            '<input name="quote" disabled="true" type="button" class="RUSKQuoteSelection" value="Quote selection"/>&nbsp;' +
                             '</span>' +
                             '<span style="float:right;">' +
                             '<input name="cancel" type="button" value="Abort"/>&nbsp;' +
