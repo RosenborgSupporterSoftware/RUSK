@@ -205,18 +205,13 @@ export class UserFilter implements ExtensionModule {
         var threadtrolls = new Map<string, Object>();
         try {
             var threadtrollstr = this.cfg.GetSetting("threadTrolls") as string;
-            //console.log("loaded threadTrolls: " + threadtrollstr);
             var config = JSON.parse(threadtrollstr);
-            var now = (new Date()).getTime();
-            var period = 1000 * 60 * 60 * 24 * 2;
-            var treshold = now - period;
+            var treshold = this.getTresholdTime();
             var filtered = false;
-            var keys = Object.keys(config);
-            keys.forEach(function(threadid: string, idx, keys) {
+            Object.keys(config).forEach(function(threadid: string, idx, keys) {
                 var threadinfo = {};
                 var obj = config[threadid];
-                var trolls = Object.keys(obj);
-                trolls.forEach(function(troll, idx, trolls) {
+                Object.keys(obj).forEach(function(troll, idx, trolls) {
                     var timestamp = +(obj[troll]);
                     if (timestamp < treshold) {
                         filtered = true;
@@ -225,7 +220,7 @@ export class UserFilter implements ExtensionModule {
                         threadinfo[troll] = timestamp;
                     }
                 }.bind(this));
-                threadtrolls.set(threadid, threadinfo);
+                this.threadTrolls.set(threadid, threadinfo);
             }.bind(this));
             if (filtered) this.storeThreadTrolls();
         } catch (e) {
@@ -234,28 +229,24 @@ export class UserFilter implements ExtensionModule {
         return threadtrolls;
     }
 
+    private getTresholdTime(): number {
+        return (new Date()).getTime() - (1000*60*60*24*2);
+    }
+
     private isThreadTroll(thread: string, userid: string): boolean {
-        var now = (new Date()).getTime();
-        var period = 1000 * 60 * 60 * 24 * 2;
         var threadinfo = {};
-        if (this.threadTrolls.has(thread)) {
+        if (this.threadTrolls.has(thread))
             threadinfo = this.threadTrolls.get(thread);
-        }
-        // console.log("checking thread: " + thread + ", user " + userid);
-        // console.log("threadinfo: " + JSON.stringify(threadinfo));
-        if (threadinfo[userid] && (threadinfo[userid] > (now - period))) {
-            // console.log("found thread troll: " + userid);
+        if (threadinfo[userid] && (threadinfo[userid] > this.getTresholdTime()))
             return true;
-        }
         return false;
     }
 
     private addThreadTroll(thread: string, userid: string) {
-        var now = (new Date()).getTime();
         var threadinfo = {};
         if (this.threadTrolls.has(thread))
             threadinfo = this.threadTrolls.get(thread);
-        threadinfo[userid] = now;
+        threadinfo[userid] = (new Date()).getTime();
         this.threadTrolls.set(thread, threadinfo);
     }
 
