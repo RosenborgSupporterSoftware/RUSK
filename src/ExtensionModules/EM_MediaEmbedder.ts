@@ -135,7 +135,10 @@ export class MediaEmbedder implements ExtensionModule {
         this.posts = context.RUSKPage.items as Array<PostInfo>;
     }
 
+    tweets: Array<string>;
+
     execute = (context: PageContext) => {
+        this.tweets = new Array<string>();
         this.posts.forEach(function(post: PostInfo, idx, posts) {
             var sigpos = post.postBodyElement.innerHTML.indexOf('________');
             var hasSignature = sigpos != -1;
@@ -178,6 +181,7 @@ export class MediaEmbedder implements ExtensionModule {
                             if (match) {
                                 var account = match[1];
                                 var code = match[2];
+                                this.tweets.push("tweet_" + code);
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
                                     '<iframe id="tweet_' + code + '" border=0 frameborder=0 height=250 width=460 src="https://twitframe.com/show?url=' + encodeURI("https://twitter.com/" + account + "/status/" + code) + '"></iframe>');
                                 anchor.classList.add("RUSKHiddenItem"); // option for hiding link?
@@ -271,20 +275,17 @@ export class MediaEmbedder implements ExtensionModule {
             }.bind(this));
         }.bind(this));
 
-        var tweets = document.body.querySelectorAll('iframe[id^="tweet_"]');
-        tweets.forEach(function(tweetframe: HTMLIFrameElement, key, parent) {
-            tweetframe.addEventListener('load', function() {
-                tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
-                                                     "https://twitframe.com");
-                var origheight = tweetframe.style.height;
-                var interval = setInterval(function() {
-                    if (tweetframe.style.height == origheight) {
-                        tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
-                                                               "https://twitframe.com");
-                    }
-                }, 500);
-                tweetframe.setAttribute("data-interval", "" + interval);
-            });
+        this.tweets.forEach(function(id: string, idx, tweets) {
+            var iframe = document.getElementById(id);
+            var origheight = iframe.style.height;
+            var poller = function() {
+                var tweetframe = document.getElementById(id) as HTMLIFrameElement;
+                if (tweetframe.style.height == origheight && tweetframe.contentWindow) {
+                    tweetframe.contentWindow.postMessage({ element: tweetframe.id, query: "height" },
+                                                           "https://twitframe.com");
+                }
+            }.bind(this);
+            iframe.setAttribute("data-interval", "" + setInterval(poller, 250));
         });
 
         window.addEventListener("message", function(event) {
