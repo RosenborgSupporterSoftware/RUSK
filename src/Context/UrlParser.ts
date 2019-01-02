@@ -14,11 +14,11 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_NON_RBKWEB_URL;
 
         // Check if we're even at RBKweb - extension should not run otherwise, but just for making sure we're catching everything
-        let rbkwebMatch = url.match(/https?:\/\/(www\.)?(rbkweb\.(no|com)|rosenborg\.info)\/(.*)/);
+        let rbkwebMatch = url.match(/https?:\/\/(www\.)?(rbkweb\.(no|com)|rosenborg\.info)(\/.*)/);
         if (!rbkwebMatch) {
             return RBKwebPageType.RBKweb_NON_RBKWEB_URL;
         }
-        var restUrl = rbkwebMatch[rbkwebMatch.length - 1];
+        var restUrl = rbkwebMatch[rbkwebMatch.length - 1].substring(1);
         var hashPart = restUrl.match(/^([^#]*)#(.*)/);
         var hashArg = "";
         if  (hashPart) {
@@ -33,8 +33,8 @@ export class UrlParser {
         }
 
 
-        if (restUrl == "") // FIXME: proper enum
-            return RBKwebPageType.RBKweb_UNKNOWN_URL;
+        if (restUrl == "")
+            return RBKwebPageType.RBKweb_FRONTPAGE;
 
         try {
             if (restUrl.startsWith('forum/')) {

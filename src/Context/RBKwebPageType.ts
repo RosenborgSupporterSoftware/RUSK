@@ -44,6 +44,7 @@
 
    // Regular RBKweb pages
 
+    RBKweb_FRONTPAGE,               // http://www.rbkweb.no/
     RBKweb_MATCH_OVERVIEW,          // http://www.rbkweb.no/kamper2018.php
     RBKweb_MATCH_OVERVIEW_INDEX,    // http://www.rbkweb.no/arkiv/kamper.shtml
     RBKweb_COPYRIGHT,               // http://www.rbkweb.no/copyright.shtml
