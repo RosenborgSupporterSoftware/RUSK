@@ -3,9 +3,7 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
-import { SettingType } from "../Configuration/SettingType";
-import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
-import { Log } from "../Utility/Log";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * EM_ModPostTools - Extension module for RBKweb.
@@ -41,18 +39,20 @@ export class ModPostTools implements ExtensionModule {
 
     posts: Array<PostInfo>;
 
-    preprocess = () => {
+    preprocess = (ctx: PageContext) => {
         let modOnlyElement = document.querySelector('a img[src$="topic_delete.gif"]');
         this.userIsModerator = modOnlyElement != null;
-        this.posts = PostInfo.GetPostsFromDocument(document);
+        this.posts = ctx.RUSKPage.items as Array<PostInfo>;
     }
 
-    execute = () => {
+    execute = (ctx: PageContext) => {
         if (!this.userIsModerator) return;
+
+        let menuLabel = ctx.Language == "norwegian" ? "Flytt innlegg" : "Move post";
 
         this.posts.forEach(function (post: PostInfo, key, parent) {
             let cmenu = post.getContextMenu();
-            cmenu.addAction("Flytt", true, function () {
+            cmenu.addAction(menuLabel, true, function () {
                 window.location.href = "movet.php?id=" + post.postid;
             });
         }.bind(this));
