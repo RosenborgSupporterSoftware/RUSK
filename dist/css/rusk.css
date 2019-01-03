@@ -12,6 +12,7 @@ div.RUSKDivTextArea {
     resize: vertical;
     min-height: 60px;
     overflow-y: scroll;
+    white-space: pre-wrap;
 }
 
 input.RUSKQuickReplyButton:disabled {
