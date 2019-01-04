@@ -103,6 +103,12 @@ export class QuickReply implements ExtensionModule {
                     if (editor) { 
                         editor.remove();
                         post.buttonRowElement.insertAdjacentElement('afterend', editor);
+                        if (this.selectionPost) {
+                            var quickeditor = post.rowElement.nextElementSibling.nextElementSibling as HTMLTableRowElement;
+                            var editarea = quickeditor.querySelector('div[name="editor"]') as HTMLDivElement;
+                            editarea.insertAdjacentHTML('beforeend',
+                                 '\n[quote="' + this.selectionPost.posterNickname + '"]' + this.selectionText + '[/quote]\n');
+                        }
                     }
                     else {
                         post.rowElement.nextElementSibling.insertAdjacentHTML('afterend',
