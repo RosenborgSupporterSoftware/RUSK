@@ -35,6 +35,7 @@ import { QuickReply } from "./EM_QuickReply";
 export default function loadModules(path: string): Array<ExtensionModule> {
     let allModules = [
         new Empowerment(),
+        new RelativeForumWidth(),
         new Usertips(),
         new SeasonViews(),
         new TabTitles(),
@@ -58,7 +59,6 @@ export default function loadModules(path: string): Array<ExtensionModule> {
         new QuickReply(),
         new SpawnWindow(),
         new ModPostTools(),
-        new RelativeForumWidth(),
     ];
 
     verifyModules(allModules);

@@ -35,16 +35,14 @@ storage.GetConfiguration(config => {
         //ruskConfig = RUSKConfig.FromStoredConfiguration(config, allModules);
     }
     initPage(modules, context);
-    state.configured = true;
-    stateChanged(state);
 });
 
-function stateChanged(state: any) {
+function stateChanged(state: any): void {
     if (!state.configured || !state.pageReady) return;
     processPage(modules, context); 
 }
 
-function initPage(modules: Array<ExtensionModule>, context: PageContext) {
+function initPage(modules: Array<ExtensionModule>, context: PageContext): void {
     // Init modules
     let modulenames = modules.map(module => module.name);
     chrome.runtime.sendMessage({ getConfigFor: modulenames }, configs => {
@@ -61,11 +59,12 @@ function initPage(modules: Array<ExtensionModule>, context: PageContext) {
                 }
             }
         }
+        state.configured = true;
+        stateChanged(state);
     });
-
 }
 
-function processPage(modules: Array<ExtensionModule>, context: PageContext) {
+function processPage(modules: Array<ExtensionModule>, context: PageContext): void {
     // TODO: Sortér moduler basert på deres runBefore og runAfter-properties
     let modname = "";
     // let modulenames = modules.map(module => module.name);
