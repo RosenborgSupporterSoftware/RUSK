@@ -65,7 +65,7 @@ function initPage(modules: Array<ExtensionModule>, context: PageContext) {
 
 }
 
-async function processPage(modules: Array<ExtensionModule>, context: PageContext) {
+function processPage(modules: Array<ExtensionModule>, context: PageContext) {
     // TODO: Sortér moduler basert på deres runBefore og runAfter-properties
     let modname = "";
     // let modulenames = modules.map(module => module.name);
