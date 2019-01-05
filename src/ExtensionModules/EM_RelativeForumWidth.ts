@@ -15,7 +15,7 @@ export class RelativeForumWidth implements ExtensionModule {
     cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_FORUM_ALL
+        RBKwebPageType.RBKweb_ALL
     ];
 
     runBefore: Array<string> = ['late-extmod'];
@@ -42,39 +42,33 @@ export class RelativeForumWidth implements ExtensionModule {
         this.cfg = config;
     }
 
-    preprocess = async (context: PageContext) => {
-        let request = await fetch(chrome.runtime.getURL("/data/forumWidth.css"));
-        let text = await request.text();
-        let css = this.hydrateTemplate(text);
-        chrome.runtime.sendMessage({ css: css, from: this.name });
-    }
-
-    execute = (context: PageContext) => {
-        // Banner and content tables
-        document.querySelectorAll('html > body > table').forEach(function(table: HTMLTableElement, ky, parent) {
-            table.align = "center";
-            table.style.minWidth = table.width;
-            table.removeAttribute('width');
-            table.classList.add("RUSKForumWidth");
-        }.bind(this));
+    preprocess = (context: PageContext) => {
+        (async function() {
+            let request = await fetch(chrome.runtime.getURL("/data/forumWidth.css"));
+            let text = await request.text();
+            let css = this.hydrateTemplate(text);
+            chrome.runtime.sendMessage({ css: css, from: this.name });
+        }.bind(this))();
 
         // Forum table 
-        const forumTable = document.querySelectorAll('html > body > table > tbody > tr  > td > table')[1] as HTMLTableElement;
-        forumTable.parentElement.removeAttribute('width');
+        const forumTable = document.querySelectorAll('html > body > table > tbody > tr > td > table')[1] as HTMLTableElement;
         forumTable.setAttribute('width', '100%');
 
-        // Banner image
-        const bannerImg = document.querySelector(' html  > body > table > tbody > tr > td > a > img') as HTMLImageElement;
-        bannerImg.setAttribute('width', '100%');
-
         // Input fields
-        const subjectInput = document.getElementsByName('subject')[0] as HTMLInputElement;
-        if (subjectInput) subjectInput.style.width = "100%";
-        const textareaTable = document.querySelectorAll('tbody > tr > td > font > form > table > tbody > tr > td > span > table')[0] as HTMLTableElement;
-        if (textareaTable) textareaTable.style.width = "100%";
-        const textArea =  document.getElementsByName('message')[0] as HTMLTextAreaElement;
-        if (textArea) textArea.style.width = "100%";
+        if (context.PageType == RBKwebPageType.RBKweb_FORUM_EDITPOST ||
+            context.PageType == RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC ||
+            context.PageType == RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC) {
+            const subjectInput = document.getElementsByName('subject')[0] as HTMLInputElement;
+            if (subjectInput) subjectInput.style.width = "100%";
+            const textareaTable = document.querySelectorAll('tbody > tr > td > font > form > table > tbody > tr > td > span > table')[0] as HTMLTableElement;
+            if (textareaTable) textareaTable.style.width = "100%";
+            const textArea =  document.getElementsByName('message')[0] as HTMLTextAreaElement;
+            if (textArea) textArea.style.width = "100%";
+        }
     };
+
+    execute = (context: PageContext) => {
+    }
 
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];
@@ -87,8 +81,4 @@ export class RelativeForumWidth implements ExtensionModule {
 
         return template;
     }
-
 };
-
-
-

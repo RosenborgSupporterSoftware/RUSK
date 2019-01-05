@@ -1,3 +1,20 @@
-table.RUSKForumWidth {
+html > body > table {
+    min-width: 980px;
     width: $RUSKForumWidth$ !important;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+img[alt="Rosenborg Web"] {
+    width: 100%;
+}
+
+/*
+td:has(table > tbody > tr > td > font > form[name="post"]) {
+    width: 100% !important;
+}
+
+table:has(tr > td > font > form[name="post"]) {
+    width: 100% !important;
+}
+*/

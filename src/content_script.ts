@@ -17,7 +17,7 @@ document.addEventListener('readystatechange', function(ev) {
          state.pageReady = true;
          stateChanged(state);
      }
-});
+}, true);
 
 let storage = new ChromeSyncStorage() as IConfigurationStorage;
 let context = new PageContext();
