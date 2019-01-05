@@ -178,7 +178,7 @@ export class QuickReply implements ExtensionModule {
                                 if (!signatureon.checked)
                                     form.querySelector('input[name="attach_sig"]').remove();
                                 var messageelt = quickeditor.querySelector('input[name="message"]') as HTMLInputElement;
-                                messageelt.value = editarea.textContent;
+                                messageelt.value = editarea.innerText.replace(/\r?\n/g, "\r\n");
                                 form.submit();
                             }.bind(this));
                         quickeditor.querySelector('input[name="submit"]').addEventListener('click',
@@ -197,7 +197,7 @@ export class QuickReply implements ExtensionModule {
                                 if (!signatureon.checked)
                                     form.querySelector('input[name="attach_sig"]').remove();
                                 var messageelt = quickeditor.querySelector('input[name="message"]') as HTMLInputElement;
-                                messageelt.value = editarea.textContent;
+                                messageelt.value = editarea.innerText.replace(/\r?\n/g, "\r\n");
                                 var command = form.querySelector('input[name="preview"]') as HTMLInputElement;
                                 command.name = "post";
                                 command.value = "Submit";
