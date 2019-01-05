@@ -67,7 +67,7 @@ export class QuickReply implements ExtensionModule {
     }
 
     execute = (context: PageContext) => {
-        addEventListener('mouseup', function(ev) {
+        addEventListener('mouseup', function (ev) {
             this.lastSelectionPost = this.selectionPost;
             this.lastSelectionText = this.selectionText;
             var post = this.getSelPost();
@@ -81,12 +81,12 @@ export class QuickReply implements ExtensionModule {
                 this.selectionText = null;
             }
             var enable = (this.selectionText != null && this.selectionText.trim() != "");
-            document.body.querySelectorAll('input.RUSKQuoteSelection').forEach(function(elt: HTMLInputElement, idx, parent) {
+            document.body.querySelectorAll('input.RUSKQuoteSelection').forEach(function (elt: HTMLInputElement, idx, parent) {
                 elt.disabled = enable ? false : true;
             }.bind(this));
         }.bind(this));
 
-        this.posts.forEach(function(post: PostInfo, idx, posts) {
+        this.posts.forEach(function (post: PostInfo, idx, posts) {
             var menu = post.getContextMenu();
             if (context.Username && context.Username != "") {
                 var quote = post.rowElement.querySelector('a[href^="posting.php?mode=quote"]') as HTMLAnchorElement;
@@ -94,20 +94,20 @@ export class QuickReply implements ExtensionModule {
                     '<a name="quickreply" title="' + this.tr('Quick Reply') + '"><img src="' + this.quickreplyPNG + '"/></a>');
                 var quick = post.rowElement.querySelector('a[name="quickreply"]') as HTMLAnchorElement;
                 //menu.addAction(this.tr("Quick reply"), true, function() {
-                quick.addEventListener('click', function(ev) {
+                quick.addEventListener('click', function (ev) {
                     var text = "";
                     if (this.lastSelectionText) {
                         text = '[quote="' + this.lastSelectionPost.posterNickname + '"]' + this.lastSelectionText + '[/quote]\n';
                     }
                     var editor = document.getElementById('RUSKQuickEditor') as HTMLTableRowElement;
-                    if (editor) { 
+                    if (editor) {
                         editor.remove();
                         post.buttonRowElement.insertAdjacentElement('afterend', editor);
                         if (this.selectionPost) {
                             var quickeditor = post.rowElement.nextElementSibling.nextElementSibling as HTMLTableRowElement;
                             var editarea = quickeditor.querySelector('div[name="editor"]') as HTMLDivElement;
                             editarea.insertAdjacentHTML('beforeend',
-                                 '\n[quote="' + this.selectionPost.posterNickname + '"]' + this.selectionText + '[/quote]\n');
+                                '\n[quote="' + this.selectionPost.posterNickname + '"]' + this.selectionText + '[/quote]\n');
                         }
                     }
                     else {
@@ -152,18 +152,18 @@ export class QuickReply implements ExtensionModule {
                         var quickeditor = post.rowElement.nextElementSibling.nextElementSibling as HTMLTableRowElement;
                         var editarea = quickeditor.querySelector('div[name="editor"]') as HTMLDivElement;
                         quickeditor.querySelector('input[name="quote"]').addEventListener('click',
-                            function(ev) {
+                            function (ev) {
                                 if (this.selectionPost) {
                                     editarea.insertAdjacentHTML('beforeend',
-                                         '\n[quote="' + this.selectionPost.posterNickname + '"]' + this.selectionText + '[/quote]\n');
+                                        '\n[quote="' + this.selectionPost.posterNickname + '"]' + this.selectionText + '[/quote]\n');
                                 }
                             }.bind(this));
                         quickeditor.querySelector('input[name="cancel"]').addEventListener('click',
-                            function(ev) {
+                            function (ev) {
                                 quickeditor.remove();
                             }.bind(this));
                         quickeditor.querySelector('input[name="editor"]').addEventListener('click',
-                            function(ev) {
+                            function (ev) {
                                 var form = quickeditor.querySelector('form') as HTMLFormElement;
                                 var htmlon = quickeditor.querySelector('input[name="html_on"]') as HTMLInputElement;
                                 if (htmlon.checked)
@@ -182,7 +182,7 @@ export class QuickReply implements ExtensionModule {
                                 form.submit();
                             }.bind(this));
                         quickeditor.querySelector('input[name="submit"]').addEventListener('click',
-                            function(ev) {
+                            function (ev) {
                                 var form = quickeditor.querySelector('form') as HTMLFormElement;
                                 var htmlon = quickeditor.querySelector('input[name="html_on"]') as HTMLInputElement;
                                 if (htmlon.checked)
@@ -204,7 +204,14 @@ export class QuickReply implements ExtensionModule {
                                 form.action = "posting.php";
                                 form.submit();
                             }.bind(this));
+                        quickeditor.addEventListener('keyup', ev => {
+                            if (ev.code == "Enter" && ev.ctrlKey) {
+                                (quickeditor.querySelector('input[name="submit"]') as HTMLInputElement).click();
+                            }
+                        });
                     }
+                    // Set fokus!
+                    (document.querySelector('div[name=editor]') as HTMLDivElement).focus();
                 }.bind(this));
             }
         }.bind(this));
@@ -217,7 +224,7 @@ export class QuickReply implements ExtensionModule {
             var node = sel.focusNode;
             if (node) var row = node.parentElement.closest('tr') as HTMLTableRowElement;
             while (row && !found) {
-                this.posts.forEach(function(post: PostInfo, idx, posts) {
+                this.posts.forEach(function (post: PostInfo, idx, posts) {
                     if (post.rowElement.isSameNode(row)) found = post;
                 }.bind(this));
                 row = row.parentElement.closest('tr') as HTMLTableRowElement;

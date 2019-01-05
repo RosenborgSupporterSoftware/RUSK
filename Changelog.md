@@ -4,7 +4,7 @@
 
 Nye funksjoner:
 
-- Hurtigsvar-editor direkte i forumtråden, med selection-basert siteringsfunksjon.
+- Hurtigsvar-editor direkte i forumtråden, med selection-basert siteringsfunksjon. Hurtigsvar på valgt innlegg med Shift-R. Legg inn hurtigsvar med Ctrl-Enter.
 
 Bugfixes:
 

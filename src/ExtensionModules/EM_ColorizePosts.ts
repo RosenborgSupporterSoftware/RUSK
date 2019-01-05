@@ -154,7 +154,11 @@ export class ColorizePosts implements ExtensionModule {
                 this.goUp();
             }
             if (ev.code == "KeyR") {
-                this.replyToSelected();
+                if (ev.shiftKey) {
+                    this.quickReplyIfEnabled();
+                } else {
+                    this.replyToSelected();
+                }
             }
             if (ev.code == "KeyN") {
                 this.newTopic();
@@ -168,6 +172,7 @@ export class ColorizePosts implements ExtensionModule {
             if (ev.code == "KeyI") {
                 this.getIpInformation();
             }
+            ev.preventDefault();
         });
         document.addEventListener("keyup", (ev) => {
             let activeElement = document.activeElement;
@@ -221,6 +226,15 @@ export class ColorizePosts implements ExtensionModule {
             .querySelector(
                 'body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(4) > table > tbody > tr > td > font > p:nth-child(3) > table:nth-child(3) > tbody > tr > td:nth-child(2) > span > a:nth-child(2)'
             ) as HTMLAnchorElement).href;
+    }
+
+    private quickReplyIfEnabled() {
+        let quickReplyButton = this.currentlySelectedItem.rowElement.querySelector('a[name="quickreply"]') as HTMLAnchorElement;
+        if (quickReplyButton == null) {
+            this.replyToSelected();
+        } else {
+            quickReplyButton.click();
+        }
     }
 
     private replyToSelected() {
