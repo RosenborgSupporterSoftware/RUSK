@@ -125,14 +125,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
 
 // performance data for ExtensionModules
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.module && request.executiontime && request.url) {
-        let performanceHistory = JSON.parse(localStorage.getItem('RBKweb-Survival-Kit-PerformanceHistory')) || [];
-
-        performanceHistory.push(request);
-        localStorage.setItem('RBKweb-Survival-Kit-PerformanceHistory', JSON.stringify(performanceHistory));
-    }
-});
+//chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//    if (request.module && request.executiontime && request.url) {
+//        let performanceHistory = JSON.parse(localStorage.getItem('RBKweb-Survival-Kit-PerformanceHistory')) || [];
+//        performanceHistory.push(request);
+//        localStorage.setItem('RBKweb-Survival-Kit-PerformanceHistory', JSON.stringify(performanceHistory));
+//    }
+//});
 
 // Configuration update
 

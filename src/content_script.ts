@@ -89,11 +89,11 @@ function processPage(modules: Array<ExtensionModule>, context: PageContext): voi
                 chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
             }
             let endtime = performance.now();
-            chrome.runtime.sendMessage({
-                module: modname,
-                executiontime: endtime - starttime,
-                url: document.URL
-            });
+            //chrome.runtime.sendMessage({
+            //    module: modname,
+            //    executiontime: endtime - starttime,
+            //    url: document.URL
+            //});
         }
     } catch (e) {
         chrome.runtime.sendMessage(new ModuleError(modname, "processPage", e.message, e));
@@ -121,11 +121,11 @@ function executeModules(modules: Array<ExtensionModule>, context: PageContext) {
                 chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
             }
             let endtime = performance.now();
-            chrome.runtime.sendMessage({
-                module: modname,
-                executiontime: endtime - starttime,
-                url: document.URL
-            });
+            //chrome.runtime.sendMessage({
+            //    module: modname,
+            //    executiontime: endtime - starttime,
+            //    url: document.URL
+            //});
         });
     } catch (e) {
         chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
