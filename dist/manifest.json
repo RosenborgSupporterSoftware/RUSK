@@ -29,7 +29,7 @@
                       "*://rosenborg.info/*", "*://*.rosenborg.info/*"],
           "js": ["js/vendor.js", "js/content_script.js"],
           "css": ["css/rusk.css"],
-          "run_at": "document_end"
+          "run_at": "document_start"
       }
   ],
 
@@ -49,6 +49,7 @@
    ],
 
   "background": {
+    "persistent": true,
     "scripts": ["js/vendor.js", "js/background.js"]
   }
 }

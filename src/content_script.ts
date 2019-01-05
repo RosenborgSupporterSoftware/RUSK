@@ -7,84 +7,95 @@ import { IConfigurationStorage } from './Configuration/IConfigurationStorage';
 import { ModuleError } from './Errors/ModuleError';
 import { ModuleConfiguration } from './Configuration/ModuleConfiguration';
 
-var allModules = moduleLoader("notyet");
+var state = {
+    configured: false,
+    pageReady: false
+};
+
+document.addEventListener('readystatechange', function(ev) {
+    if ((document.readyState === 'interactive' || document.readyState === 'complete') && !state.pageReady) {
+         state.pageReady = true;
+         stateChanged(state);
+     }
+});
 
 let storage = new ChromeSyncStorage() as IConfigurationStorage;
+let context = new PageContext();
+let modules = filterModules(moduleLoader("notyet"), context);
+
+chrome.runtime.sendMessage({ init_css: modules.map(module => module.name) });
 
 storage.GetConfiguration(config => {
-
     if (config == null) {
         // Lag ny config med default ting
         // ruskConfig = new RUSKConfig();
         // ruskConfig.AddModuleDefaultConfigurations(allModules);
-
         //storage.StoreConfiguration(ruskConfig.ToJSON());
     } else {
         //ruskConfig = RUSKConfig.FromStoredConfiguration(config, allModules);
     }
-    let context = new PageContext();
-    let filteredModules = filterModules(allModules, context);
-
-    processPage(filteredModules, context);
-    // preprocessModules(filteredModules);
-    // executeModules(filteredModules, context);
+    initPage(modules, context);
+    state.configured = true;
+    stateChanged(state);
 });
 
-// TODO: Sortér moduler basert på deres runBefore og runAfter-properties
+function stateChanged(state: any) {
+    if (!state.configured || !state.pageReady) return;
+    processPage(modules, context); 
+}
+
+function initPage(modules: Array<ExtensionModule>, context: PageContext) {
+    // Init modules
+    let modulenames = modules.map(module => module.name);
+    chrome.runtime.sendMessage({ getConfigFor: modulenames }, configs => {
+        for (let i = 0; i < modules.length; i++) {
+            for (let j = 0; j < configs.length; j++) {
+                if (configs[j].moduleName == modules[i].name) {
+                    try {
+                        let realConf = ModuleConfiguration.FromStorageObject(configs[j], modules[i]);
+                        modules[i].init(realConf);
+                    } catch (e) {
+                        chrome.runtime.sendMessage(new ModuleError(modules[i].name, "init", e.message, e));
+                    }
+                    break;
+                }
+            }
+        }
+    });
+
+}
 
 async function processPage(modules: Array<ExtensionModule>, context: PageContext) {
+    // TODO: Sortér moduler basert på deres runBefore og runAfter-properties
     let modname = "";
-
+    // let modulenames = modules.map(module => module.name);
     try {
-        let modulenames = [];
+        // Preprocess modules
         for (let i = 0; i < modules.length; i++) {
-            modulenames.push(modules[i].name);
+            modname = modules[i].name;
+            try {
+                modules[i].preprocess(context);
+            } catch (e) {
+                chrome.runtime.sendMessage(new ModuleError(modules[i].name, "preprocess", e.message, e));
+            }
         }
-        chrome.runtime.sendMessage({ init_css: modulenames });
-        chrome.runtime.sendMessage({ getConfigFor: modulenames }, configs => {
+        // Execute modules
+        for (let i = 0; i < modules.length; i++) {
+            modname = modules[i].name;
 
-            // Init modules
-            for (let i = 0; i < modules.length; i++) {
-                modname = modules[i].name;
-                for (let j = 0; j < configs.length; j++) {
-                    if (configs[j].moduleName == modules[i].name) {
-                        try {
-                            let realConf = ModuleConfiguration.FromStorageObject(configs[j], modules[i]);
-                            modules[i].init(realConf);
-                        } catch (e) {
-                            chrome.runtime.sendMessage(new ModuleError(modname, "init", e.message, e));
-                        }
-                        break;
-                    }
-                }
+            let starttime = performance.now();
+            try {
+                modules[i].execute(context);
+            } catch (e) {
+                chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
             }
-            // Preprocess modules
-            for (let i = 0; i < modules.length; i++) {
-                modname = modules[i].name;
-                try {
-                    modules[i].preprocess(context);
-                } catch (e) {
-                    chrome.runtime.sendMessage(new ModuleError(modules[i].name, "preprocess", e.message, e));
-                }
-            }
-            // Execute modules
-            for (let i = 0; i < modules.length; i++) {
-                modname = modules[i].name;
-
-                let starttime = performance.now();
-                try {
-                    modules[i].execute(context);
-                } catch (e) {
-                    chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
-                }
-                let endtime = performance.now();
-                chrome.runtime.sendMessage({
-                    module: modname,
-                    executiontime: endtime - starttime,
-                    url: document.URL
-                });
-            }
-        });
+            let endtime = performance.now();
+            chrome.runtime.sendMessage({
+                module: modname,
+                executiontime: endtime - starttime,
+                url: document.URL
+            });
+        }
     } catch (e) {
         chrome.runtime.sendMessage(new ModuleError(modname, "processPage", e.message, e));
     }
@@ -108,7 +119,6 @@ function executeModules(modules: Array<ExtensionModule>, context: PageContext) {
             try {
                 mod.execute(context);
             } catch (e) {
-                //chrome.runtime.sendMessage({ module: modname, message: e.message, exception: e });
                 chrome.runtime.sendMessage(new ModuleError(modname, "execute", e.message, e));
             }
             let endtime = performance.now();
@@ -139,15 +149,5 @@ function filterModules(modules: Array<ExtensionModule>, context: PageContext): A
 }
 
 // following is not triggered if not on rbkweb (manifest config), so always true
+// used to control the grey vs sharp switch on the toolbar icon
 chrome.runtime.sendMessage({ onRBKweb: true });
-
-// I'm sure we're approaching the point where we no longer need the below
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    if (msg.color) {
-        chrome.runtime.sendMessage({ logMessage: 'Receive color = ' + msg.color });
-        document.body.style.backgroundColor = msg.color;
-        sendResponse('Change color to ' + msg.color);
-    } else {
-        sendResponse('Color message is none.');
-    }
-});
