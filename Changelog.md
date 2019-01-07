@@ -13,6 +13,7 @@ Bugfixes:
 Optimaliseringer:
 
 - Konfigurert CSS injisers tidligere
+- Hele RUSK kjører tidligere i page load syklusen, slik at ting føles (og er!) kjappere.
 
 ## RUSK v0.0.8
 
