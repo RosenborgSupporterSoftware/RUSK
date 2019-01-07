@@ -38,7 +38,7 @@ export class QuickReply implements ExtensionModule {
         'Use HTML': 'Tillat HTML',
         'Use BBcode': 'Bruk BBcode',
         'Use Smileys': 'Bruk smileys',
-        'Attach Signature': 'Inkludr signatur',
+        'Attach Signature': 'Inkludér signatur',
         'Quote Selection': 'Siter musseleksjon',
         'Abort': 'Avbryt',
         'Full Editor': 'Editor',
