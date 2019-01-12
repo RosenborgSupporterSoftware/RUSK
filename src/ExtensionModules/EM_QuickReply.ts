@@ -31,6 +31,8 @@ export class QuickReply implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     i18n_no = {
@@ -215,6 +217,10 @@ export class QuickReply implements ExtensionModule {
                 }.bind(this));
             }
         }.bind(this));
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private getSelPost(): PostInfo {

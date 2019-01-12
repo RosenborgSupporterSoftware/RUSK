@@ -35,6 +35,8 @@ export class ModPostTools implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     posts: Array<PostInfo>;
@@ -57,4 +59,9 @@ export class ModPostTools implements ExtensionModule {
             });
         }.bind(this));
     }
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
+
 }

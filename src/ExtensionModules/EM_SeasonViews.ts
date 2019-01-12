@@ -70,6 +70,8 @@ export class SeasonViews implements ExtensionModule {
         this.cfg = config;
         this.weekday = this.cfg.GetSetting("displayWeekday") as boolean;
         this.colorize = this.cfg.GetSetting("colorizeResult") as boolean;
+
+        return null;
     }
 
     preprocess = async () => {
@@ -124,6 +126,10 @@ export class SeasonViews implements ExtensionModule {
                 });
             }
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private hydrateTemplate(template: string): string {

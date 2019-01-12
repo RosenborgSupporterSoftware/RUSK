@@ -40,6 +40,8 @@ export class RelativeForumWidth implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -50,7 +52,7 @@ export class RelativeForumWidth implements ExtensionModule {
             chrome.runtime.sendMessage({ css: css, from: this.name });
         }.bind(this))();
 
-        // Forum table 
+        // Forum table
         const forumTable = document.querySelectorAll('html > body > table > tbody > tr > td > table')[1] as HTMLTableElement;
         forumTable.setAttribute('width', '100%');
 
@@ -68,6 +70,10 @@ export class RelativeForumWidth implements ExtensionModule {
     };
 
     execute = (context: PageContext) => {
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private hydrateTemplate(template: string): string {

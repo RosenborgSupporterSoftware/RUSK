@@ -54,6 +54,8 @@ export class AlternateSearchEngine implements ExtensionModule {
         this.cfg = config;
         this.useGoogle = this.cfg.GetSetting("UseGoogle") as boolean;
         this.useDuckDuckGo = this.cfg.GetSetting("UseDuckDuckGo") as boolean;
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -85,5 +87,9 @@ export class AlternateSearchEngine implements ExtensionModule {
                 window.location.href = 'https://www.google.com/search?q='+encodeURIComponent(keywords.value)+'+site:rbkweb.no';
             }.bind(this));
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 }

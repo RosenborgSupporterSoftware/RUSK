@@ -1,6 +1,7 @@
 const COLOR_PROPER_REGEX = /^#[0-9A-Fa-f]{6}$/;
 const COLOR_NOHASH_REGEX = /^[0-9A-Fa-f]{6}$/;
 const COLOR_SHORT_REGEX = /^#?([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$/;
+const FALLBACK_COLOR = '#FF69B4'; // Oh, cruelty!
 
 export class ColorChecker {
 
@@ -27,15 +28,21 @@ export class ColorChecker {
     public static GetBestColorOption(originalColor: string, fallback: string): string {
         if (this.CheckColorFormat(originalColor)) return originalColor;
 
+        if (originalColor == null || originalColor.length == 0) return this.GetBestColorOption(fallback, FALLBACK_COLOR);
+
         if (originalColor.match(COLOR_NOHASH_REGEX)) return "#" + originalColor;
 
         if (originalColor.match(COLOR_SHORT_REGEX)) return this.LongColorFromShort(originalColor);
 
         // Sorry, originalColor can't be used. We go with the fallback, or our default.
 
-        return this.GetBestColorOption(fallback, "#FF69B4"); // Oh, cruelty!
+        return this.GetBestColorOption(fallback, FALLBACK_COLOR);
     }
 
+    /**
+     * Converts a color from short to proper long format
+     * @param shortColor - The short color format input
+     */
     public static LongColorFromShort(shortColor: string): string {
         let match = shortColor.match(COLOR_SHORT_REGEX);
         let a = match[1];

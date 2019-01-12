@@ -1,0 +1,23 @@
+.RUSKItem.RUSKReadItem.RUSKEvenRowItem td {
+    background-color: $RUSKReadItemEven$ !important;
+}
+
+.RUSKItem.RUSKReadItem.RUSKOddRowItem td {
+    background-color: $RUSKReadItemOdd$ !important;
+}
+
+.RUSKItem.RUSKUnreadItem.RUSKEvenRowItem td {
+    background-color: $RUSKUnreadItemEven$ !important;
+}
+
+.RUSKItem.RUSKUnreadItem.RUSKOddRowItem td {
+    background-color: $RUSKUnreadItemOdd$ !important;
+}
+
+.RUSKItem.RUSKUnreadItem.RUSKSelectedItem td {
+    background-color: $RUSKSelectedUnread$ !important;
+}
+
+.RUSKItem.RUSKReadItem.RUSKSelectedItem td {
+    background-color: $RUSKSelectedRead$ !important;
+}

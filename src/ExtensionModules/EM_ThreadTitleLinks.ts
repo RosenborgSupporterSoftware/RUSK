@@ -29,6 +29,8 @@ export class ThreadTitleLinks implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = () => {
@@ -47,4 +49,9 @@ export class ThreadTitleLinks implements ExtensionModule {
             }
         }.bind(this));
     }
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
+
 };

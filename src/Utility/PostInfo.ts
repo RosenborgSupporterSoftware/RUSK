@@ -34,6 +34,10 @@ export class PostInfo implements IRUSKPageItem {
 
     isHidden: boolean;
 
+    get lastUpdate(): Date {
+        return this.postedDate;
+    }
+
     // IRUSKPageItem end
 
     /** The row element from the DOM */

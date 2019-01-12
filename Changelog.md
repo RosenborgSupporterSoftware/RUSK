@@ -2,6 +2,11 @@
 
 ## RUSK future
 
+Nye funksjoner:
+
+- Lagt til noen nye hurtigtaster - f.eks Ctrl-| (pipe) for å gå til forumforsiden.
+- Skilt fargelegging og tastaturnavigasjon i separate moduler.
+
 Bugfixes:
 
 - Fikset problem med at media-linker ikke ble embeddet i noen tilfeller.

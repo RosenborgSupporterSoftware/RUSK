@@ -112,6 +112,8 @@ export class EnhancePosting implements ExtensionModule {
             if (obj.titles) this.topicTitles = obj.titles as Array<string>;
             else this.topicTitles = new Array<string>();
         }
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -146,6 +148,10 @@ export class EnhancePosting implements ExtensionModule {
             this.setupTitle();
         }
     };
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
 
     private setupHotkeys(): void {
         document.addEventListener("keyup", (ev) => {

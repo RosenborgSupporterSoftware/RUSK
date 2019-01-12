@@ -33,6 +33,8 @@ export class Usertips implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = () => {
@@ -62,6 +64,10 @@ export class Usertips implements ExtensionModule {
         var contentrow = tabell.insertRow(-1);
         var contentcell = contentrow.insertCell(0);
         contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">" + userTip + "</font>";
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private async getUserTip(): Promise<string> {

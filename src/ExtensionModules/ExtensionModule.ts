@@ -2,6 +2,7 @@ import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { PageContext } from "../Context/PageContext";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { RUSKUI } from "../UI/RUSKUI";
 
 /**
  * Represents a module that adds some kind of functionality to RBKweb.
@@ -48,13 +49,18 @@ export interface ExtensionModule {
     /**
      * Called when RUSK wants an ExtensionModule to initialize itself with a new configuration
      * @param config - The ModuleConfiguration for this ExtensionModule
+     * @returns A RUSKUI object containing UI modifications, or null if none are desired
      */
-    init(config: ModuleConfiguration): void;
+    init(config: ModuleConfiguration): RUSKUI;
 
     /**
      * Called when RUSK wants the module to preprocess the current page
      */
     preprocess(context: PageContext): void;
 
-    // TODO: Metode for å gi fra seg config til rammeverket
+    /**
+     * Called when RUSK needs to invoke a command on the ExtensionModule. Initially used for hotkeys, can be used for anything.
+     * @param command - The name of the command to invoke
+     */
+    invoke(command: string): boolean;
 }

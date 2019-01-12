@@ -3,6 +3,10 @@ import { ConfigurationOptionVisibility } from "./ConfigurationOptionVisibility";
 import { ModuleConfiguration } from "./ModuleConfiguration";
 import { ConfigSetting, ConfigurationSetting } from "./ConfigurationSetting";
 import { Log } from "../Utility/Log";
+import { KeyCombo } from "../Utility/KeyCombo";
+import { RBKwebPageType } from "../Context/RBKwebPageType";
+import { HotkeyAction } from "../Utility/HotkeyAction";
+import { HotkeySetting } from "./HotkeySetting";
 
 /**
  * ConfigBuilder is a fluent interface for defining the configuration options used by an ExtensionModule.
@@ -15,6 +19,7 @@ export class ConfigBuilder {
     defaultEnabled: boolean = true;
     defaultVisible: boolean = true;
     configOptions: Array<ConfigOptionBuilder> = [];
+    hotkeys: Array<HotkeyOptionBuilder> = [];
 
     /** A method used to define the configuration needed for an ExtensionModule */
     public static Define(): ConfigBuilder {
@@ -42,7 +47,14 @@ export class ConfigBuilder {
                     break;
             }
         });
-        return new ModuleConfiguration(this.name, this.displayName, this.description, this.defaultEnabled, this.defaultVisible, settings);
+
+        let hotkeys = new Array<HotkeySetting>();
+
+        this.hotkeys.forEach(hk => {
+            hotkeys.push(new HotkeySetting(hk.name, hk.label, hk.hotkeys, hk.validPages, hk.visibility));
+        });
+
+        return new ModuleConfiguration(this.name, this.displayName, this.description, this.defaultEnabled, this.defaultVisible, settings, hotkeys);
     }
 
     private createTextOption(opt: ConfigOptionBuilder): ConfigurationSetting<string> {
@@ -121,10 +133,66 @@ export class ConfigBuilder {
         return this;
     }
 
+    /** Adds a config option (setting) to the configSpec */
     public WithConfigOption(callback: (opt: ConfigOptionBuilder) => ConfigOptionBuilder): ConfigBuilder {
         this.configOptions.push(callback(new ConfigOptionBuilder()));
         return this;
     }
+
+    /** Adds a hotkey to the configSpec */
+    public WithHotkey(callback: (opt: HotkeyOptionBuilder) => HotkeyOptionBuilder): ConfigBuilder {
+        this.hotkeys.push(callback(new HotkeyOptionBuilder()));
+        return this;
+    }
+}
+
+export class HotkeyOptionBuilder {
+
+    name: string;
+    label: string;
+    hotkeys: Array<KeyCombo> = [];
+    validPages: Array<RBKwebPageType> = [];
+    visibility: ConfigurationOptionVisibility = ConfigurationOptionVisibility.Always;
+
+    /** Set the name of the hotkey, called with invoke() against the ExtMod */
+    public WithHotkeyName(hotkeyName: string): HotkeyOptionBuilder {
+        this.name = hotkeyName;
+        return this;
+    }
+
+    /** Set the label of the hotkey, displayed in the settings UI */
+    public WithLabel(label: string): HotkeyOptionBuilder {
+        this.label = label;
+        return this;
+    }
+
+    /** Define the keyboard combinations used to trigger this hotkey */
+    public WithKeyCombos(combos: Array<string>): HotkeyOptionBuilder {
+        if (combos == null) return this;
+
+        combos.forEach(hk => {
+            this.hotkeys.push(KeyCombo.FromString(hk));
+        });
+        return this;
+    }
+
+    /** Defines which page types this particular hotkey will run on */
+    public WithPageTypes(pageTypes: Array<RBKwebPageType>): HotkeyOptionBuilder {
+        if (pageTypes == null) return this;
+
+        pageTypes.forEach(pt => {
+            this.validPages.push(pt);
+        });
+
+        return this;
+    }
+
+    /** Sets the visibility of this hotkey */
+    public WithVisibility(visibility: ConfigurationOptionVisibility): HotkeyOptionBuilder {
+        this.visibility = visibility;
+        return this;
+    }
+
 }
 
 /**

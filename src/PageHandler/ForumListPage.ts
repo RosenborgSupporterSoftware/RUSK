@@ -1,5 +1,6 @@
 import { ForumInfo } from "../Utility/ForumInfo";
 import { RUSKPage } from "./RUSKPage";
+import { IRUSKPageItem } from "./IRUSKPageItem";
 
 /**
  * IRUSKPage implementation for forum lists
@@ -21,4 +22,12 @@ export class ForumListPage extends RUSKPage {
         // Gir ingen mening når man står på forumlista
         // FIXME: Kan allikevel gjøre det om man står på de "underlistene" med forumseksjoner.
     }
+
+    GoToNextPage(): void {
+        // No-op
+    }
+    GoToPreviousPage(): void {
+        // No-op
+    }
+
 }

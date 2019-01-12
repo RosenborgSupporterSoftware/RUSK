@@ -6,6 +6,9 @@ import { ChromeSyncStorage } from './Configuration/ChromeSyncStorage';
 import { IConfigurationStorage } from './Configuration/IConfigurationStorage';
 import { ModuleError } from './Errors/ModuleError';
 import { ModuleConfiguration } from './Configuration/ModuleConfiguration';
+import { HotkeyManager } from './Utility/HotkeyManager';
+import { RUSKUI } from './UI/RUSKUI';
+import { HotkeyAction } from './Utility/HotkeyAction';
 
 var state = {
     configured: false,
@@ -22,6 +25,9 @@ document.addEventListener('readystatechange', function(ev) {
 let storage = new ChromeSyncStorage() as IConfigurationStorage;
 let context = new PageContext();
 let modules = filterModules(moduleLoader("notyet"), context);
+
+HotkeyManager.Instance.SetPageType(context.PageType);
+HotkeyManager.Instance.SetModules(modules);
 
 chrome.runtime.sendMessage({ init_css: modules.map(module => module.name) });
 
@@ -45,13 +51,17 @@ function stateChanged(state: any): void {
 function initPage(modules: Array<ExtensionModule>, context: PageContext): void {
     // Init modules
     let modulenames = modules.map(module => module.name);
+    let uimods = new Array<RUSKUI>();
     chrome.runtime.sendMessage({ getConfigFor: modulenames }, configs => {
         for (let i = 0; i < modules.length; i++) {
             for (let j = 0; j < configs.length; j++) {
                 if (configs[j].moduleName == modules[i].name) {
                     try {
                         let realConf = ModuleConfiguration.FromStorageObject(configs[j], modules[i]);
-                        modules[i].init(realConf);
+                        let ui = modules[i].init(realConf);
+                        if (ui != null) {
+                            uimods.push(ui);
+                        }
                     } catch (e) {
                         chrome.runtime.sendMessage(new ModuleError(modules[i].name, "init", e.message, e));
                     }
@@ -61,6 +71,7 @@ function initPage(modules: Array<ExtensionModule>, context: PageContext): void {
         }
         state.configured = true;
         stateChanged(state);
+        installUIMods(uimods);
     });
 }
 
@@ -145,6 +156,14 @@ function filterModules(modules: Array<ExtensionModule>, context: PageContext): A
         }
     }
     return filteredModules;
+}
+
+function installUIMods(uimods: Array<RUSKUI>): void {
+    let allHotkeys = new Array<HotkeyAction>();
+    uimods.forEach(mod => {
+        mod.Hotkeys.forEach(hk => allHotkeys.push(hk));
+    });
+    HotkeyManager.Instance.AddHotkeys(allHotkeys);
 }
 
 // following is not triggered if not on rbkweb (manifest config), so always true

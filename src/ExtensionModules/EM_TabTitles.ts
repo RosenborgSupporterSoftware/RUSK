@@ -29,6 +29,8 @@ export class TabTitles implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = () => {
@@ -56,4 +58,9 @@ export class TabTitles implements ExtensionModule {
                 titleelt.textContent = title.substring(title.indexOf(" - ") + 3);
         }
     }
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
+
 };

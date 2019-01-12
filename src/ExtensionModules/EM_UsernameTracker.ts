@@ -54,6 +54,8 @@ export class UsernameTracker implements ExtensionModule {
         } catch (e) {
             console.error(this.name + " init failed: " + e.message);
         }
+
+        return null;
     }
 
     posts: Array<PostInfo>;
@@ -105,6 +107,10 @@ export class UsernameTracker implements ExtensionModule {
         } catch (e) {
             console.error("exception: " + e.message + " - " + e.stack);
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private storeKnownUsernames(): void {

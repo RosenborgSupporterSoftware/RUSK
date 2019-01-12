@@ -8,4 +8,5 @@ export interface IRUSKPageItem {
     isUnread: boolean;
     isHidden: boolean;
     url: string;
+    lastUpdate: Date;
 }

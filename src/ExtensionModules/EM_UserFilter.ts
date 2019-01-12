@@ -84,6 +84,8 @@ export class UserFilter implements ExtensionModule {
         } catch (e) {
             console.log("init exception: " + e.message);
         }
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -183,6 +185,10 @@ export class UserFilter implements ExtensionModule {
 
         }.bind(this));
 
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private getForumTrollConfig(): Set<number> {

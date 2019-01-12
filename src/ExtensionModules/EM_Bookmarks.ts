@@ -83,6 +83,8 @@ export class Bookmarks implements ExtensionModule {
         this.bookmarkedPosts = JSON.parse(this.cfg.GetSetting("bookmarkedPosts") as string);
         this.accountNames = JSON.parse(this.cfg.GetSetting('accountNames') as string);
         this.threadNames = JSON.parse(this.cfg.GetSetting('threadNames') as string);
+
+        return null;
     }
 
     i18n_no = {
@@ -248,6 +250,10 @@ export class Bookmarks implements ExtensionModule {
         } catch (e) {
             console.error("execute error: " + e.message + " - " + e.stack);
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private addBookmarksHeader(contentTag: HTMLTableElement): void {

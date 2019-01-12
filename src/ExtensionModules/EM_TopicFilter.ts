@@ -52,6 +52,8 @@ export class TopicFilter implements ExtensionModule {
         this.cfg = config;
         var cfgstring = this.cfg.GetSetting("hideThreads") as string;
         this.hideThreads = JSON.parse(cfgstring || "[]");
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -189,6 +191,10 @@ export class TopicFilter implements ExtensionModule {
                 this.topmenu.getAction(this.tr(this.SHOW_THREADS)).show();
             }
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private saveHideThreads(): void {

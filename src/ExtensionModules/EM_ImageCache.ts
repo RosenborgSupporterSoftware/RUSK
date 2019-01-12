@@ -29,6 +29,8 @@ export class ImageCache implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = () => {
@@ -139,6 +141,11 @@ export class ImageCache implements ExtensionModule {
             }
         }
     }
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
+
 };
 
 

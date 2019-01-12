@@ -31,6 +31,8 @@ export class Empowerment implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -77,6 +79,11 @@ export class Empowerment implements ExtensionModule {
             }
         }
     }
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
+
 };
 
 

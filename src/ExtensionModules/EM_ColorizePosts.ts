@@ -103,6 +103,8 @@ export class ColorizePosts implements ExtensionModule {
         this._readColorOdd = this.cfg.GetSetting("ReadColorOdd") as string;
         this._selectedRead = this.cfg.GetSetting("SelectedItemColor") as string;
         this._selectedUnread = this.cfg.GetSetting("SelectedUnreadItemColor") as string;
+
+        return null;
     }
 
     preprocess = async () => {
@@ -121,6 +123,10 @@ export class ColorizePosts implements ExtensionModule {
 
         this.determineSelectedItem(this.allPosts);
         this.setupHotkeys();
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private setupHotkeys(): void {

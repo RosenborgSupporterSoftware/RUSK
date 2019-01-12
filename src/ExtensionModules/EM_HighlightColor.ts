@@ -39,6 +39,8 @@ export class HighlightColor implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = async () => {
@@ -55,6 +57,10 @@ export class HighlightColor implements ExtensionModule {
             elt.classList.add("RUSKHighlightColor");
         }.bind(this));
     };
+
+    invoke = function (cmd: string): boolean {
+        return false;
+    }
 
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];

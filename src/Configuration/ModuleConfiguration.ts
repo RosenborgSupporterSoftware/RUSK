@@ -1,6 +1,7 @@
 import { ConfigSetting, settingValueTypes } from "./ConfigurationSetting";
 import { ExtensionModule } from "../ExtensionModules/ExtensionModule";
 import { ColorChecker } from "../Utility/ColorChecker";
+import { HotkeySetting } from "./HotkeySetting";
 
 /**
  * ModuleConfiguration contains configuration for a single ExtensionModule
@@ -34,6 +35,8 @@ export class ModuleConfiguration {
 
     public settings: Array<ConfigSetting>;
 
+    public hotkeys: Array<HotkeySetting>;
+
     /**
      * Creates a ModuleConfiguration instance with settings for an ExtensionModule
      * @param name - The name of the ExtensionModule this ModuleConfiguration belongs to
@@ -42,14 +45,16 @@ export class ModuleConfiguration {
      * @param enabled - A value indicating if the module is enabled
      * @param visible - A value indicating if the module should be visible in the config UI
      * @param settings - An array of settings belonging to the ExtensionModule
+     * @param hotkeys - An array of hotkey definitions belonging to the ExtensionModule
      */
-    public constructor(name: string, displayName: string, desc: string, enabled: boolean, visible: boolean, settings: Array<ConfigSetting>) {
+    public constructor(name: string, displayName: string, desc: string, enabled: boolean, visible: boolean, settings: Array<ConfigSetting>, hotkeys: Array<HotkeySetting>) {
         this.moduleName = name;
         this.displayName = displayName;
         this.moduleDescription = desc;
         this.moduleEnabled = enabled;
         this.moduleVisible = visible;
         this.settings = settings;
+        this.hotkeys = hotkeys;
     }
 
     /**
@@ -60,7 +65,9 @@ export class ModuleConfiguration {
      */
     public static FromStorageObject(obj: any, module: ExtensionModule): ModuleConfiguration {
         let modConf = module.configSpec();
-        if (obj && obj.settings) {
+        if (obj == null) return modConf;
+
+        if (obj.settings) {
             for (let i = 0; i < obj.settings.length; i++) {
                 let setting = obj.settings[i];
                 if (setting.visability) {
@@ -83,6 +90,20 @@ export class ModuleConfiguration {
                 }
             }
         }
+        if (obj.hotkeys) {
+            obj.hotkeys.forEach(hk => {
+                if (modConf.doesHotkeyExist(hk.name)) {
+                    let neo = HotkeySetting.FromStorageObject(hk);
+                    modConf.hotkeys.forEach(origHotkey => {
+                        if (origHotkey.name == hk.name) {
+                            modConf.hotkeys[modConf.hotkeys.indexOf(origHotkey)] = neo;
+                        }
+                    })
+                } else {
+                    modConf.SetDirtyState(true);
+                }
+            });
+        }
         return modConf;
     }
 
@@ -99,6 +120,14 @@ export class ModuleConfiguration {
             if (this.settings[i].setting == setting) return true;
         }
         return false;
+    }
+
+    private doesHotkeyExist(hotkey: string): boolean {
+        let exists = false;
+        this.hotkeys.forEach(hk => {
+            if (hk.name == hotkey) exists = true;
+        });
+        return exists;
     }
 
     // /** Sets the given RUSKConfig object as the parent/owner of this ModuleConfiguration */
@@ -168,6 +197,10 @@ export class ModuleConfiguration {
         for(let i=0; i<this.settings.length; i++) {
             settings.push(this.settings[i].ToStorageObject());
         }
+        let hotkeys = [];
+        this.hotkeys.forEach(hk => {
+            hotkeys.push(hk.ToStorageObject());
+        });
 
         return {
             moduleName: this.moduleName,
@@ -175,7 +208,8 @@ export class ModuleConfiguration {
             displayName: this.displayName,
             enabled: this.moduleEnabled,
             visible: this.moduleVisible,
-            settings
+            settings,
+            hotkeys
         };
     }
 

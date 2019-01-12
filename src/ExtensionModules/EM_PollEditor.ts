@@ -51,6 +51,8 @@ export class PollEditor implements ExtensionModule {
         this.cfg = config;
         var pollscfg = this.cfg.GetSetting("polls") as string;
         this.polls = JSON.parse(pollscfg);
+
+        return null;
     }
 
     preprocess = () => {
@@ -179,6 +181,10 @@ export class PollEditor implements ExtensionModule {
         } catch (e) {
             console.log("exception: " + e.message);
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private storePolls(): void {

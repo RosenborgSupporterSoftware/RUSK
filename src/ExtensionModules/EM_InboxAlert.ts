@@ -49,6 +49,8 @@ export class InboxAlert implements ExtensionModule {
 
     init = (config: ModuleConfiguration) => {
         this.cfg = config;
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -81,6 +83,10 @@ export class InboxAlert implements ExtensionModule {
                     '</div>');
             }
         }
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private hydrateTemplate(template: string): string {

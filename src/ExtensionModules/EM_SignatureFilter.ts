@@ -56,6 +56,8 @@ export class SignatureFilter implements ExtensionModule {
         this.cfg = config;
         this.hideSignatures = this.cfg.GetSetting("HideSignatures") as boolean;
         this.hideUserSignatures = JSON.parse(this.cfg.GetSetting("HideSignatureUsers") as string);
+
+        return null;
     }
 
     posts: Array<PostInfo>;
@@ -158,6 +160,10 @@ export class SignatureFilter implements ExtensionModule {
                 }.bind(this));
             }.bind(this));
         }.bind(this));
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private saveHideUserSignatures(): void {

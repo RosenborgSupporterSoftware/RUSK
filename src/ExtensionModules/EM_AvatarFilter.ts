@@ -55,6 +55,8 @@ export class AvatarFilter implements ExtensionModule {
         this.cfg = config;
         this.hideAvatars = this.cfg.GetSetting("HideAvatars") as boolean;
         this.hideUserAvatars = JSON.parse(this.cfg.GetSetting("HideAvatarUsers") as string);
+
+        return null;
     }
 
     posts: Array<PostInfo>;
@@ -123,6 +125,10 @@ export class AvatarFilter implements ExtensionModule {
                 }.bind(this));
             }
         }.bind(this));
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private saveHideUserAvatars(): void {

@@ -129,6 +129,8 @@ export class MediaEmbedder implements ExtensionModule {
         this.embedMp4 = this.cfg.GetSetting("EmbedMP4") as boolean;
         this.embedWebm = this.cfg.GetSetting("EmbedWebm") as boolean;
         //this.embedM3U8 = this.cfg.GetSetting("EmbedM3U8") as boolean;
+
+        return null;
     }
 
     preprocess = (context: PageContext) => {
@@ -220,7 +222,7 @@ export class MediaEmbedder implements ExtensionModule {
                             }
                         }
                         else if (this.embedInstagram &&
-                                 (href.match(/https?:\/\/(www\.)?instagram\.com\/.*$/i) || 
+                                 (href.match(/https?:\/\/(www\.)?instagram\.com\/.*$/i) ||
                                   href.match(/https?:\/\/instagr\.am\/p.*/))) {
                             //console.log("found instagram: " + href);
                             var match = href.match(/https?:\/\/(www\.)?instagram\.com\/p\/([^\/\?#]*).*$/i);
@@ -299,6 +301,10 @@ export class MediaEmbedder implements ExtensionModule {
                 iframe.style.height = height + "px";
             }
         });
+    }
+
+    invoke = function (cmd: string): boolean {
+        return false;
     }
 
     private activateInstagrams(): void {

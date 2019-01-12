@@ -60,29 +60,39 @@ export class ConfigManager {
         let conf = this._moduleConfigs.get(storageKey);
         if (conf != null) return conf;
 
+        // If we don't have a stored config for module, use the default one.
         let mod = this.getModule(modname);
         if (mod != null) {
             console.log('Getting default configuration for module ' + modname);
-            let config = mod.configSpec();
-            this.SetConfigForModule(mod, config);
+            let config = this.SetConfigForModule(mod, null);
             return config;
         }
         console.log('ConfigManager was asked for config for module ' + modname + ' and we failed miserably.');
         return null;
     }
 
-    public SetConfigForModule(module: string | ExtensionModule, config: ModuleConfiguration) {
+    public SetConfigForModule(module: string | ExtensionModule, config: ModuleConfiguration): ModuleConfiguration {
         let modname = (typeof module == "string") ?
             module :
             module.name;
+        let extmod = (typeof module == "string") ?
+            this.getModule(module) :
+            module;
         let storageKey = this._moduleConfPrefix + modname;
-        let modConf = ModuleConfiguration.FromStorageObject(config, this.getModule(modname));
-        this._moduleConfigs.set(storageKey, modConf);
 
-        chrome.storage.sync.set({ [storageKey]: modConf.ToStorageObject() }, () => {
-            modConf.SetDirtyState(false);
+        if (config == null) {
+            config = extmod.configSpec();
+        } else {
+            config = ModuleConfiguration.FromStorageObject(config, extmod);
+        }
+        this._moduleConfigs.set(storageKey, config);
+
+        chrome.storage.sync.set({ [storageKey]: config.ToStorageObject() }, () => {
+            config.SetDirtyState(false);
             console.log('Configuration for ' + modname + ' stored in sync storage under key ' + storageKey);
         });
+
+        return config;
     }
 
     /**
