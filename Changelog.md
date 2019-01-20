@@ -1,5 +1,11 @@
 # Changelog for RUSK
 
+## RUSK future
+
+Bugfixes:
+
+- Fikset problem med at media-linker ikke ble embeddet i noen tilfeller.
+
 ## RUSK v0.0.9
 
 Nye funksjoner:
