@@ -39,7 +39,7 @@ storage.GetConfiguration(config => {
 
 function stateChanged(state: any): void {
     if (!state.configured || !state.pageReady) return;
-    processPage(modules, context); 
+    processPage(modules, context);
 }
 
 function initPage(modules: Array<ExtensionModule>, context: PageContext): void {
@@ -140,7 +140,7 @@ function executeModules(modules: Array<ExtensionModule>, context: PageContext) {
 function filterModules(modules: Array<ExtensionModule>, context: PageContext): Array<ExtensionModule> {
     let filteredModules = new Array<ExtensionModule>();
     for (let i = 0; i < modules.length; i++) {
-        if (PageTypeClassifier.ShouldRunOnPage(modules[i], context.PageType)) {
+        if (PageTypeClassifier.ShouldRunOnPage(modules[i].pageTypesToRunOn, context.PageType)) {
             filteredModules.push(modules[i]);
         }
     }

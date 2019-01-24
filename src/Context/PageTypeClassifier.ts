@@ -12,24 +12,24 @@ export class PageTypeClassifier {
      * @param module - The ExtensionModule object to test
      * @param pageType - The RBKwebPageType we're currently on
      */
-    public static ShouldRunOnPage(module: ExtensionModule, pageType: RBKwebPageType): boolean {
+    public static ShouldRunOnPage(acceptablePages: Array<RBKwebPageType>, pageType: RBKwebPageType): boolean {
 
-        if(module.pageTypesToRunOn.indexOf(RBKwebPageType.RBKweb_ALL) >= 0) {
+        if(acceptablePages.indexOf(RBKwebPageType.RBKweb_ALL) >= 0) {
             // Vi er happy på alle sider
             return true;
         }
 
-        if(module.pageTypesToRunOn.indexOf(RBKwebPageType.RBKweb_FORUM_ALL) >= 0) {
+        if(acceptablePages.indexOf(RBKwebPageType.RBKweb_FORUM_ALL) >= 0) {
             // Alle forumsider!
             if(pageType > RBKwebPageType.RBKweb_FORUM_START && pageType < RBKwebPageType.RBKweb_FORUM_END) {
                 return true;
             }
         }
 
-        if(module.pageTypesToRunOn.indexOf(pageType) >= 0) {
+        if(acceptablePages.indexOf(pageType) >= 0) {
             return true;
         }
-        
+
         return false;
     }
 }
