@@ -41,74 +41,120 @@ export class PostInfo implements IRUSKPageItem {
     // IRUSKPageItem end
 
     /** The row element from the DOM */
-    readonly rowElement: HTMLTableRowElement;
+    private readonly _rowElement: HTMLTableRowElement;
+    public get rowElement(): HTMLTableRowElement {
+        return this._rowElement;
+    }
 
     /** The subsequent rown with buttons/actions from the DOM */
-    readonly buttonRowElement: HTMLTableRowElement;
+    private readonly _buttonRowElement: HTMLTableRowElement;
+    public get buttonRowElement(): HTMLTableRowElement {
+        return this._buttonRowElement;
+    }
 
     /** The title of the post (if any) */
-    readonly postTitle: string;
+    private _postTitle: string;
+    public get postTitle(): string {
+        return this._postTitle || (this._postTitle = this.getTitle());
+    }
 
     /** Whether or not the post is unread */
-    readonly isUnread: boolean;
+    private _isUnread: boolean;
+    public get isUnread(): boolean {
+        return this._isUnread;
+    }
+    public set isUnread(newState: boolean) {
+        this._isUnread = newState;  // TODO: Tenk gjennom om dette er riktig approach når vi skal merke besøkte items som read
+    }
 
     /** The url of the post */
-    readonly baseUrl: string;
+    private _baseUrl: string;
+    public get baseUrl(): string {
+        return this._baseUrl || (this._baseUrl = this.getPostUrl());
+    }
 
-    readonly quoteUrl: string;
+    private _quoteUrl: string;
+    public get quoteUrl(): string {
+        return this._quoteUrl || (this._quoteUrl = this.getQuoteUrl());
+    }
 
-    readonly editUrl: string;
+    private _editUrl: string;
+    public get editUrl(): string {
+        return this._editUrl || (this._editUrl = this.getEditUrl());
+    }
 
-    readonly deleteUrl: string;
+    private _deleteUrl: string;
+    public get deleteUrl(): string {
+        return this._deleteUrl || (this._deleteUrl = this.getDeleteUrl());
+    }
 
-    readonly ipInfoUrl: string;
+    private _ipInfoUrl: string;
+    public get ipInfoUrl(): string {
+        return this._ipInfoUrl || (this._ipInfoUrl = this.getIpInfoUrl());
+    }
 
-    readonly postid: number;
+    private _postid: number;
+    public get postid(): number {
+        return this._postid || (this._postid = this.getPostId());
+    }
 
-    readonly postedDate: Date;
+    private _postedDate: Date;
+    public get postedDate(): Date {
+        return this._postedDate || (this._postedDate = this.getPostedDate());
+    }
 
-    readonly posterNickname: string;
+    private _posterNickname: string;
+    public get posterNickname(): string {
+        return this._posterNickname || (this._posterNickname = this.getPosterNickname());
+    }
 
-    readonly posterid: number;
+    private _posterId: number;
+    public get posterid(): number {
+        return this._posterId || (this._posterId = this.getPosterId());
+    }
 
-    readonly posterLevel: string;
+    private _posterLevel: string;
+    public get posterLevel(): string {
+        return this._posterLevel || (this._posterLevel = this.getPosterLevel());
+    }
 
-    readonly postTextBody: string;
+    private _postTextBody: string;
+    public get postTextBody(): string {
+        return this._postTextBody || (this._postTextBody = this.getPostTextBody());
+    }
 
-    readonly postBodyElement: HTMLTableDataCellElement;
+    private _postBodyElement: HTMLTableDataCellElement;
+    public get postBodyElement(): HTMLTableDataCellElement {
+        return this._postBodyElement || (this._postBodyElement = this.getPostBodyElement());
+    }
 
-    readonly posterRegistered: Date;
+    private _posterRegistered: Date;
+    public get posterRegistered(): Date {
+        return this._posterRegistered || (this._posterRegistered = this.getPosterRegistered());
+    }
 
-    readonly posterPosts: number;
+    private _posterPosts: number;
+    public get posterPosts(): number {
+        return this._posterPosts || (this._posterPosts = this.getPosterPosts());
+    }
 
-    readonly posterLocation: string;
+    private _posterLocation: string;
+    public get posterLocation(): string {
+        return this._posterLocation || (this._posterLocation = this.getPosterLocation());
+    }
 
-    readonly threadId: number;
+    private _threadId: number;
+    public get threadId(): number {
+        return this._threadId || (this._threadId = this.getThreadId());
+    }
 
     /** Create a new PostInfo object based on parsing of a passed HTMLTableRowElement */
     constructor(row: HTMLTableRowElement) {
-        this.rowElement = row;
-        this.buttonRowElement = row.nextElementSibling as HTMLTableRowElement;
+        this._rowElement = row;
+        this._buttonRowElement = row.nextElementSibling as HTMLTableRowElement;
 
         try {
-            this.postTitle = this.getTitle(row);
-            this.isUnread = this.getUnreadState(row);
-            this.baseUrl = this.getPostUrl(row);
-            this.quoteUrl = this.getQuoteUrl(row);
-            this.editUrl = this.getEditUrl(row);
-            this.deleteUrl = this.getDeleteUrl(row);
-            this.ipInfoUrl = this.getIpInfoUrl(row);
-            this.postid = this.getPostId(row);
-            this.postedDate = this.getPostedDate(row);
-            this.posterNickname = this.getPosterNickname(row);
-            this.posterid = this.getPosterId(row);
-            this.posterLevel = this.getPosterLevel(row);
-            this.postTextBody = this.getPostTextBody(row);
-            this.postBodyElement = this.getPostBodyElement(row);
-            this.posterRegistered = this.getPosterRegistered(row);
-            this.posterPosts = this.getPosterPosts(row);
-            this.posterLocation = this.getPosterLocation(row);
-            this.threadId = this.getThreadId(row);
+            this.isUnread = this.getUnreadState();
         } catch (e) {
             Log.Error("PostInfo exception " + e.message + " - " + e.stack);
         }
@@ -116,7 +162,7 @@ export class PostInfo implements IRUSKPageItem {
 
     public getContextMenu(): ContextMenu {
         try {
-            var menu = new ContextMenu(this.rowElement, "post");
+            var menu = new ContextMenu(this._rowElement, "post");
             return menu;
         } catch (e) {
             console.error("exception: " + e.message);
@@ -124,71 +170,71 @@ export class PostInfo implements IRUSKPageItem {
         return null;
     }
 
-    private getTitle(row: HTMLTableRowElement): string {
-        let textContent = row.querySelector('td:nth-child(2) table tbody tr td span.postdetails').textContent;
+    private getTitle(): string {
+        let textContent = this._rowElement.querySelector('td:nth-child(2) table tbody tr td span.postdetails').textContent;
         if (textContent == null) return "";
         return textContent.match(/^.*(Post subject|Tittel): (.*)$/)[2];
     }
 
-    private getUnreadState(row: HTMLTableRowElement): boolean {
-        let image = (row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(1) > a > img') as HTMLImageElement);
+    private getUnreadState(): boolean {
+        let image = (this._rowElement.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(1) > a > img') as HTMLImageElement);
         if (image == null) return false;
         return (image.alt == "Nytt innlegg" || image.alt == "New post");
     }
 
-    private getPostUrl(row: HTMLTableRowElement): string {
-        let link = (row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(1) > a') as HTMLAnchorElement);
+    private getPostUrl(): string {
+        let link = (this._rowElement.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(1) > a') as HTMLAnchorElement);
         return link == null ? "" : link.href;
     }
 
-    private getQuoteUrl(row: HTMLTableRowElement): string {
-        let image = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_quote.gif"]') as HTMLImageElement;
+    private getQuoteUrl(): string {
+        let image = this._rowElement.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_quote.gif"]') as HTMLImageElement;
         if (image == null) return "";
         let link = image.parentElement as HTMLAnchorElement;
         if (link == null) return "";
         return link.href;
     }
 
-    private getEditUrl(row: HTMLTableRowElement): string {
-        let image = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_edit.gif"]') as HTMLImageElement;
+    private getEditUrl(): string {
+        let image = this._rowElement.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_edit.gif"]') as HTMLImageElement;
         if (image == null) return "";
         let link = image.parentElement as HTMLAnchorElement;
         if (link == null) return "";
         return link.href;
     }
 
-    private getDeleteUrl(row: HTMLTableRowElement): string {
-        let image = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_delete.gif"]') as HTMLImageElement;
+    private getDeleteUrl(): string {
+        let image = this._rowElement.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_delete.gif"]') as HTMLImageElement;
         if (image == null) return "";
         let link = image.parentElement as HTMLAnchorElement;
         if (link == null) return "";
         return link.href;
     }
 
-    private getIpInfoUrl(row: HTMLTableRowElement): string {
-        let image = row.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_ip.gif"]') as HTMLImageElement;
+    private getIpInfoUrl(): string {
+        let image = this._rowElement.querySelector('td:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(2) > a > img[src$="icon_ip.gif"]') as HTMLImageElement;
         if (image == null) return "";
         let link = image.parentElement as HTMLAnchorElement;
         if (link == null) return "";
         return link.href;
     }
 
-    private getPostId(row: HTMLTableRowElement): number {
-        let bnode = row.querySelector('td span.name a');
+    private getPostId(): number {
+        let bnode = this._rowElement.querySelector('td span.name a');
         return +bnode.getAttribute("name");
     }
 
-    private getPostedDate(row: HTMLTableRowElement): Date {
-        let text = row.querySelector('td > table > tbody > tr > td > span.postdetails').textContent;
+    private getPostedDate(): Date {
+        let text = this._rowElement.querySelector('td > table > tbody > tr > td > span.postdetails').textContent;
         let dateInfo = text.match(/(Posted|Skrevet): (\d{2})\.(\d{2}).(\d{4}) (\d{2}):(\d{2})/);
         return new Date(+dateInfo[4], +dateInfo[3] - 1, +dateInfo[2], +dateInfo[5], +dateInfo[6]);
     }
 
-    private getPosterNickname(row: HTMLTableRowElement): string {
-        return row.querySelector('td span.name b').textContent;
+    private getPosterNickname(): string {
+        return this._rowElement.querySelector('td span.name b').textContent;
     }
 
-    private getPosterId(row: HTMLTableRowElement): number {
+    private getPosterId(): number {
         let profileAnchor = this.buttonRowElement.querySelector('td > table > tbody > tr > td > a:first-child') as HTMLAnchorElement;
         if (profileAnchor) {
             let match = profileAnchor.href.match(/.*\/profile\.php\?mode=viewprofile&u=(\d+)$/);
@@ -197,32 +243,32 @@ export class PostInfo implements IRUSKPageItem {
         return -1; // "Guest" (deleted account)
     }
 
-    private getPosterLevel(row: HTMLTableRowElement): string {
-        return row.querySelector('td span.postdetails').childNodes[0].textContent;
+    private getPosterLevel(): string {
+        return this._rowElement.querySelector('td span.postdetails').childNodes[0].textContent;
     }
 
-    private getPostTextBody(row: HTMLTableRowElement): string {
-        return this.getPostBodyElement(row).textContent;
+    private getPostTextBody(): string {
+        return this.getPostBodyElement().textContent;
     }
 
-    private getPostBodyElement(row: HTMLTableRowElement): HTMLTableDataCellElement {
-        var ruler = row.querySelector('tr td hr').closest('tr');
+    private getPostBodyElement(): HTMLTableDataCellElement {
+        var ruler = this._rowElement.querySelector('tr td hr').closest('tr');
         return ruler.nextElementSibling.firstElementChild as HTMLTableDataCellElement; // next row, first (only) cell
     }
 
-    private getPosterRegistered(row: HTMLTableRowElement): Date {
-        let span = row.querySelector('td > span.postdetails') as HTMLSpanElement;
+    private getPosterRegistered(): Date {
+        let span = this._rowElement.querySelector('td > span.postdetails') as HTMLSpanElement;
         for (let i = 0; i < span.childNodes.length; i++) {
             let match = span.childNodes[i].textContent.match(/^(Registrert|Registered): (\d{2})\.(\d{2}).(\d{4})$/);
             if (match) {
-                return new Date(+match[4], +match[3] - 1, +match[2]);
+                return new Date(match[4]+'-'+match[3]+'-'+match[2]);
             }
         }
         return null;
     }
 
-    private getPosterPosts(row: HTMLTableRowElement): number {
-        let span = row.querySelector('td > span.postdetails') as HTMLSpanElement;
+    private getPosterPosts(): number {
+        let span = this._rowElement.querySelector('td > span.postdetails') as HTMLSpanElement;
         for (let i = 0; i < span.childNodes.length; i++) {
             let match = span.childNodes[i].textContent.match(/^(Innlegg|Posts): (\d*)$/);
             if (match) {
@@ -232,8 +278,8 @@ export class PostInfo implements IRUSKPageItem {
         return 0;
     }
 
-    private getPosterLocation(row: HTMLTableRowElement): string {
-        let span = row.querySelector('td > span.postdetails') as HTMLSpanElement;
+    private getPosterLocation(): string {
+        let span = this._rowElement.querySelector('td > span.postdetails') as HTMLSpanElement;
         for (let i = 0; i < span.childNodes.length; i++) {
             let match = span.childNodes[i].textContent.match(/^(Bosted|Location): (.*)$/);
             if (match) {
@@ -243,8 +289,8 @@ export class PostInfo implements IRUSKPageItem {
         return "";
     }
 
-    private getThreadId(row: HTMLTableRowElement): number {
-        var link = row.parentElement.parentElement.parentElement.querySelector('a[href*="posting.php?mode=reply"]') as HTMLAnchorElement;
+    private getThreadId(): number {
+        var link = this._rowElement.parentElement.parentElement.parentElement.querySelector('a[href*="posting.php?mode=reply"]') as HTMLAnchorElement;
         var topicmatch = link.href.match(/.*&t=([0-9]+)/);
         if (topicmatch) return +topicmatch[1];
         return 0;
