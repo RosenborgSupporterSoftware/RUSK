@@ -28,6 +28,12 @@ export class ThreadInfo implements IRUSKPageItem {
         return threads;
     }
 
+    /**
+     * If we're on a "full" thread list, i.e. enter a forum, this is true.
+     * If not, we're on the "newposts" view.
+     */
+    private _isFullThreadList: boolean;
+
     // IRUSKPageItem start
 
     get itemId(): number {
@@ -46,77 +52,165 @@ export class ThreadInfo implements IRUSKPageItem {
     readonly rowElement: HTMLTableRowElement;
 
     /** The id of the thread */
-    readonly threadid: number;
+    private _threadId: number;
+    public get threadid(): number {
+        return this._threadId || (this._threadId = this.getThreadId());
+    }
 
-    // FIXME: add forumid
+    private _forumId: number = -1;
 
+    /** Gets the forum id that the thread belongs to */
+    public get forumId(): number {
+        if (this._forumId == -1) {
+            this._forumId = this.getForumId();
+        }
+        return this._forumId;
+    }
+
+    private _forumName: string;
+
+    /** Gets the name of the forum that the thread belongs to */
+    public get forumName(): string {
+        return this._forumName || (this._forumName = this.getForumName());
+    }
+
+    private _title: string;
+    
     /** The title of the thread */
-    readonly title: string;
+    public get title(): string {
+        return this._title || (this._title = this.getTitle());
+    }
+    
+    private _baseUrl: string;
 
     /** The url of the first page of the thread */
-    readonly baseUrl: string;
+    public get baseUrl(): string {
+        return this._baseUrl || (this._baseUrl = this.getBaseUrl());
+    }
+
+    private _latestPageUrl: string;
 
     /** The url of the last page of the thread */
-    readonly latestPageUrl: string;
+    public get latestPageUrl(): string {
+        return this._latestPageUrl || (this._latestPageUrl = this.getLatestPageUrl());
+    }
+
+    private _lastPostUrl: string;
 
     /** The url of the last post of the thread */
-    readonly lastPostUrl: string;
+    public get lastPostUrl(): string {
+        return this._lastPostUrl || (this._lastPostUrl = this.getLastPostUrl());
+    }
+
+    private _hasParsedUnread = false;
+    private _isUnread: boolean;
 
     /** Gets a value that indicates if the thread contains unread messages */
-    readonly isUnread: boolean;
+    public get isUnread(): boolean {
+        if(!this._hasParsedUnread) {
+            this._isUnread = this.determineUnreadState();
+            this._hasParsedUnread = true;
+        }
+        return this._isUnread;
+    }
+
+    private _threadType: ThreadType;
 
     /** Gets the type of thread */
-    readonly threadType: ThreadType;
+    public get threadType(): ThreadType {
+        return this._threadType || (this._threadType = this.determineThreadType());
+    }
+
+    private _hasParsedLocked: boolean = false;
+    private _isLocked: boolean;
 
     /** Gets a value that indicates if the thread is locked */
-    readonly isLocked: boolean;
+    public get isLocked(): boolean {
+        if(!this._hasParsedLocked) {
+            this._isLocked = this.determineLockedState();
+            this._hasParsedLocked = true;
+        }
+        return this._isLocked;
+    }
+
+    private _threadStarter: string;
 
     /** Gets the name of the user that started the thread */
-    readonly threadStarter: string;
+    public get threadStarter(): string {
+        return this._threadStarter || (this._threadStarter = this.getThreadStarter());
+    }
+
+    private _latestPoster: string;
 
     /** Gets the name of the user that posted to the thread most recently */
-    readonly latestPoster: string;
+    public get latestPoster(): string {
+        return this._latestPoster || (this._latestPoster = this.getLatestPoster());
+    }
+
+    private _replies: number = -1;
 
     /** Gets the number of replies to the thread */
-    readonly replies: number;
+    public get replies(): number {
+        if (this._replies == -1) {
+            this._replies = this.getReplies();
+        }
+        return this._replies;
+    }
 
+    private _views: number;
     /** Gets the number of views the thread has */
-    readonly views: number;
+    public get views(): number {
+        return this._views || (this._views = this.getViews());
+    }
 
+    private _numberOfPages: number = -1;
     /** Gets the number of pages the thread has */
-    readonly numberOfPages: number;
+    public get numberOfPages(): number {
+        if (this._numberOfPages == -1) {
+            this._numberOfPages = this.getNumberOfPages();
+        }
+        return this._numberOfPages;
+    }
+
+    private _lastUpdate: Date;
 
     /** Gets a Date object representing the time when the thread was last updated */
-    readonly lastUpdate: Date;
+    public get lastUpdate(): Date {
+        return this._lastUpdate || (this._lastUpdate = this.getLastUpdate());
+    }
 
     /** Gets a value indicating if the thread contains a poll or not */
     readonly hasPoll: boolean;
 
-    private threadAttributes: ThreadAttributes;
+    private _threadAttributes: ThreadAttributes;
+
+    private get threadAttributes(): ThreadAttributes {
+        if(this._threadAttributes == null) {
+            this._threadAttributes = this.getThreadAttributes();
+        }
+        return this._threadAttributes;
+    }
 
     /** Create a new ThreadInfo object based on parsing of a passed HTMLTableRowElement */
     constructor(row: HTMLTableRowElement, alt: boolean) {
         this.rowElement = row;
+
+        /*
+         * The below is used to differentiate between full forum lists
+         * and the "new posts" view. Either we're in the full thread list
+         * or we're not. 
+         * 
+         * If we're going to support more page types in the future, this
+         * is probably the central mechanism that needs to grow in
+         * complexity to support that.
+        */
+        this._isFullThreadList = (row.querySelectorAll('td').length == 6);
+
         if (!alt) {
             // FIXME: make these work on the alternative topic list views (some might work already)
-            this.threadAttributes = this.getThreadAttributes(row);
-            this.threadStarter = this.getThreadStarter(row);
-            this.latestPoster = this.getLatestPoster(row);
-            this.replies = this.getReplies(row);
-            this.views = this.getViews(row);
 
-            this.numberOfPages = this.getNumberOfPages(row);
-            this.lastUpdate = this.getLastUpdate(row);
-            this.hasPoll = this.determinePollState(row);
+            this.hasPoll = this.determinePollState();
         }
-        this.threadid = this.getThreadId(row);
-        this.title = this.getTitle(row);
-        this.baseUrl = this.getBaseUrl(row);
-        this.latestPageUrl = this.getLatestPageUrl(row);
-        this.lastPostUrl = this.getLastPostUrl(row);
-        this.isUnread = this.determineUnreadState(row);
-        this.threadType = this.determineThreadType(row);
-        this.isLocked = this.determineLockedState(row);
     }
 
     public getContextMenu(): ContextMenu {
@@ -129,42 +223,42 @@ export class ThreadInfo implements IRUSKPageItem {
         return null;
     }
 
-    private getThreadId(row: HTMLTableRowElement): number {
-        var link = (row.querySelector('a.topictitle') as HTMLAnchorElement).href;
+    private getThreadId(): number {
+        var link = (this.rowElement.querySelector('a.topictitle') as HTMLAnchorElement).href;
         var id = link.match(/viewtopic\.php\?t=([0-9]*)/);
         if (id) return +(id[1]);
         return -1;
     }
 
-    private getTitle(row: HTMLTableRowElement): string {
-        return (row.querySelector('span.topictitle a.topictitle') as HTMLAnchorElement).innerText;
+    private getTitle(): string {
+        return (this.rowElement.querySelector('span.topictitle a.topictitle') as HTMLAnchorElement).textContent;
     }
 
-    private getBaseUrl(row: HTMLTableRowElement): string {
-        let anchor = row.querySelector('td span.topictitle a') as HTMLAnchorElement;
+    private getBaseUrl(): string {
+        let anchor = this.rowElement.querySelector<HTMLAnchorElement>('td span.topictitle a');
 
         return anchor.href;
     }
 
-    private getLatestPageUrl(row: HTMLTableRowElement): string {
-        var subPages = row.querySelectorAll('td > span.gensmall > a');
+    private getLatestPageUrl(): string {
+        var subPages = this.rowElement.querySelectorAll<HTMLAnchorElement>('td > span.gensmall > a');
         if (subPages.length > 0) {
             // Vi har undersider
-            return (subPages[subPages.length - 1] as HTMLAnchorElement).href;
+            return subPages[subPages.length - 1].href;
         }
-        return this.getBaseUrl(row);
+        return this.getBaseUrl();
     }
 
-    private getLastPostUrl(row: HTMLTableRowElement): string {
-        var lastanchor = row.querySelector('td > span.postdetails > a[href^="viewtopic.php?p="]') as HTMLAnchorElement;
+    private getLastPostUrl(): string {
+        var lastanchor = this.rowElement.querySelector<HTMLAnchorElement>('td > span.postdetails > a[href^="viewtopic.php?p="]');
         return lastanchor.href;
     }
 
-    private determineUnreadState(row: HTMLTableRowElement): boolean {
+    private determineUnreadState(): boolean {
         return (this.threadAttributes & ThreadAttributes.isUnread) == ThreadAttributes.isUnread;
     }
 
-    private determineThreadType(row: HTMLTableRowElement): ThreadType {
+    private determineThreadType(): ThreadType {
         if (this.threadAttributes & ThreadAttributes.isAnnouncementThread)
             return ThreadType.Announcement;
         else if (this.threadAttributes & ThreadAttributes.isStickyThread)
@@ -173,37 +267,68 @@ export class ThreadInfo implements IRUSKPageItem {
             return ThreadType.Normal;
     }
 
-    private determineLockedState(row: HTMLTableRowElement): boolean {
+    private determineLockedState(): boolean {
         return (this.threadAttributes & ThreadAttributes.isLocked) > 0;
     }
 
-    private getThreadStarter(row: HTMLTableRowElement): string {
-        return (row.querySelector('td span.name') as HTMLSpanElement).textContent;
+    private getThreadStarter(): string {
+        return (this.rowElement.querySelector('td span.name') as HTMLSpanElement).textContent;
     }
 
-    private getLatestPoster(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row3Right span a') as HTMLAnchorElement).textContent;
+    private getLatestPoster(): string {
+        let author = this.rowElement.querySelector('td.row3Right span a') as HTMLAnchorElement;
+        if (author == null) {
+            author = this.rowElement.querySelector('td.row2 span.postdetails a');
+        }
+        return author.textContent;
     }
 
-    private getReplies(row: HTMLTableRowElement): number {
-        return +(row.children[2] as HTMLTableCellElement).innerText;
+    private getReplies(): number {
+        if (this._isFullThreadList) {
+            return +(this.rowElement.children[2] as HTMLTableCellElement).textContent;
+        } else {
+            return +this.rowElement.querySelector<HTMLTableCellElement>('td:nth-child(5)').textContent;
+        }
     }
 
-    private getViews(row: HTMLTableRowElement): number {
-        return +(row.children[4] as HTMLTableCellElement).innerText;
+    private getViews(): number {
+        if (this._isFullThreadList) {
+            return +(this.rowElement.children[4] as HTMLTableCellElement).textContent;
+        } else {
+            return +this.rowElement.querySelector<HTMLTableCellElement>('td:nth-child(6)').textContent;
+        }
     }
 
-    private getNumberOfPages(row: HTMLTableRowElement): number {
-        var subPages = row.querySelectorAll('td > span.gensmall > a');
+    private getForumId(): number {
+        let forumlink = this._isFullThreadList ?
+            document.querySelector<HTMLAnchorElement>('td.nav span.nav a.nav[href^=viewforum]').href :
+            this.rowElement.querySelector<HTMLAnchorElement>('td:nth-child(2) a.forumlink').href;
+        return +forumlink.substr(forumlink.lastIndexOf('f=') + 2);
+    }
+
+    private getForumName(): string {
+        if(this._isFullThreadList) {
+            return document.querySelector<HTMLAnchorElement>('td.nav span.nav a.nav[href^=viewforum]').textContent;
+        } else {
+            return this.rowElement.querySelector<HTMLAnchorElement>('td:nth-child(2) a.forumlink').textContent;
+        }
+    }
+
+    private getNumberOfPages(): number {
+        var subPages = this.rowElement.querySelectorAll('td > span.gensmall > a');
         if (subPages.length > 0) {
             // Vi har undersider
-            return +(subPages[subPages.length - 1] as HTMLAnchorElement).innerText;
+            return +(subPages[subPages.length - 1] as HTMLAnchorElement).textContent;
         }
         return 1;
     }
 
-    private getLastUpdate(row: HTMLTableRowElement): Date {
-        var date = ((row.querySelector('td.row3Right span.postdetails') as HTMLSpanElement).childNodes[0]).textContent;
+    private getLastUpdate(): Date {
+        let span = this.rowElement.querySelector('td.row3Right span.postdetails') as HTMLSpanElement;
+        if (span == null) {
+            span = this.rowElement.querySelector('td:nth-child(7) span.postdetails');
+        }
+        var date = (span.childNodes[0]).textContent;
         var match = date.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4}) (\d{1,2}):(\d{1,2})/);
         if (match) {
             return new Date(+match[3], +match[2] - 1, +match[1], +match[4], +match[5]);
@@ -211,23 +336,22 @@ export class ThreadInfo implements IRUSKPageItem {
         return new Date();
     }
 
-    private determinePollState(row: HTMLTableRowElement): boolean {
-        if (row.children[1].children[0].children[0].innerHTML == "[ Poll ]") {
+    private determinePollState(): boolean {
+        if (this.rowElement.children[1].children[0].children[0].innerHTML == "[ Poll ]") {
             return true;
         }
         return false;
     }
 
-    private getThreadAttributes(row: HTMLTableRowElement): ThreadAttributes {
-
-        let img = row.querySelector('td > img') as HTMLImageElement;
+    private getThreadAttributes(): ThreadAttributes {
+        let img = this.rowElement.querySelector('td > img') as HTMLImageElement;
         let imageName = img.src.match(/\/(images|img)\/([\w_]+)\.gif/)[2];
         let fileAttrs = this.getAttributesFromFilename(imageName);
         if (fileAttrs == ThreadAttributes.None) {
             console.error('ThreadInfo.getThreadAttributes håndterer ikke ' + imageName + ' ennå');
         }
         let altAttrs = this.getAttributesFromAltText(img.alt);
-
+        
         return fileAttrs | altAttrs;
     }
 
@@ -270,11 +394,11 @@ export class ThreadInfo implements IRUSKPageItem {
     public markAsRead(): void {
         var url = this.latestPageUrl;
         fetch(url, { mode: 'cors', credentials: 'include' })
-            .then(function(response){ return response.text(); }.bind(this))
-            .then(function(text) {
+            .then(function (response) { return response.text(); }.bind(this))
+            .then(function (text) {
                 // Log.Debug('marked thread ' + this.threadid + ' as read.');
             }.bind(this))
-            .catch(function(err) {
+            .catch(function (err) {
                 // Log.Warning('failed on request to mark thread ' + this.threadid + ' as read.');
             }.bind(this));
     }

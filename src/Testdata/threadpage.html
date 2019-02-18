@@ -1,0 +1,1188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html dir="ltr">
+<head>
+
+<script language="Javascript">
+<!--
+// please keep these lines on when you copy the source
+// made by: Nicolas - http://www.javascript-page.com
+
+if (top.location != self.location) {
+top.location = self.location.href
+}
+
+//-->
+</script>
+
+<link rel="alternate" type="application/rss+xml" TITLE="RBKweb - RSS-nyheter" HREF="http://www.rbkweb.no/rss.php">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+
+<link rel="up" href="index.php" title="RBKweb - hovedsiden" />
+
+<title>RBKweb - forum - På sidelinja</title>
+<!-- link rel="stylesheet" href="templates/subSilver/subSilver.css" type="text/css" -->
+<style type="text/css">
+<!--
+
+.c:link {text-decoration: none; color: #ffffff}   .c:visited {text-decoration: none; color: #ffffff}   .c:active {text-decoration: none; color: #ffffff}   .c:hover {text-decoration: underline; color: #ffffff}
+.b:link {text-decoration: none; color: #000000}   .b:visited {text-decoration: none; color: #000000}   .b:active {text-decoration: none; color: #000000}   .b:hover {text-decoration: underline; color: #000000}
+a:link		{text-decoration: underline; color: #000000}	a:visited	{text-decoration: underline; color: #000000}	a:active	{text-decoration: none; color: #000000}	a:hover		{text-decoration: none; color: #000000}
+
+
+
+/*
+  The original subSilver Theme for phpBB version 2+
+  Created by subBlue design
+  http://www.subBlue.com
+
+  NOTE: These CSS definitions are stored within the main page body so that you can use the phpBB2
+  theme administration centre. When you have finalised your style you could cut the final CSS code
+  and place it in an external file, deleting this section to save bandwidth.
+*/
+
+/* General page style. The scroll bar colours only visible in IE5.5+ */
+body {
+	background-color: #FFFFFF;
+	scrollbar-face-color: #FFFFFF;
+	scrollbar-highlight-color: #DDDDDD;
+	scrollbar-shadow-color: #FFFFFF;
+	scrollbar-3dlight-color: #FFFFFF;
+	scrollbar-arrow-color:  #444444;
+	scrollbar-track-color: #FFFFFF;
+	scrollbar-darkshadow-color: #;
+}
+
+/* General font families for common tags */
+font,th,td,p { font-family: Verdana, Arial, Helvetica, sans-serif }
+a:link,a:active,a:visited { color : #444444; }
+a:hover		{ text-decoration: underline; color : #000000; }
+hr	{ height: 0px; border: solid #FFFFFF 0px; border-top-width: 1px;}
+
+/* This is the border line & background colour round the entire page */
+.bodyline	{ background-color: #DDDDDD; border: 1px # solid; }
+
+/* This is the outline round the main forum tables */
+.forumline	{ background-color: #DDDDDD; border: 2px # solid; }
+
+/* Main table cell colours and backgrounds */
+td.row1	{ background-color: #FFFFFF; }
+td.row2	{ background-color: #FFFFFF; }
+td.row3	{ background-color: #FFFFFF; }
+
+/*
+  This is for the table cell above the Topics, Post & Last posts on the index.php page
+  By default this is the fading out gradiated silver background.
+  However, you could replace this with a bitmap specific for each forum
+*/
+td.rowpic {
+		background-color: #DDDDDD;
+		background-image: url(templates/subSilver/images/cellpic2_ny.jpg);
+		background-repeat: repeat-y;
+}
+
+/* Header cells - the blue and silver gradient backgrounds */
+th	{
+	color: #FFFFFF; font-size: 11px; font-weight : bold;
+	background-color: #444444; height: 25px;
+	background-image: url(templates/subSilver/images/cellpic3_ny.gif);
+}
+
+td.cat,td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom {
+			background-image: url(templates/subSilver/images/cellpic1_ny.gif);
+			background-color:#FFFFFF; border: #; border-style: solid; height: 28px;
+}
+
+/*
+  Setting additional nice inner borders for the main table cells.
+  The names indicate which sides the border will be on.
+  Don't worry if you don't understand this, just ignore it :-)
+*/
+td.cat,td.catHead,td.catBottom {
+	height: 29px;
+	border-width: 0px 0px 0px 0px;
+}
+th.thHead,th.thSides,th.thTop,th.thLeft,th.thRight,th.thBottom,th.thCornerL,th.thCornerR {
+	font-weight: bold; border: #DDDDDD; border-style: solid; height: 28px;
+}
+td.row3Right,td.spaceRow {
+	background-color: #FFFFFF; border: #; border-style: solid;
+}
+
+th.thHead,td.catHead { font-size: 12px; border-width: 1px 1px 0px 1px; }
+th.thSides,td.catSides,td.spaceRow	 { border-width: 0px 1px 0px 1px; }
+th.thRight,td.catRight,td.row3Right	 { border-width: 0px 1px 0px 0px; }
+th.thLeft,td.catLeft	  { border-width: 0px 0px 0px 1px; }
+th.thBottom,td.catBottom  { border-width: 0px 1px 1px 1px; }
+th.thTop	 { border-width: 1px 0px 0px 0px; }
+th.thCornerL { border-width: 1px 0px 0px 1px; }
+th.thCornerR { border-width: 1px 1px 0px 0px; }
+
+/* The largest text used in the index page title and toptic title etc. */
+.maintitle	{
+	font-weight: bold; font-size: 22px; font-family: "Trebuchet MS",Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none; line-height : 120%; color : #000000;
+}
+
+/* General text */
+.gen { font-size : 12px; }
+.genmed { font-size : 11px; }
+.gensmall { font-size : 10px; }
+.gen,.genmed,.gensmall { color : #000000; }
+a.gen,a.genmed,a.gensmall { color: #444444; text-decoration: none; }
+a.gen:hover,a.genmed:hover,a.gensmall:hover	{ color: #000000; text-decoration: underline; }
+
+/* The register, login, search etc links at the top of the page */
+.mainmenu		{ font-size : 11px; color : #000000 }
+a.mainmenu		{ text-decoration: none; color : #444444;  }
+a.mainmenu:hover{ text-decoration: underline; color : #000000; }
+
+/* Forum category titles */
+.cattitle		{ font-weight: bold; font-size: 12px ; letter-spacing: 1px; color : #444444}
+a.cattitle		{ text-decoration: none; color : #444444; }
+a.cattitle:hover{ text-decoration: underline; }
+
+/* Forum title: Text and link to the forums used in: index.php */
+.forumlink		{ font-weight: bold; font-size: 12px; color : #444444; }
+a.forumlink 	{ text-decoration: none; color : #444444; }
+a.forumlink:hover{ text-decoration: underline; color : #000000; }
+
+/* Used for the navigation text, (Page 1,2,3 etc) and the navigation bar when in a forum */
+.nav			{ font-weight: bold; font-size: 11px; color : #000000;}
+a.nav			{ text-decoration: none; color : #444444; }
+a.nav:hover		{ text-decoration: underline; }
+
+/* titles for the topics: could specify viewed link colour too */
+.topictitle,h1,h2	{ font-weight: bold; font-size: 11px; color : #000000; }
+a.topictitle:link   { text-decoration: none; color : #444444; }
+a.topictitle:visited { text-decoration: none; color : #444444; }
+a.topictitle:hover	{ text-decoration: underline; color : #000000; }
+
+/* Name of poster in viewmsg.php and viewtopic.php and other places */
+.name			{ font-size : 11px; color : #000000;}
+
+/* Location, number of posts, post date etc */
+.postdetails		{ font-size : 10px; color : #000000; }
+
+/* The content of the posts (body of text) */
+.postbody { font-size : 12px; line-height: 18px}
+a.postlink:link	{ text-decoration: underline; color : #444444 }
+a.postlink:visited { text-decoration: underline; color : #444444; }
+a.postlink:hover { text-decoration: none; color : #000000}
+
+/* Quote & Code blocks */
+.code {
+	font-family: Courier, 'Courier New', sans-serif; font-size: 11px; color: #666666;
+	background-color: #FFFFFF; border: #FFFFFF; border-style: solid;
+	border-left-width: 1px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px
+}
+
+.quote{
+	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; color: #000000; line-height: 125%;
+	background: #FFFFFF;
+	border: 1px dotted #000;
+	border-left: 4px solid Verdana, Arial, Helvetica, sans-serif;
+	padding: 4px;
+	margin: 0 auto 8px auto;
+}
+
+/* Copyright and bottom info */
+.copyright		{ font-size: 10px; font-family: Verdana, Arial, Helvetica, sans-serif; color: #000000; letter-spacing: -1px;}
+a.copyright		{ color: #000000; text-decoration: none;}
+a.copyright:hover { color: #000000; text-decoration: underline;}
+
+/* Form elements */
+input,textarea, select {
+	color : #000000;
+	font: normal 11px Verdana, Arial, Helvetica, sans-serif;
+	border-color : #000000;
+}
+
+/* The text input fields background colour */
+input.post, textarea.post, select {
+	background-color : #DDDDDD;
+}
+
+input { text-indent : 2px; }
+
+/* The buttons used for bbCode styling in message post */
+input.button {
+	background-color : #FFFFFF;
+	color : #000000;
+	font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* The main submit button option */
+input.mainoption {
+	background-color : #FFFFFF;
+	font-weight : bold;
+}
+
+/* None-bold submit button */
+input.liteoption {
+	background-color : #FFFFFF;
+	font-weight : normal;
+}
+
+/* This is the line in the posting page which shows the rollover
+  help line. This is actually a text box, but if set to be the same
+  colour as the background no one will know ;)
+*/
+.helpline { background-color: #FFFFFF; border-style: none; }
+
+/* Import the fancy styles for IE only (NS4.x doesn't use the @import function) */
+@import url("templates/subSilver/formIE.css");
+-->
+</style>
+<script language="Javascript" type="text/javascript">
+<!--
+	if ( 0 )
+	{
+		window.open('privmsg.php?mode=newpm', '_phpbbprivmsg', 'HEIGHT=225,resizable=yes,WIDTH=400');;
+	}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" link="#444444" vlink="#444444" topmargin="6" leftmargin="6" marginheight="6" marginwidth="6">
+
+<a name="top"></a>
+
+<table width="980" border="0" cellspacing="0" cellpadding="0">
+<tr><td width="980" colspan="2" align="left" valign="bottom"><!--/* OpenX Javascript Tag v2.8.9 */-->
+
+
+<script type='text/javascript'><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://www.rbkweb.no/annonse/www/delivery/ajs.php':'http://www.rbkweb.no/annonse/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=3");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><noscript><a href='http://www.rbkweb.no/annonse/www/delivery/ck.php?n=aa688bdf&amp;cb=INSERT_RANDOM_NUMBER_HERE' target='_blank'><img src='http://www.rbkweb.no/annonse/www/delivery/avw.php?zoneid=3&amp;cb=INSERT_RANDOM_NUMBER_HERE&amp;n=aa688bdf' border='0' alt='' /></a></noscript></td></tr>
+<tr><td width="980" colspan="2" bgcolor="#000000"><img src="http://www.rbkweb.no/images/svart.gif" width="980" height="1"></td></tr>
+<tr bgcolor="#f1f1f1">
+<td width="200" align="left" height="14" valign="top"><img src="http://www.rbkweb.no/images/pixel.gif" width="4" height="1"><script language="JavaScript" type="text/javascript">
+
+var montharray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+
+function countup(yr,m,d){
+var today=new Date()
+var todayy=today.getYear()
+if (todayy < 1000)
+todayy+=1900
+var todaym=today.getMonth()
+var todayd=today.getDate()
+var todaystring=montharray[todaym]+" "+todayd+", "+todayy
+var paststring=montharray[m-1]+" "+d+", "+yr
+var difference=(Math.round((Date.parse(todaystring)-Date.parse(paststring))/(24*60*60*1000))*1)
+difference+=" dager"
+document.write("<font face='Verdana,Arial, Helvetica, sans-serif' size='1'>Uavhengig i "+difference+"</font>")
+}
+
+countup(1999,1,12)
+</script></td>
+<td width="780" align="right" height="14" valign="top"><font size=1 face='Verdana,Arial, Helvetica, sans-serif' color=000000><a href="http://www.rosenborg.info/english/" style="color: #000000">English version</a>&nbsp;</font></td>
+</tr>
+<tr><td width="980" colspan="2" bgcolor="#000000"><img src="http://www.rbkweb.no/images/svart.gif" width="980" height="1"></td></tr>
+<tr><td width="980" colspan="2" bgcolor="#000000" height="60"><a href="http://www.rbkweb.no/"><img border="0" src="http://www.rbkweb.no/images/rosenborg.png" width="980" height="60" alt="Rosenborg Web"></a></font></td></tr>
+<tr><td width="980" colspan="2" bgcolor="#000000"><img src="http://www.rbkweb.no/images/svart.gif" width="980" height="1"></td></tr>
+</table>
+
+<table width="980" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="980" colspan="7" height="3" bgcolor="#FFFFFF"></td>
+</tr>
+
+<tr>
+
+<td width="1" bgcolor="#000000" valign="top"><img src="http://www.rbkweb.no/images/pixel.gif" width="1" height="1"></td>
+<td width="151" align="center" valign="top">
+<! ------ Meny -------- >
+
+<table width="100%" cellpadding="1" cellspacing="2" border="0" bgcolor="#FFFFFF">
+
+<tr bgcolor="#000000"><td align="center"><font face="Verdana,Arial,Helvetica" size="1" color="#FFFFFF"><strong>SESONGEN 2019</strong></font></td></tr>
+
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/nyheter.shtml" class="b">NYHETER</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/kamper2019.php" class="b">KAMPER</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/spillere" class="b">SPILLERE</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/statistikk/" class="b">STATISTIKK</a></font></td></tr>
+
+<tr bgcolor="#000000"><td align="center"><font face="Verdana,Arial,Helvetica" size="1" color="#FFFFFF"><strong>KLUBBEN</strong></font></td></tr>
+
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/klubben/historie.shtml" class="b">HISTORIE</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/klubben/" class="b">KLUBBFAKTA</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/klubben/meritter.shtml" class="b">MERITTER</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/klubben/rekorder.shtml" class="b">REKORDER</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/klubben/lerkendal.shtml" class="b">LERKENDAL STADION</a></font></td></tr>
+
+<tr bgcolor="#000000"><td align="center"><font face="Verdana,Arial,Helvetica" size="1" color="#FFFFFF"><strong>EKSKLUSIVT</strong></font></td></tr>
+
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/lesestoff.shtml" class="b">LESESTOFF</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/gamledager.shtml" class="b">I GAMLE DAGER</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/legender" class="b">LEGENDER</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/bilder.shtml" class="b">BILDESPESIAL</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/lerkendal360/" class="b">LERKENDAL360&deg;</a></font></td></tr>
+
+<tr bgcolor="#000000"><td align="center"><font face="Verdana,Arial,Helvetica" size="1" color="#FFFFFF"><strong>MENINGER</strong></font></td></tr>
+
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/forum/" class="b">DEBATTFORUM</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/kommentar.shtml" class="b">KOMMENTAR</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/din_mening.shtml" class="b">DIN MENING</a></font></td></tr>
+
+<tr bgcolor="#000000"><td align="center"><font face="Verdana,Arial,Helvetica" size="1" color="#FFFFFF"><strong>RBKweb</strong></font></td></tr>
+
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/om.php" class="b">OM RBKweb</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/annonser/" class="b">ANNONSEINFORMASJON</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/rss.php" class="b">RSS-KANAL</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/arkiv/" class="b">ARKIV</a></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">&nbsp;<a href="http://www.rbkweb.no/kontakt.php" class="b">TA KONTAKT</a></font></td></tr>
+
+
+<form action="http://www.rbkweb.no/art/index.php" method="get">
+<tr bgcolor="#000000"><td align="center"><font face="Verdana,Arial,Helvetica" size="1" color="#FFFFFF"><strong>S&Oslash;K I ARTIKLER</strong></font></td></tr>
+<tr bgcolor="#F1F1F1"><td><font face="Verdana,Arial,Helvetica" size="1" color="#000000">
+    <input type="hidden" name="action" value="show"/>
+    <input type="hidden" name="type" value="search"/>
+<input type="text" name="query" STYLE="width: 90px; font-size: 8pt; font-family: verdana;" size="10">
+<INPUT TYPE="submit" VALUE="S&oslash;k" STYLE="font-size: 7pt; font-family: verdana;">
+</center></font>
+</td></tr>
+</FORM>
+
+</table>
+
+<! ------ Meny slutt -------- >
+
+</td>
+
+<td width="1" bgcolor="#000000" vlign="top"><img src="http://www.rbkweb.no/images/pixel.gif" width="1" height="1"></td>
+
+<! ------ Hoved -------- >
+
+<td width="636" align="middle" valign="top">
+<table width="626" cellpadding="0" cellspacing="4" border="0">
+
+<tr>
+<td width="100%">
+<font face="Verdana,Tahoma,Arial,Helvetica" size="2">
+<font size="4"><strong>Debattforum</strong></font><p>
+<font size="1">Alle kan lese innleggene, men man må registrere seg for å delta aktivt i diskusjonene.<br>
+<i>Everyone can read the posts, but you have to register before writing your own posts.</i></font><p>
+
+<table cellspacing="0" cellpadding="2" border="0" align="center">
+					<tr>
+						<td align="center" valign="top" nowrap="nowrap"><span class="mainmenu">&nbsp;<a href="faq.php" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="Hjelp" hspace="3" />Hjelp</a></span><span class="mainmenu">&nbsp; &nbsp;<a href="search.php" class="mainmenu"><img src="templates/subSilver/images/icon_mini_search.gif" width="12" height="13" border="0" alt="Søk" hspace="3" />Søk</a>&nbsp; &nbsp;<a href="memberlist.php" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="Brukerliste" hspace="3" />Brukerliste</a>&nbsp; &nbsp;<a href="groupcp.php" class="mainmenu"><img src="templates/subSilver/images/icon_mini_groups.gif" width="12" height="13" border="0" alt="Grupper" hspace="3" />Grupper</a>&nbsp;
+
+&nbsp;<a href="statistics.php" class="mainmenu"><img src="templates/subSilver/images/icon_mini_statistics.png" width="12" height="13" border="0" alt="Statistikk" hspace="3" />Statistikk</a>&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td height="25" align="center" valign="top" nowrap="nowrap"><span class="mainmenu">&nbsp;<a href="profile.php?mode=editprofile" class="mainmenu"><img src="templates/subSilver/images/icon_mini_profile.gif" width="12" height="13" border="0" alt="Profil" hspace="3" />Profil</a>&nbsp; &nbsp;<a href="privmsg.php?folder=inbox" class="mainmenu"><img src="templates/subSilver/images/icon_mini_message.gif" width="12" height="13" border="0" alt="Du har ingen nye meldinger" hspace="3" />Du har ingen nye meldinger</a>&nbsp; &nbsp;<a href="login.php?logout=true&amp;sid=104a7d87324be94f6996897cf342cc80" class="mainmenu"><img src="templates/subSilver/images/icon_mini_login.gif" width="12" height="13" border="0" alt="Logg ut [ OrionPax ]" hspace="3" />Logg ut [ OrionPax ]</a>&nbsp;</span></td>
+					</tr>
+				</table>
+
+
+<form method="post" action="viewforum.php?f=11&amp;start=0">
+  <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+	<tr>
+	  <td align="left" valign="bottom" colspan="2"><a class="maintitle" href="viewforum.php?f=11">På sidelinja</a><br /><span class="gensmall"><b>Moderatorer: Ingen<br /><br />Brukere i forumet: Ingen</b></span></td>
+	  <td align="right" valign="bottom" nowrap="nowrap"><span class="gensmall"><b>Gå til side <b>1</b>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=50">2</a>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=100">3</a> ... <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=450">10</a>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=500">11</a>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=550">12</a>&nbsp;&nbsp;<a href="viewforum.php?f=11&amp;topicdays=0&amp;start=50">Neste</a></b></span></td>
+	</tr>
+	<tr>
+	  <td align="left" valign="middle" width="50"><a href="posting.php?mode=newtopic&amp;f=11"><img src="templates/subSilver/images/lang_norwegian/post.gif" border="0" alt="Start nytt emne" /></a></td>
+	  <td align="left" valign="middle" class="nav" width="100%"><span class="nav">&nbsp;&nbsp;&nbsp;<a href="index.php" class="nav">Forum</a> -> <a class="nav" href="viewforum.php?f=11">På sidelinja</a></span></td>
+	  <td align="right" valign="bottom" class="nav" nowrap="nowrap"><span class="gensmall"><a href="viewforum.php?f=11&amp;mark=topics">Marker alle emner som lest</a></span></td>
+	</tr>
+  </table>
+
+  <table border="0" cellpadding="4" cellspacing="1" width="100%" class="forumline">
+	<tr>
+	  <th colspan="2" align="center" height="25" class="thCornerL" nowrap="nowrap">&nbsp;Emner&nbsp;</th>
+	  <th width="50" align="center" class="thTop" nowrap="nowrap">&nbsp;Svar&nbsp;</th>
+	  <th width="100" align="center" class="thTop" nowrap="nowrap">&nbsp;Av&nbsp;</th>
+	  <th width="50" align="center" class="thTop" nowrap="nowrap">&nbsp;Visninger&nbsp;</th>
+	  <th align="center" class="thCornerR" nowrap="nowrap">&nbsp;Siste innlegg&nbsp;</th>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_announce.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><b>Viktig :</b> <a href="viewtopic.php?t=6534" class="topictitle">Bli medlem i Kjernen</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=6534&amp;start=0">1</a> ... <a href="viewtopic.php?t=6534&amp;start=125">6</a>, <a href="viewtopic.php?t=6534&amp;start=150">7</a>, <a href="viewtopic.php?t=6534&amp;start=175">8</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">185</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">99315</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">24.05.2018 20:38<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=969132#969132"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_announce.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><b>Viktig :</b> <a href="viewtopic.php?t=3632" class="topictitle">Bli medlem i Rosenborg Ballklub</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=3632&amp;start=0">1</a> ... <a href="viewtopic.php?t=3632&amp;start=75">4</a>, <a href="viewtopic.php?t=3632&amp;start=100">5</a>, <a href="viewtopic.php?t=3632&amp;start=125">6</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">128</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=697">Recon</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">134149</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">23.02.2016 23:00<br /><a href="profile.php?mode=viewprofile&amp;u=1966">denyngstelillebroren</a> <a href="viewtopic.php?p=823278#823278"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_sticky.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><b>Prioritert :</b> <a href="viewtopic.php?t=2371" class="topictitle">RBK-humor</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=2371&amp;start=0">1</a> ... <a href="viewtopic.php?t=2371&amp;start=100">5</a>, <a href="viewtopic.php?t=2371&amp;start=125">6</a>, <a href="viewtopic.php?t=2371&amp;start=150">7</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">153</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">131263</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 13:14<br /><a href="profile.php?mode=viewprofile&amp;u=6615">Mustrum Ridcully</a> <a href="viewtopic.php?p=1029360#1029360"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_sticky.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><b>Prioritert :</b> <a href="viewtopic.php?t=2133" class="topictitle">Videokomposisjoner</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=2133&amp;start=0">1</a> ... <a href="viewtopic.php?t=2133&amp;start=825">34</a>, <a href="viewtopic.php?t=2133&amp;start=850">35</a>, <a href="viewtopic.php?t=2133&amp;start=875">36</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">880</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=1293">Jon Irenicus</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">348360</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">29.12.2018 20:11<br /><a href="profile.php?mode=viewprofile&amp;u=6615">Mustrum Ridcully</a> <a href="viewtopic.php?p=1020943#1020943"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_sticky.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><b>Prioritert :</b> <a href="viewtopic.php?t=2101" class="topictitle">Videofiler</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=2101&amp;start=0">1</a> ... <a href="viewtopic.php?t=2101&amp;start=650">27</a>, <a href="viewtopic.php?t=2101&amp;start=675">28</a>, <a href="viewtopic.php?t=2101&amp;start=700">29</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">706</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=396">Tysker'n</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">332281</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">22.10.2018 18:51<br /><a href="profile.php?mode=viewprofile&amp;u=6276">Knowrud</a> <a href="viewtopic.php?p=1006784#1006784"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_new.gif" width="19" height="18" alt="Nye innlegg" title="Nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8555&amp;view=newest"><img src="templates/subSilver/images/icon_newest_reply.gif" alt="Vis nyeste innlegg" title="Vis nyeste innlegg" border="0" /></a> <a href="viewtopic.php?t=8555" class="topictitle">Økonomi 2019</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">13</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1505</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">15.02.2019 09:13<br /><a href="profile.php?mode=viewprofile&amp;u=1013">Henning</a> <a href="viewtopic.php?p=1029415#1029415"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1295" class="topictitle">RBK-bøker</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1295&amp;start=0">1</a> ... <a href="viewtopic.php?t=1295&amp;start=125">6</a>, <a href="viewtopic.php?t=1295&amp;start=150">7</a>, <a href="viewtopic.php?t=1295&amp;start=175">8</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">177</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">204753</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 23:17<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1029406#1029406"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=551" class="topictitle">Hvor er de nå?</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=551&amp;start=0">1</a> ... <a href="viewtopic.php?t=551&amp;start=10650">427</a>, <a href="viewtopic.php?t=551&amp;start=10675">428</a>, <a href="viewtopic.php?t=551&amp;start=10700">429</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">10701</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">2548505</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 23:04<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1029402#1029402"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8045" class="topictitle">Økonomi 2018</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8045&amp;start=0">1</a> ... <a href="viewtopic.php?t=8045&amp;start=50">3</a>, <a href="viewtopic.php?t=8045&amp;start=75">4</a>, <a href="viewtopic.php?t=8045&amp;start=100">5</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">123</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">21432</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 23:02<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1029401#1029401"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1111" class="topictitle">I gamle dager</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1111&amp;start=0">1</a> ... <a href="viewtopic.php?t=1111&amp;start=775">32</a>, <a href="viewtopic.php?t=1111&amp;start=800">33</a>, <a href="viewtopic.php?t=1111&amp;start=825">34</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">825</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">396039</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 23:00<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1029400#1029400"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1144" class="topictitle">Statue av Nils Arne?</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1144&amp;start=0">1</a> ... <a href="viewtopic.php?t=1144&amp;start=50">3</a>, <a href="viewtopic.php?t=1144&amp;start=75">4</a>, <a href="viewtopic.php?t=1144&amp;start=100">5</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">122</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=993">robinla</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">69752</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 22:59<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1029399#1029399"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8516" class="topictitle">Årsmøte 2019</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">6</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1212</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">14.02.2019 22:57<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1029398#1029398"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=5877" class="topictitle">Spillerne som aldri kom</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=5877&amp;start=0">1</a> ... <a href="viewtopic.php?t=5877&amp;start=175">8</a>, <a href="viewtopic.php?t=5877&amp;start=200">9</a>, <a href="viewtopic.php?t=5877&amp;start=225">10</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">226</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">138547</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">13.02.2019 21:51<br /><a href="profile.php?mode=viewprofile&amp;u=7226">waterfalls</a> <a href="viewtopic.php?p=1029328#1029328"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1857" class="topictitle">Tribunesanger</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1857&amp;start=0">1</a> ... <a href="viewtopic.php?t=1857&amp;start=475">20</a>, <a href="viewtopic.php?t=1857&amp;start=500">21</a>, <a href="viewtopic.php?t=1857&amp;start=525">22</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">536</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=1293">Jon Irenicus</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">217532</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">13.02.2019 12:27<br /><a href="profile.php?mode=viewprofile&amp;u=6615">Mustrum Ridcully</a> <a href="viewtopic.php?p=1029304#1029304"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1106" class="topictitle">RBK i fantasiens verden</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1106&amp;start=0">1</a> ... <a href="viewtopic.php?t=1106&amp;start=50">3</a>, <a href="viewtopic.php?t=1106&amp;start=75">4</a>, <a href="viewtopic.php?t=1106&amp;start=100">5</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">117</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">134672</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">12.02.2019 22:20<br /><a href="profile.php?mode=viewprofile&amp;u=1279">RbkUrge</a> <a href="viewtopic.php?p=1029268#1029268"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8472" class="topictitle">Drakt 2019</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">24</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=3971">toki</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">4179</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">11.02.2019 21:23<br /><a href="profile.php?mode=viewprofile&amp;u=2788">xMegafonmannen</a> <a href="viewtopic.php?p=1029175#1029175"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=6665" class="topictitle">«De tok steget»</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=6665&amp;start=0">1</a> ... <a href="viewtopic.php?t=6665&amp;start=75">4</a>, <a href="viewtopic.php?t=6665&amp;start=100">5</a>, <a href="viewtopic.php?t=6665&amp;start=125">6</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">141</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">71233</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">10.02.2019 12:12<br /><a href="profile.php?mode=viewprofile&amp;u=6191">BjarneS</a> <a href="viewtopic.php?p=1029079#1029079"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1080" class="topictitle">Utenlandske medier om RBK</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1080&amp;start=0">1</a> ... <a href="viewtopic.php?t=1080&amp;start=425">18</a>, <a href="viewtopic.php?t=1080&amp;start=450">19</a>, <a href="viewtopic.php?t=1080&amp;start=475">20</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">494</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">287518</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">06.02.2019 20:32<br /><a href="profile.php?mode=viewprofile&amp;u=5842">gisp!</a> <a href="viewtopic.php?p=1028840#1028840"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8520" class="topictitle">Trenerrettssaken</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8520&amp;start=0">1</a> ... <a href="viewtopic.php?t=8520&amp;start=1225">50</a>, <a href="viewtopic.php?t=8520&amp;start=1250">51</a>, <a href="viewtopic.php?t=8520&amp;start=1275">52</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1297</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">117064</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">02.02.2019 07:43<br /><a href="profile.php?mode=viewprofile&amp;u=1580">senador</a> <a href="viewtopic.php?p=1028097#1028097"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1167" class="topictitle">Utstyrsavtaler</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1167&amp;start=0">1</a> ... <a href="viewtopic.php?t=1167&amp;start=100">5</a>, <a href="viewtopic.php?t=1167&amp;start=125">6</a>, <a href="viewtopic.php?t=1167&amp;start=150">7</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">165</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=445">Zbegra</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">97320</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">29.01.2019 21:02<br /><a href="profile.php?mode=viewprofile&amp;u=1244">Hacken</a> <a href="viewtopic.php?p=1027426#1027426"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1031" class="topictitle">RBK og forholdet til media</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1031&amp;start=0">1</a> ... <a href="viewtopic.php?t=1031&amp;start=825">34</a>, <a href="viewtopic.php?t=1031&amp;start=850">35</a>, <a href="viewtopic.php?t=1031&amp;start=875">36</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">896</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">336534</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">26.01.2019 22:17<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1026969#1026969"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=7" class="topictitle">Lerkendal stadion</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=7&amp;start=0">1</a> ... <a href="viewtopic.php?t=7&amp;start=3200">129</a>, <a href="viewtopic.php?t=7&amp;start=3225">130</a>, <a href="viewtopic.php?t=7&amp;start=3250">131</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">3268</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1170678</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">25.01.2019 13:00<br /><a href="profile.php?mode=viewprofile&amp;u=7996">ballbingen</a> <a href="viewtopic.php?p=1026728#1026728"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=5794" class="topictitle">Ivar Koteng</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=5794&amp;start=0">1</a> ... <a href="viewtopic.php?t=5794&amp;start=850">35</a>, <a href="viewtopic.php?t=5794&amp;start=875">36</a>, <a href="viewtopic.php?t=5794&amp;start=900">37</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">904</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2821">1972 Miami Dolphins</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">281163</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">23.01.2019 13:14<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1026372#1026372"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=448" class="topictitle">Rosenborg-musikk</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=448&amp;start=0">1</a> ... <a href="viewtopic.php?t=448&amp;start=550">23</a>, <a href="viewtopic.php?t=448&amp;start=575">24</a>, <a href="viewtopic.php?t=448&amp;start=600">25</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">620</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=505">Ravenhill</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">351316</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">17.01.2019 20:46<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1024629#1024629"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8527" class="topictitle">Underholdning, ungdommer og titler</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">420</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">17.01.2019 09:18<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1024462#1024462"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=6646" class="topictitle">Troillprat</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=6646&amp;start=0">1</a> ... <a href="viewtopic.php?t=6646&amp;start=525">22</a>, <a href="viewtopic.php?t=6646&amp;start=550">23</a>, <a href="viewtopic.php?t=6646&amp;start=575">24</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">585</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=6500">OrionPax</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">155305</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">10.01.2019 12:28<br /><a href="profile.php?mode=viewprofile&amp;u=6500">OrionPax</a> <a href="viewtopic.php?p=1023431#1023431"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8105" class="topictitle">Rosenborgs utenlandske motstandere</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8105&amp;start=0">1</a>, <a href="viewtopic.php?t=8105&amp;start=25">2</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">35</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">10648</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">02.01.2019 10:25<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1021190#1021190"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8147" class="topictitle">Lagbilde 2018</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8147&amp;start=0">1</a>, <a href="viewtopic.php?t=8147&amp;start=25">2</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">25</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=5598">hello</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">5910</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">27.12.2018 18:55<br /><a href="profile.php?mode=viewprofile&amp;u=6360">Dew</a> <a href="viewtopic.php?p=1020632#1020632"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1745" class="topictitle">Kjernen</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1745&amp;start=0">1</a> ... <a href="viewtopic.php?t=1745&amp;start=1825">74</a>, <a href="viewtopic.php?t=1745&amp;start=1850">75</a>, <a href="viewtopic.php?t=1745&amp;start=1875">76</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1887</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=1190">attach</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">576560</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">24.12.2018 22:04<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1020277#1020277"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=2161" class="topictitle">RBK-styret</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=2161&amp;start=0">1</a> ... <a href="viewtopic.php?t=2161&amp;start=50">3</a>, <a href="viewtopic.php?t=2161&amp;start=75">4</a>, <a href="viewtopic.php?t=2161&amp;start=100">5</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">118</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">52184</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">24.12.2018 19:20<br /><a href="profile.php?mode=viewprofile&amp;u=1978">Konesseur</a> <a href="viewtopic.php?p=1020271#1020271"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1263" class="topictitle">560 000 RBK-tilhengere</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1263&amp;start=0">1</a> ... <a href="viewtopic.php?t=1263&amp;start=125">6</a>, <a href="viewtopic.php?t=1263&amp;start=150">7</a>, <a href="viewtopic.php?t=1263&amp;start=175">8</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">189</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">138485</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">21.12.2018 20:41<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1019716#1019716"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1642" class="topictitle">- Best kampopplevelse på Lerkendal</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1642&amp;start=0">1</a> ... <a href="viewtopic.php?t=1642&amp;start=325">14</a>, <a href="viewtopic.php?t=1642&amp;start=350">15</a>, <a href="viewtopic.php?t=1642&amp;start=375">16</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">394</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">181888</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">17.12.2018 20:34<br /><a href="profile.php?mode=viewprofile&amp;u=6289">larsarus</a> <a href="viewtopic.php?p=1018664#1018664"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8442" class="topictitle">Sesongkort 2019</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">10</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=8235">Putte</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1894</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">17.12.2018 10:13<br /><a href="profile.php?mode=viewprofile&amp;u=8515">IskaldDahls</a> <a href="viewtopic.php?p=1018510#1018510"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=6264" class="topictitle">KjernenTV</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=6264&amp;start=0">1</a> ... <a href="viewtopic.php?t=6264&amp;start=75">4</a>, <a href="viewtopic.php?t=6264&amp;start=100">5</a>, <a href="viewtopic.php?t=6264&amp;start=125">6</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">148</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=6782">gollumLAD legend</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">85288</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">03.12.2018 13:39<br /><a href="profile.php?mode=viewprofile&amp;u=7133">trolle</a> <a href="viewtopic.php?p=1015400#1015400"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=469" class="topictitle">Sponsoravtaler</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=469&amp;start=0">1</a> ... <a href="viewtopic.php?t=469&amp;start=1225">50</a>, <a href="viewtopic.php?t=469&amp;start=1250">51</a>, <a href="viewtopic.php?t=469&amp;start=1275">52</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1280</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">473742</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">03.12.2018 11:49<br /><a href="profile.php?mode=viewprofile&amp;u=5907">Macha</a> <a href="viewtopic.php?p=1015376#1015376"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=7811" class="topictitle">Drakt 2018</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=7811&amp;start=0">1</a> ... <a href="viewtopic.php?t=7811&amp;start=150">7</a>, <a href="viewtopic.php?t=7811&amp;start=175">8</a>, <a href="viewtopic.php?t=7811&amp;start=200">9</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">221</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">51678</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">30.11.2018 20:16<br /><a href="profile.php?mode=viewprofile&amp;u=6653">RBK19051917</a> <a href="viewtopic.php?p=1014830#1014830"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8432" class="topictitle">Cupfinaletifo</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8432&amp;start=0">1</a>, <a href="viewtopic.php?t=8432&amp;start=25">2</a>, <a href="viewtopic.php?t=8432&amp;start=50">3</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">62</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">7229</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">30.11.2018 07:37<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1014705#1014705"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8131" class="topictitle">Tilskuersnitt 2018</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8131&amp;start=0">1</a>, <a href="viewtopic.php?t=8131&amp;start=25">2</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">42</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=8235">Putte</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">10538</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">26.11.2018 18:43<br /><a href="profile.php?mode=viewprofile&amp;u=8235">Putte</a> <a href="viewtopic.php?p=1014161#1014161"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8454" class="topictitle">Tifodugnad rundt Oslo 26.-30.11.!</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">5</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1226</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">24.11.2018 12:40<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1013748#1013748"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=6870" class="topictitle">Setetellerautomat</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=6870&amp;start=0">1</a> ... <a href="viewtopic.php?t=6870&amp;start=1425">58</a>, <a href="viewtopic.php?t=6870&amp;start=1450">59</a>, <a href="viewtopic.php?t=6870&amp;start=1475">60</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">1482</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=1550">Vemundo</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">319077</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">21.11.2018 10:21<br /><a href="profile.php?mode=viewprofile&amp;u=6500">OrionPax</a> <a href="viewtopic.php?p=1013453#1013453"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=2301" class="topictitle">Spillerlønningene</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=2301&amp;start=0">1</a> ... <a href="viewtopic.php?t=2301&amp;start=450">19</a>, <a href="viewtopic.php?t=2301&amp;start=475">20</a>, <a href="viewtopic.php?t=2301&amp;start=500">21</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">520</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">224684</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">19.11.2018 20:21<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1013301#1013301"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8433" class="topictitle">Lagets jubeltakk etter kamp</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">17</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=8572">NilsArneEggenErKongen</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">2760</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">09.11.2018 15:11<br /><a href="profile.php?mode=viewprofile&amp;u=4625">Clasiker</a> <a href="viewtopic.php?p=1011703#1011703"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=6422" class="topictitle">Tove Moe Dyrhaug</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=6422&amp;start=0">1</a> ... <a href="viewtopic.php?t=6422&amp;start=100">5</a>, <a href="viewtopic.php?t=6422&amp;start=125">6</a>, <a href="viewtopic.php?t=6422&amp;start=150">7</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">153</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2120">Kjello</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">87890</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">09.11.2018 10:48<br /><a href="profile.php?mode=viewprofile&amp;u=1978">Konesseur</a> <a href="viewtopic.php?p=1011633#1011633"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=7078" class="topictitle">Til lykke med Troilldagen!</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=7078&amp;start=0">1</a>, <a href="viewtopic.php?t=7078&amp;start=25">2</a>, <a href="viewtopic.php?t=7078&amp;start=50">3</a>, <a href="viewtopic.php?t=7078&amp;start=75">4</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">99</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">28381</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">07.11.2018 08:49<br /><a href="profile.php?mode=viewprofile&amp;u=6500">OrionPax</a> <a href="viewtopic.php?p=1010837#1010837"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=4495" class="topictitle">Freding av nr 6?</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=4495&amp;start=0">1</a>, <a href="viewtopic.php?t=4495&amp;start=25">2</a>, <a href="viewtopic.php?t=4495&amp;start=50">3</a>, <a href="viewtopic.php?t=4495&amp;start=75">4</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">81</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2424">Trondheim</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">42307</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">06.11.2018 21:57<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1010801#1010801"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=8096" class="topictitle">ÆRBEKÅ.no</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=8096&amp;start=0">1</a>, <a href="viewtopic.php?t=8096&amp;start=25">2</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">43</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">12535</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">06.11.2018 14:54<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1010688#1010688"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1119" class="topictitle">Supporterutstyr</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1119&amp;start=0">1</a> ... <a href="viewtopic.php?t=1119&amp;start=525">22</a>, <a href="viewtopic.php?t=1119&amp;start=550">23</a>, <a href="viewtopic.php?t=1119&amp;start=575">24</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">577</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">317170</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">06.11.2018 07:49<br /><a href="profile.php?mode=viewprofile&amp;u=2763">v_olden</a> <a href="viewtopic.php?p=1010582#1010582"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=4780" class="topictitle">Europaliga: TV- og premiepenger</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=4780&amp;start=0">1</a> ... <a href="viewtopic.php?t=4780&amp;start=50">3</a>, <a href="viewtopic.php?t=4780&amp;start=75">4</a>, <a href="viewtopic.php?t=4780&amp;start=100">5</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">109</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">67359</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">31.10.2018 14:04<br /><a href="profile.php?mode=viewprofile&amp;u=6615">Mustrum Ridcully</a> <a href="viewtopic.php?p=1009035#1009035"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=6131" class="topictitle">Samfunnsansvar</a></span><span class="gensmall"><br />
+		</span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">3</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">3551</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">31.10.2018 09:38<br /><a href="profile.php?mode=viewprofile&amp;u=31">haavarl</a> <a href="viewtopic.php?p=1008993#1008993"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=1729" class="topictitle">CL: premie- og TV-penger</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=1729&amp;start=0">1</a> ... <a href="viewtopic.php?t=1729&amp;start=50">3</a>, <a href="viewtopic.php?t=1729&amp;start=75">4</a>, <a href="viewtopic.php?t=1729&amp;start=100">5</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">118</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">99922</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">30.10.2018 23:09<br /><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a> <a href="viewtopic.php?p=1008943#1008943"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=2922" class="topictitle">Medieinntekter og fordeling</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=2922&amp;start=0">1</a> ... <a href="viewtopic.php?t=2922&amp;start=100">5</a>, <a href="viewtopic.php?t=2922&amp;start=125">6</a>, <a href="viewtopic.php?t=2922&amp;start=150">7</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">159</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=2">2mas</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">116722</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">20.10.2018 21:59<br /><a href="profile.php?mode=viewprofile&amp;u=6289">larsarus</a> <a href="viewtopic.php?p=1006143#1006143"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="row1" align="center" valign="middle" width="20"><img src="templates/subSilver/images/folder_hot.gif" width="19" height="18" alt="Ingen nye innlegg" title="Ingen nye innlegg" /></td>
+	  <td class="row1" width="100%"><span class="topictitle"><a href="viewtopic.php?t=7426" class="topictitle">RBKNytt.no - Samlested for RBK-nyheter</a></span><span class="gensmall"><br />
+		 [ <img src="templates/subSilver/images/icon_minipost.gif" alt="Gå til side" title="Gå til side" />Gå til side: <a href="viewtopic.php?t=7426&amp;start=0">1</a> ... <a href="viewtopic.php?t=7426&amp;start=250">11</a>, <a href="viewtopic.php?t=7426&amp;start=275">12</a>, <a href="viewtopic.php?t=7426&amp;start=300">13</a> ] </span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">313</span></td>
+	  <td class="row3" align="center" valign="middle"><span class="name"><a href="profile.php?mode=viewprofile&amp;u=7667">Markus</a></span></td>
+	  <td class="row2" align="center" valign="middle"><span class="postdetails">84607</span></td>
+	  <td class="row3Right" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">10.10.2018 14:23<br /><a href="profile.php?mode=viewprofile&amp;u=7768">Rosalind standarn</a> <a href="viewtopic.php?p=1005466#1005466"><img src="templates/subSilver/images/icon_latest_reply.gif" alt="Vis siste innlegg" title="Vis siste innlegg" border="0" /></a></span></td>
+	</tr>
+	<tr>
+	  <td class="catBottom" align="center" valign="middle" colspan="6" height="28"><span class="genmed">Vis emner fra:&nbsp;<select name="topicdays"><option value="0" selected="selected">Alle emner</option><option value="1">1 dag</option><option value="7">7 dager</option><option value="14">2 uker</option><option value="30">1 måned</option><option value="90">3 måneder</option><option value="180">6 måneder</option><option value="364">1 år</option></select>&nbsp;
+		<input type="submit" class="liteoption" value="Gå" name="submit" />
+		</span></td>
+	</tr>
+  </table>
+
+  <table width="100%" cellspacing="2" border="0" align="center" cellpadding="2">
+	<tr>
+	  <td align="left" valign="middle" width="50"><a href="posting.php?mode=newtopic&amp;f=11"><img src="templates/subSilver/images/lang_norwegian/post.gif" border="0" alt="Start nytt emne" /></a></td>
+	  <td align="left" valign="middle" width="100%"><span class="nav">&nbsp;&nbsp;&nbsp;<a href="index.php" class="nav">RBKweb - hovedsiden</a> -> <a class="nav" href="viewforum.php?f=11">På sidelinja</a></span></td>
+	  <td align="right" valign="middle" nowrap="nowrap"><span class="gensmall">Tidssone: CET vintertid (Europa)</span><br /><span class="nav">Gå til side <b>1</b>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=50">2</a>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=100">3</a> ... <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=450">10</a>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=500">11</a>, <a href="viewforum.php?f=11&amp;topicdays=0&amp;start=550">12</a>&nbsp;&nbsp;<a href="viewforum.php?f=11&amp;topicdays=0&amp;start=50">Neste</a></span>
+		</td>
+	</tr>
+	<tr>
+	  <td align="left" colspan="3"><span class="nav">Side <b>1</b> av <b>12</b></span></td>
+	</tr>
+  </table>
+</form>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+	<td align="right">
+<form method="get" name="jumpbox" action="viewforum.php" onSubmit="if(document.jumpbox.f.value == -1){return false;}"><table cellspacing="0" cellpadding="0" border="0">
+	<tr>
+		<td nowrap="nowrap"><span class="gensmall">Gå til:&nbsp;<select name="f" onchange="if(this.options[this.selectedIndex].value != -1){ forms['jumpbox'].submit() }"><option value="-1">Velg forum</option><option value="-1">&nbsp;</option><option value="-1">Rosenborg</option><option value="-1">----------------</option><option value="1">Sportslig avdeling</option><option value="11">På sidelinja</option><option value="7">English forum</option><option value="-1">&nbsp;</option><option value="-1">Mye om mangt</option><option value="-1">----------------</option><option value="3">Fotball generelt</option><option value="6">Garderoben</option><option value="8">Kjøp, salg og bytting</option><option value="-1">&nbsp;</option><option value="-1">RBKweb</option><option value="-1">----------------</option><option value="4">RBKweb og forumet</option><option value="10">Gapestokken</option></select><input type="hidden" name="sid" value="104a7d87324be94f6996897cf342cc80" />&nbsp;<input type="submit" value="Gå" class="liteoption" /></span></td>
+	</tr>
+</table></form>
+
+</td>
+  </tr>
+</table>
+
+
+<div align="center"><span class="copyright"><br />
+<!--
+	We request you retain the full copyright notice below including the link to www.phpbb.com.
+	This not only gives respect to the large amount of time given freely by the developers
+	but also helps build interest, traffic and use of phpBB 2.0. If you cannot (for good
+	reason) retain the full copyright we request you at least leave in place the
+	Powered by phpBB  line, with phpBB linked to www.phpbb.com. If you refuse
+	to include even this then support on our forums may be affected.
+
+	The phpBB Group : 2002
+// -->
+Utviklet av <a href="http://www.phpbb.com/" target="_blank" class="copyright">phpBB</a>.
+Tilrettelagt for RBKweb.</span></div>
+
+
+
+<br>
+<p align="center">
+
+<!--/* OpenX Javascript Tag v2.8.9 */-->
+
+
+
+<script type='text/javascript'><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://www.rbkweb.no/annonse/www/delivery/ajs.php':'http://www.rbkweb.no/annonse/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=5");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><noscript><a href='http://www.rbkweb.no/annonse/www/delivery/ck.php?n=ad0133d6&amp;cb=INSERT_RANDOM_NUMBER_HERE' target='_blank'><img src='http://www.rbkweb.no/annonse/www/delivery/avw.php?zoneid=5&amp;cb=INSERT_RANDOM_NUMBER_HERE&amp;n=ad0133d6' border='0' alt='' /></a></noscript>
+
+
+
+
+</p>
+
+</font>
+
+</td></tr></table>
+</td>
+
+
+<td width="1" bgcolor="#000000" valign="top"><img src="http://www.rbkweb.no/images/pixel.gif" width="1" height="1"></td>
+
+
+
+<! ------ Høyre kolonne -------- >
+
+<td width="188" valign="top" bgcolor="#FFFFFF" align="center">
+
+<Font Face="Verdana,Arial,Helvetica" size="1" color="#000000">
+
+<table cellspacing="1" cellpadding="1" width="100%" border="0">
+
+<tr>
+<td bgcolor="#f1f1f1"><Font Face="Verdana,Arial,Helvetica" size="1" color="#000000"><strong>ANNONSE</font></strong></td></tr>
+<tr><td align="center"><Font Face="Verdana,Arial,Helvetica" size="1" color="#000000">
+
+
+<!--/* OpenX Javascript Tag v2.8.9 */-->
+
+
+<script type='text/javascript'><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://www.rbkweb.no/annonse/www/delivery/ajs.php':'http://www.rbkweb.no/annonse/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=4");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><noscript><a href='http://www.rbkweb.no/annonse/www/delivery/ck.php?n=a75113ab&amp;cb=INSERT_RANDOM_NUMBER_HERE' target='_blank'><img src='http://www.rbkweb.no/annonse/www/delivery/avw.php?zoneid=4&amp;cb=INSERT_RANDOM_NUMBER_HERE&amp;n=a75113ab' border='0' alt='' /></a></noscript>
+
+
+
+</font>
+
+</td></tr>
+</table>
+
+
+
+
+
+<! ---- Sitat start -------- >
+
+<table cellspacing="1" cellpadding="1" width="100%" border="0">
+<tr><td height="4"><img src="http://www.rbkweb.no/images/pixel.gif" height="1" width="1"></td></tr>
+<tr><td bgcolor="#f1f1f1"><Font Face="Verdana,Arial,Helvetica" size="1" color="#000000"><strong>SITATET</font></strong></td></tr>
+<tr><td height="4"><img src="http://www.rbkweb.no/images/pixel.gif" height="1" width="1"></td></tr>
+<tr><td><Font Face="Verdana,Arial,Helvetica" size="1" color="#000000">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+<!-- Begin
+var howMany = 51
+var quote = new Array(howMany+1)
+
+
+quote[0]="<strong>«Du prate som en gud, men spælle som ei fett!»</strong><br>Odd Iversen til lagkaptein Eggen, som hadde scoret selvmål i semifinalen mot Mjøndalen, 1968."
+
+quote[1]="<strong>«Jeg har langt hår, og er pen å se på. Er det rart småjentene liker meg?»</strong><br>Mini til VG i 1990."
+
+quote[2]="<strong>«Gratulerer. Rævvafotball!»</strong><br>Eggen til Molde-trener Åge Hareide etter cuptapet i 1994."
+
+quote[3]="<strong>«Jeg har aldri spilt på Hampden Park uten å score.»</strong><br>Bjørn Wirkola etter å ha scoret i 1-2-tap mot Celtic 1971."
+
+quote[4]="<strong>«Jeg vil foreslå at han spiller nærmest mulig Vangseter, jeg! Jeg er mot å få hit en type som har banka kjerringa si tre ganger!»</strong><br>Eggen på spørsmål om han kunne tenke seg å ha Paul «Gazza» Gascoigne på laget."
+
+quote[5]="<strong>«Å forsvare seg på Lerkendal er det samme som å sende Salman Rushdie på sykkeltur gjennom Teheran.»</strong><br>Åge Hareide som Molde-trener."
+
+quote[6]="<strong>«This is a ball.»</strong><br>George Curtis startet med det mest grunnleggende overfor spillerne da han ble trener i 1969."
+
+quote[7]="<strong>«Andre får blomster når de slutter, du skal få blomster <i>fordi</i> du slutter!»</strong><br>Odd Iversen til trener Eggen under en krangel."
+
+quote[7]="<strong>«Jøss, John - med alt det gullet dær begynne du faktisk å ligne på en neger!»</strong><br>Eggen etter at John Alieu Carew hadde vært på Bahamas og kjøpt smykker i januar 2000."
+
+quote[8]="<strong>«Asså, æ må sitere Ibsen. «Ikke øl i en sådan stund, rekk meg heller fløten.» Men i en sådan stund bytter vi ut fløyten. Rekk meg Løiten!»</strong><br>Eggen fritt etter Henrik Ibsen da RBK slo IFK Göteborg 3-2 i september 1996 (første Champions League-borteseier i historien)."
+
+quote[9]="<strong>«Dersom jeg blir verdensmester legger jeg opp. En verdensmester spiller ikke på Fosshaugane!»</strong><br>Mini høyt oppe etter det overraskende VM-uttaket i 1998. Noen uker senere ble han byttet ut i pausen borte mot Sogndal etter en elendig første omgang..."
+
+quote[10]="<strong>«It's hope in a hanging snore. Fishing-snore.»</strong><br>Eggen forklarte verden at det er håp i en hengende tråd på pressekonferanse før hjemmekamp mot Celtic okt. 2001. Snore = å snorke ;-]"
+
+quote[11]="<strong>«Nå holder du kjeft, ellers kan du gå i garderoben!»</strong><br>Eggen skjeller ut assistenten Ola By under en treningskamp mot Tromsø i april 2002."
+
+quote[12]="<strong>«Når flomlyset kommer på og det er dugg i gresset er gutan klar. Det er som å se vårkåte trøndere - og nordlendinger!»</strong><br>En glad Mini etter å ha scoret to mål i 3-1-seieren over MTK Budapest i Mesterliga-kvalikken høsten 1997."
+
+quote[13]="<strong>«Bjørn Wirkola skjøt hardere med hoppski på beina!»</strong><br>TV2s Ivar Hoff etter et lompeskudd fra Ørjan Berg mot Lyn i april 2002."
+
+quote[14]="<strong>«Janne Saarinen bør få litt mer Ivar Medaas-stil. Han må begynne å se til begge sider samtidig!»</strong><br>Radio 1-ekspert Ivar Selnæs med den slagrammede musikeren i tankene under LSK-RBK mai 2002."
+
+quote[15]="<strong>«Det var som en dårlig skrekkfilm.»</strong><br>Ola By Rise om da Inter Bratislava snudde 1-0 til 1-3 i Mesterliga-kvalikken 2001. Heldigvis ble det 3-3 til slutt."
+
+quote[16]="<strong>«Karl-Petter Løken, du har jo tilslag som en Cocker Spaniel!»</strong><br>Eggen under skuddtrening på slutten av 80-tallet."
+
+quote[17]="<strong>«You have to come in joggedress!»</strong><br>Eggen til Robert Boateng i 1997. Det endte med at afrikaneren kom joggende i dress!"
+
+quote[18]="<strong>«Æ score tre!»</strong><br>Ivers blir intervjuet over østerriksk presse dagen før han på egen hånd sørget for 3-3 borte mot Rapid Wien i 1968."
+
+quote[19]="<strong>«Nå må han Morgan Andersen, eller hva han heter for noe, prøve å holde smella litt. Han er jo omtrent asfaltert fra kravebenet og helt opp!»</strong><br>Eggen under krangel med NISO-leder Morgan Andersen."
+
+quote[20]="<strong>«Æ e jo en mainn av få ord. Tusen takk te' dåkk aill!»</strong><br>En selvironisk Eggen i sin takketale til publikum etter sin avskjedskamp mot Lyon 12.11.02."
+
+quote[21]="<strong>«Jeg har gitt mange gode råd til håndverkere som har arbeidet på Brakka, og jeg tror de fleste har satt stor pris på rådene.»</strong><br>Sitat signert Eggen. Det må sies at alle «ekspertrådene» fra den kanten har skremt mang en håndverker bort fra Lerkendal..."
+
+quote[22]="<strong>«Du får mange sjanser til å vinne mesterskap på Rosenborg!»</strong><br>Eggens unnskyldning til unggutten Øystein Wormdal da i stedet medtrener og reservekeeper Tor Røste Fossen fikk spille de siste minuttene av cupfinalen i 1971, og dermed ble cupmester. Dessverre for Wormdals vedkommende, tok Eggen feil: 14 år i RBK endte uten en eneste medalje..."
+
+quote[23]="<strong>«Ingen betaler hundrevis av kroner for å se på innkast!»</strong><br>Eggen om sin offensive spillestil."
+
+quote[24]="<strong>«I første omgang var det helt jævlig - det så ut som vi gikk på dop!»</strong><br>Åge Hareide etter 6-1-seier over Brann i april 2003. For ordens skyld: RBK ledet 4-0 til pause!"
+
+quote[25]="<strong>«Vi vil minne om neste hjemmekamp mot Viking 5. mai.»</strong><br>Speaker på Brann stadion da Rosenborg gikk opp i en 3-0-ledelse halvveis ut i første omgang (6-1-seier i april 2003)."
+
+quote[26]="<strong>«Nå skal vi hjem og snu kjerringa!»</strong><br>Jørn Jamtfall etter (nok et) bortetap i Champions League."
+
+quote[27]="<strong>«Strindheim likner litt på Spartak Moskva.»</strong><br>Nils Arne Eggen i overkant rosende etter 2-1-seier hjemme mot Strindheim i 1995."
+
+quote[28]="<strong>«Jeg følte meg som eggedosis i en mixmaster i første omgang.»</strong><br>Viking-keeper Frode Olsen etter at RBK hadde prestert årsbeste på Lerkendal i august 2003."
+
+quote[29]="<strong>«Borussia Dortmund har ikke blitt så avkledd siden striptease ble oppfunnet i Tyskland!»</strong><br>TV3-kommentator Knut Th. Gleditsch da RBK ledet 3-0 i bortekampen høsten 1999."
+
+quote[30]="<strong>«Å forsvare seg på Lerkendal er det samme som å sende Salman Rushdie på sykkel gjennom Teheran.»</strong><br>Åge Hareide som Molde-trener."
+
+quote[31]="<strong>«Kampen på Aspmyra var ikke noe å rope hurra for. De første 20 minuttene var bra. Etterpå så det ut som alle spillerne hadde gått på Steinerskolen: Alle hadde sine egne ideer om hva som skulle gjøres.»</strong><br>Per Joar Hansen i april 2005 etter 1-0-seier mot Bodø/Glimt på en dårlig dag."
+
+quote[32]="<strong>«Tørk vekk bedehussmilet, Rune!»</strong><br>Daværende Molde-trener Åge Hareide om «arrogante» Bratseth foran returkampen i NM-semifinalene 1994."
+
+quote[33]="<strong>«Vi kaller guttene «leger uten grenser»!»</strong><br>Rune Skarsfjord etter at medisinstudentene Espen Johnsen og Fredrik Winsnes hadde havnet i basketak på trening 9. mai 2005."
+
+quote[34]="<strong>«Jeg elsker å se bilder av meg selv i avisene og lese om hvor god jeg har vært. Det er jo topp. Det er derfor jeg spiller fotball.»</strong><br>En ung Mini i velkjent stil i 1988."
+
+quote[35]="<strong>«Mini, din forbanna lille dverg! Hvis du ikke begynne å spring, så ska æ kapp av dæ beinan!»</strong><br>Eggen på trening."
+
+quote[36]="<strong>«Jeg driver med kunst, og trenger like mye inspirasjon som kondisjon.»</strong><br>Dessverre har Christer Basma ofte vist mest destruktiv kunst på banen."
+
+quote[37]="<strong>«I kveld skal jeg spandere på deg så mye spagetti som du vil ha, Eggen! Og det skal være karsk til!»</strong><br>TV3-kommentar Knut Th. Gleditsch på overtid mot AC Milan i 1996."
+
+quote[38]="<strong>«Russisk media lurte på hvordan Solli og Johnsen hadde blitt straffet. GULAG på Lade hadde vært noe...»</strong><br>TV3-kommentar Thor Eggen under returkampen mot Zenit St. Petersburg vinteren 2006. Solli og keeper-Johnsen hadde tabbet seg ut på de to baklengsmålene i hjemmekampen."
+
+quote[39]="<strong>«Reis dæ opp, din amøbe! Du har smerteterskel som en undulat!»</strong><br>Nils Arne Eggen mens Viggo Sundmoen lå og vrei seg i smerter etter en hard takling fra Svein Grøndalen på trening på seint 70-tall."
+
+quote[40]="<strong>«Ser jeg deg over midtstreken, så dreper jeg deg!»</strong><br>Advarsel fra Roger Albertsen til den purunge Lillestrøm-backen Gunnar Halle foran seriefinalen i 1985."
+
+quote[41]="<strong>«Æ passe nok bæst i små dås... dosa, æ!»</strong><br>Nils Arne Eggen i et forsøk på å sammenligne seg sjøl med Erik Hamrén i 2008."
+
+quote[42]="<strong>«Fekk du med dæ målet mitt, Bjørge?!»</strong><br>Ivers i 1968 etter den legendariske 1-0-seieren over Frankrike i Strasbourg, der radiokommentator Bjørge Lillelien i kjent stil hadde gått bananas på tribunen."
+
+quote[43]="<strong>«Det haindla om to mann i dag. Æ scora tre, hainn slapp inn tre.»</strong><br>Ivers var ikke fornøyd med keeper Tor Røste Fossen etter 3-3 borte mot Rapid Wien i 1968."
+
+quote[44]="<strong>«Det var bare tre måneder igjen av garantien på klokka da jeg fikk den.»</strong><br>Ivers spilte 24 landskamper på rad etter debuten, men ble utestengt i åtte måneder for fyll på samling i Mexico da han egentlig skulle ha spilt jubileumskampen og fått gullklokka høsten 1969."
+
+quote[45]="<strong>«Aldri før har jeg lurt deg med en enkel kipp med kølla.»</strong><br>Steffen Iversen til utleid Strømsgodset-keeper Espen Johnsen etter 1-1 i oktober 2008."
+
+quote[46]="<strong>«Antall støttepasninger i Rosenborg har økt proporsjonalt med antall nyansettelser i markedsavdelingen. Det høres flåsete ut, men det er bare å telle.»</strong><br>Drillo analyserer RBK anno 2008."
+
+quote[47]="<strong>«Med all respekt: Skal vi danse med en kvinne som er dårlig til å danse, så ser det ikke særlig bra ut på gulvet. De spilte destruktivt.»</strong><br>Erik Hamrén etter 1-0-seier hjemme mot Fredrikstad i mai 2009."
+
+quote[48]="<strong>«Alt som gjelder er at det ikke blir straffespark-konkurranse der nede. For de kommer ikke til å score. Jeg kan ikke huske sist motstanderen har scoret så lenge jeg har startet. Så det kommer ikke skje.»</strong><br>Kris Stadsgaard om returkampen mot Qarabag etter 0-0 på hjemmebane i kvalifiseringa til europaligaen i juli 2009. Trolig var han noe spakere etter 0-1-tap i returen."
+
+quote[49]="<strong>«Når du får slengt etter deg at du er en hore, eller en homo, eller at du skal hjem å runke faren din, er det liksom ikke den helt store litterære schwungen over det.»</strong><br>Eggen i 97 om tiltrop fra tribunene på bortekamper."
+
+quote[50]="<strong>«Jeg vet utmerket godt at jeg verken har utseende eller kropp til å være med i Baywatch, men når jeg blir kalt svin og grisetryne, opplever jeg det som en tanke uraffinert.»</strong><br>Eggen i 97 om tiltrop fra tribunene på bortekamper."
+
+quote[51]="<strong>«Nå må ikke du komme rett fra operasjonsbordet og fortelle oss hva vi skal gjøre.»</strong><br>Da klubblegen i 97 hadde etterlyst mer uttøying etter treningene."
+
+
+function rndnumber(){
+var randscript = -1
+while (randscript < 0 || randscript > howMany || isNaN(randscript)){
+randscript = parseInt(Math.random()*(howMany+1))
+}
+return randscript
+}
+quo = rndnumber()
+quox = quote[quo]
+document.write(quox)
+// End -->
+</SCRIPT>
+
+
+
+
+</font></td></tr></table>
+
+<! ---- Sitat slutt -------- >
+
+
+</font>
+
+</td>
+<td width="1" bgcolor="#000000" valign="top"><img src="http://www.rbkweb.no/images/pixel.gif" width="1" height="1"></td>
+
+</tr>
+
+<tr>
+<td width="980" colspan="7" height="3" bgcolor="#FFFFFF"></td>
+</tr>
+
+<tr>
+<td colspan="7" width="980" height="2" bgcolor="#000000"><img src="http://www.rbkweb.no/images/pixel.gif" height="1" width="1"></td>
+</tr>
+<tr>
+<td colspan="7" width="980" height="14" bgcolor="#f1f1f1"><font face="verdana,arial,helvetica" size="1"> <a href="http://www.rbkweb.no/copyright.shtml" style="text-decoration: none; color: #000000">&copy; 1999-2019 RBKweb</a></font></td>
+</tr>
+</table>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-333046-1";
+urchinTracker();
+</script>
+
+
+
+</body>
+</html>
+
+
