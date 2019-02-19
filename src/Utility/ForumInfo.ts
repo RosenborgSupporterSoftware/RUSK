@@ -26,81 +26,140 @@ export class ForumInfo implements IRUSKPageItem {
     /** The row element from the DOM */
     readonly rowElement: HTMLTableRowElement;
 
-    /** The ID of the forum */
-    readonly itemId: number;
+    private _itemId: number = -1;
+
+    /** Gets the ID of the forum */
+    public get itemId(): number {
+        if (this._itemId == -1) {
+            this._itemId = this.getForumId();
+        }
+        return this._itemId;
+    }
 
     /** Gets a value that indicates if the item should be hidden or not */
     isHidden: boolean;
 
+    private _title: string;
+
     /** The title of the forum */
-    readonly title: string;
+    public get title(): string {
+        return this._title || (this._title = this.getTitle());
+    }
+
+    private _description: string;
 
     /* The description of the forum */
-    readonly description: string;
+    public get description(): string {
+        return this._description || (this._description = this.getDescription());
+    }
+
+    private _baseUrl: string;
 
     /** The url of the first page of the forum */
-    readonly baseUrl: string;
+    public get baseUrl(): string {
+        return this._baseUrl || (this._baseUrl = this.getBaseUrl());
+    }
+
+    private _hasParsedUnread = false;
+    private _isUnread: boolean;
 
     /** Gets a value that indicates if the forum contains unread messages */
-    readonly isUnread: boolean;
+    public get isUnread(): boolean {
+        if (!this._hasParsedUnread) {
+            this._isUnread = this.determineUnreadState();
+            this._hasParsedUnread = true;
+        }
+        return this._isUnread;
+    }
+
+    private _latestPoster: string;
 
     /** Gets the name of the user that posted to the forum most recently */
-    readonly latestPoster: string;
+    public get latestPoster(): string {
+        return this._latestPoster || (this._latestPoster = this.getLatestPoster());
+    }
+
+    private _topics = -1;
 
     /** Gets the number of topics in the forum */
-    readonly topics: number;
+    public get topics(): number {
+        if (this._topics == -1) {
+            this._topics = this.getTopics();
+        }
+        return this._topics;
+    }
+
+    private _posts: number = -1;
 
     /** Gets the number of posts the forum has */
-    readonly posts: number;
+    public get posts(): number {
+        if (this._posts == -1) {
+            this._posts = this.getPosts();
+        }
+        return this._posts;
+    }
+
+    private _lastUpdate: Date;
 
     /** Gets a Date object representing the time when the forum was last updated */
-    readonly lastUpdate: Date;
+    public get lastUpdate(): Date {
+        return this._lastUpdate || (this._lastUpdate = this.getLastUpdate());
+    }
 
     /** Create a new ThreadInfo object based on parsing of a passed HTMLTableRowElement */
     constructor(row: HTMLTableRowElement) {
         this.rowElement = row;
-
-        this.title = this.getTitle(row);
-        this.description = this.getDescription(row);
-        this.baseUrl = this.getBaseUrl(row);
-        this.isUnread = this.determineUnreadState(row);
-        this.latestPoster = this.getLatestPoster(row);
-        this.topics = this.getTopics(row);
-        this.posts = this.getPosts(row);
-        this.lastUpdate = this.getLastUpdate(row);
     }
 
-    private getTitle(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row1 span.forumlink a.forumlink') as HTMLAnchorElement).textContent;
+    private getForumId(): number {
+        let href = this.rowElement
+            .querySelector<HTMLAnchorElement>('a.forumlink')
+            .href;
+        return +href.substr(href.lastIndexOf('=') + 1);
     }
 
-    private getDescription(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row1 span.genmed') as HTMLSpanElement).textContent.trim(); // ekstra junk
+    private getTitle(): string {
+        return this.rowElement
+            .querySelector<HTMLAnchorElement>('td.row1 span.forumlink a.forumlink')
+            .textContent;
     }
 
-    private getBaseUrl(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row1 span.forumlink a.forumlink') as HTMLAnchorElement).href;
+    private getDescription(): string {
+        return this.rowElement
+            .querySelector<HTMLSpanElement>('td.row1 span.genmed')
+            .textContent
+            .trim(); // ekstra junk
     }
 
-    private determineUnreadState(row: HTMLTableRowElement): boolean {
-        let imgUrl = (row.querySelector('td:first-of-type.row1 img') as HTMLImageElement).src;
+    private getBaseUrl(): string {
+        return this.rowElement
+            .querySelector<HTMLAnchorElement>('td.row1 span.forumlink a.forumlink')
+            .href;
+    }
+
+    private determineUnreadState(): boolean {
+        let imgUrl = this.rowElement
+            .querySelector<HTMLImageElement>('td:first-of-type.row1 img')
+            .src;
         return imgUrl.endsWith('folder_new_big.gif');
     }
 
-    private getLatestPoster(row: HTMLTableRowElement): string {
-        return (row.querySelector('td.row2 span.gensmall a:first-of-type') as HTMLAnchorElement).textContent;
+    private getLatestPoster(): string {
+        return this.rowElement
+            .querySelector<HTMLAnchorElement>('td.row2 span.gensmall a:first-of-type')
+            .textContent;
     }
 
-    private getTopics(row: HTMLTableRowElement): number {
-        return +(row.children[2] as HTMLTableCellElement).textContent;
+    private getTopics(): number {
+        return +(this.rowElement.children[2] as HTMLTableCellElement).textContent;
     }
 
-    private getPosts(row: HTMLTableRowElement): number {
-        return +(row.children[3] as HTMLTableCellElement).textContent;
+    private getPosts(): number {
+        return +(this.rowElement.children[3] as HTMLTableCellElement).textContent;
     }
 
-    private getLastUpdate(row: HTMLTableRowElement): Date {
-        var date = ((row.querySelector('td:last-of-type.row2 span.gensmall') as HTMLSpanElement).childNodes[0]).textContent;
+    private getLastUpdate(): Date {
+        var date = (this.rowElement.querySelector<HTMLSpanElement>('td:last-of-type.row2 span.gensmall').childNodes[0]).textContent;
         var match = date.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4}) (\d{1,2}):(\d{1,2})/);
         if (match) {
             return new Date(+match[3], +match[2] - 1, +match[1], +match[4], +match[5]);
