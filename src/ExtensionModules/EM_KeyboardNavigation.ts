@@ -223,7 +223,10 @@ export class KeyboardNavigation implements ExtensionModule {
                     let postInfo = this._ctx.RUSKPage.selectedItem as PostInfo;
                     if (postInfo == null) return;
                     if (!postInfo.ipInfoUrl || postInfo.ipInfoUrl.length == 0) return;
-                    window.location.href = postInfo.ipInfoUrl;
+                    postInfo
+                        .rowElement
+                        .querySelector<HTMLAnchorElement>('a[href^="modcp"]')
+                        .click();
                     shouldPreventDefault = true; // And this as well
                 }
                 break;

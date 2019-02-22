@@ -6,6 +6,7 @@ Nye funksjoner:
 
 - Lagt til noen nye hurtigtaster - f.eks Ctrl-| (pipe) for å gå til forumforsiden.
 - Skilt fargelegging og tastaturnavigasjon i separate moduler.
+- Inline ip-info i forumet for spam-bekjemping (kun moderatorer).
 
 Bugfixes:
 
