@@ -105,6 +105,7 @@ export class ModPostTools implements ExtensionModule {
             if(post==null) return false;
             let divId = "ipinfo-div-" + post.itemId;
             let div = document.getElementById(divId);
+            if(div == null) return false;
 
             let lines = (this.selectElementContents(div) as string).split('\n');
             let text = "";
