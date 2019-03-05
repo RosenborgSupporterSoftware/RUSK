@@ -5,22 +5,19 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_MediaEmbedder - Extension module for RBKweb.
  * Embeds Youtube, Twitter, Instagram, Streamable directly into posts.
  */
 
-export class MediaEmbedder implements ExtensionModule {
+export class MediaEmbedder extends ModuleBase {
     readonly name: string = "MediaEmbedder";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST,
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -118,16 +115,17 @@ export class MediaEmbedder implements ExtensionModule {
     //embedM3U8: boolean;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        this.embedYoutube = this.cfg.GetSetting("EmbedYoutube") as boolean;
-        this.embedTwitter = this.cfg.GetSetting("EmbedTwitter") as boolean;
-        this.embedStreamable = this.cfg.GetSetting("EmbedStreamable") as boolean;
-        this.replaceStreamableLinks = this.cfg.GetSetting("ReplaceStreamableLinks") as boolean;
-        this.embedInstagram = this.cfg.GetSetting("EmbedInstagram") as boolean;
-        this.instagramCaption = this.cfg.GetSetting("InstagramCaption") as boolean;
-        this.instagramOnlyPicture = this.cfg.GetSetting("InstagramOnlyPicture") as boolean;
-        this.embedMp4 = this.cfg.GetSetting("EmbedMP4") as boolean;
-        this.embedWebm = this.cfg.GetSetting("EmbedWebm") as boolean;
+        super.init(config);
+
+        this.embedYoutube = this._cfg.GetSetting("EmbedYoutube") as boolean;
+        this.embedTwitter = this._cfg.GetSetting("EmbedTwitter") as boolean;
+        this.embedStreamable = this._cfg.GetSetting("EmbedStreamable") as boolean;
+        this.replaceStreamableLinks = this._cfg.GetSetting("ReplaceStreamableLinks") as boolean;
+        this.embedInstagram = this._cfg.GetSetting("EmbedInstagram") as boolean;
+        this.instagramCaption = this._cfg.GetSetting("InstagramCaption") as boolean;
+        this.instagramOnlyPicture = this._cfg.GetSetting("InstagramOnlyPicture") as boolean;
+        this.embedMp4 = this._cfg.GetSetting("EmbedMP4") as boolean;
+        this.embedWebm = this._cfg.GetSetting("EmbedWebm") as boolean;
         //this.embedM3U8 = this.cfg.GetSetting("EmbedM3U8") as boolean;
 
         return null;
@@ -301,10 +299,6 @@ export class MediaEmbedder implements ExtensionModule {
                 iframe.style.height = height + "px";
             }
         });
-    }
-
-    invoke = function (cmd: string): boolean {
-        return false;
     }
 
     private activateInstagrams(): void {

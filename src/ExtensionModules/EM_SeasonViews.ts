@@ -1,23 +1,19 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_MatchView - Extension module for RBKweb.
  */
 
-export class SeasonViews implements ExtensionModule {
+export class SeasonViews extends ModuleBase {
     readonly name: string = "Kampoversikt";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_MATCH_OVERVIEW
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -67,9 +63,10 @@ export class SeasonViews implements ExtensionModule {
     colorize: boolean;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        this.weekday = this.cfg.GetSetting("displayWeekday") as boolean;
-        this.colorize = this.cfg.GetSetting("colorizeResult") as boolean;
+        super.init(config);
+
+        this.weekday = this._cfg.GetSetting("displayWeekday") as boolean;
+        this.colorize = this._cfg.GetSetting("colorizeResult") as boolean;
 
         return null;
     }
@@ -128,18 +125,14 @@ export class SeasonViews implements ExtensionModule {
         }
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];
         keys.push("$RUSKMatchWin$");
-        values.push(this.cfg.GetSetting('MatchWinColor'));
+        values.push(this._cfg.GetSetting('MatchWinColor'));
         keys.push("$RUSKMatchDraw$");
-        values.push(this.cfg.GetSetting('MatchDrawColor'));
+        values.push(this._cfg.GetSetting('MatchDrawColor'));
         keys.push("$RUSKMatchLoss$");
-        values.push(this.cfg.GetSetting('MatchLossColor'));
+        values.push(this._cfg.GetSetting('MatchLossColor'));
 
         for (let i = 0; i < keys.length; i++) {
             template = template.replace(keys[i], values[i]);

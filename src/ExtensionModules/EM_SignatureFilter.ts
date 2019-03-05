@@ -1,4 +1,3 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
@@ -6,21 +5,18 @@ import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_SignatureFilter - Extension module for RBKweb.
  */
 
-export class SignatureFilter implements ExtensionModule {
+export class SignatureFilter extends ModuleBase {
     readonly name: string = "Signaturfilter";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -53,9 +49,10 @@ export class SignatureFilter implements ExtensionModule {
     hideUserSignatures: Array<number>;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        this.hideSignatures = this.cfg.GetSetting("HideSignatures") as boolean;
-        this.hideUserSignatures = JSON.parse(this.cfg.GetSetting("HideSignatureUsers") as string);
+        super.init(config);
+
+        this.hideSignatures = this._cfg.GetSetting("HideSignatures") as boolean;
+        this.hideUserSignatures = JSON.parse(this._cfg.GetSetting("HideSignatureUsers") as string);
 
         return null;
     }
@@ -81,9 +78,9 @@ export class SignatureFilter implements ExtensionModule {
     HIDE_SIGNATURE: string = "Hide signature";
     SHOW_SIGNATURE: string = "Show signature";
 
-    execute = (context: PageContext) => {
+    execute = () => {
         // restructure post body to manipulate signature easier
-        this.posts.forEach(function(post: PostInfo, idx, posts) {
+        this.posts.forEach(function(post: PostInfo) {
             try {
                 var body: HTMLTableDataCellElement = post.postBodyElement;
                 var elt: HTMLElement = body.firstElementChild as HTMLElement;
@@ -116,17 +113,17 @@ export class SignatureFilter implements ExtensionModule {
         }.bind(this));
 
         // hide all signatures we should hide
-        this.posts.forEach(function(post: PostInfo, idx, posts) {
+        this.posts.forEach(function(post: PostInfo) {
             var posterid = post.posterid;
             var hideSignature = this.hideSignatures || (this.hideUserSignatures.indexOf(posterid) != -1);
             if (!hideSignature) return;
-            post.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement, idx, parent) {
+            post.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement) {
                 elt.classList.add('RUSKHiddenItem');
             }.bind(this));
         }.bind(this));
 
         // add context menu actions
-        this.posts.forEach(function(post: PostInfo, idx, posts) {
+        this.posts.forEach(function(post: PostInfo) {
             if (this.hideSignatures) return; // no need for context menu options when hiding all
             var cmenu = post.getContextMenu();
             var posterid = post.posterid;
@@ -134,11 +131,11 @@ export class SignatureFilter implements ExtensionModule {
             var hasSignature = post.rowElement.querySelector(".RUSKSignature") as HTMLSpanElement;
             if (!hasSignature) return;
             cmenu.addAction(this.tr(this.HIDE_SIGNATURE), !hideSignature, function() {
-                this.posts.forEach(function(thepost: PostInfo, idx, posts) {
+                this.posts.forEach(function(thepost: PostInfo) {
                     if (thepost.posterid != posterid) return;
                     cmenu.getAction(this.tr(this.HIDE_SIGNATURE)).hide(); // FIXME: make checkboxed menu option instead
                     cmenu.getAction(this.tr(this.SHOW_SIGNATURE)).show();
-                    thepost.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement, idx, parent) {
+                    thepost.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement) {
                         elt.classList.add('RUSKHiddenItem');
                     }.bind(this));
                     this.hideUserSignatures.push(posterid);
@@ -146,11 +143,11 @@ export class SignatureFilter implements ExtensionModule {
                 }.bind(this));
             }.bind(this));
             cmenu.addAction(this.tr(this.SHOW_SIGNATURE), hideSignature, function() {
-                this.posts.forEach(function(thepost: PostInfo, idx, posts) {
+                this.posts.forEach(function(thepost: PostInfo, idx) {
                     if (thepost.posterid != posterid) return;
                     cmenu.getAction(this.tr(this.HIDE_SIGNATURE)).show();
                     cmenu.getAction(this.tr(this.SHOW_SIGNATURE)).hide();
-                    thepost.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement, idx, parent) {
+                    thepost.postBodyElement.querySelectorAll('.RUSKSignature').forEach(function(elt: HTMLElement) {
                         elt.classList.remove('RUSKHiddenItem');
                     }.bind(this));
                     var idx = this.hideUserSignatures.indexOf(posterid);
@@ -162,13 +159,9 @@ export class SignatureFilter implements ExtensionModule {
         }.bind(this));
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private saveHideUserSignatures(): void {
         var arraystr = JSON.stringify(this.hideUserSignatures);
         //console.log("storing signature-hidden users: '" + arraystr + "'");
-        this.cfg.ChangeSetting("HideSignatureUsers", arraystr);
+        this._cfg.ChangeSetting("HideSignatureUsers", arraystr);
     }
 }

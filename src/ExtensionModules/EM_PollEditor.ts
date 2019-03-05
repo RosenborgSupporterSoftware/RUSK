@@ -1,9 +1,9 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_PollEditor - Extension module for RBKweb.
@@ -11,17 +11,13 @@ import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOpt
 
 // IDEA: add a constructd preview of the poll to preview view
 
-export class PollEditor implements ExtensionModule {
+export class PollEditor extends ModuleBase {
     readonly name: string = "PollEditor";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTNEWTOPIC,
         RBKwebPageType.RBKweb_FORUM_EDITPOST,
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -48,8 +44,8 @@ export class PollEditor implements ExtensionModule {
     language: string;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        var pollscfg = this.cfg.GetSetting("polls") as string;
+        super.init(config);
+        var pollscfg = this._cfg.GetSetting("polls") as string;
         this.polls = JSON.parse(pollscfg);
 
         return null;
@@ -183,13 +179,9 @@ export class PollEditor implements ExtensionModule {
         }
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private storePolls(): void {
         var pollsaves = JSON.stringify(this.polls);
-        this.cfg.ChangeSetting("polls", pollsaves);
+        this._cfg.ChangeSetting("polls", pollsaves);
     }
 
     private reindexPollItems(): void {

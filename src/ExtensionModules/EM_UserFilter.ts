@@ -1,4 +1,3 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
@@ -6,6 +5,7 @@ import { PostInfo } from "../Utility/PostInfo";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_UserFilter - Extension module for RBKweb.
@@ -14,16 +14,12 @@ import { PageContext } from "../Context/PageContext";
 // FIXME: common preprocessing step with UsernameTracker, SignatureFilter (marking userid
 // on username DOM objects)
 
-export class UserFilter implements ExtensionModule {
-    readonly name : string = "UserFilter";
-    cfg: ModuleConfiguration;
+export class UserFilter extends ModuleBase {
+    readonly name: string = "UserFilter";
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST // FIXME: only post views
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -75,8 +71,8 @@ export class UserFilter implements ExtensionModule {
     rendered: boolean;
 
     init = (config: ModuleConfiguration) => {
+        super.init(config);
         try {
-            this.cfg = config;
             this.rendered = false;
             this.forumTrolls = this.getForumTrollConfig();
             this.threadTrolls = this.getThreadTrollConfig();
@@ -93,24 +89,23 @@ export class UserFilter implements ExtensionModule {
         if (context.Language == "norwegian") this.i18n = this.i18n_no;
     }
 
-    execute = (context: PageContext) => {
+    execute = () => {
         // mark each username with red/orange/green
-        this.posts.forEach(function(post: PostInfo, idx: number, posts: PostInfo[]) {
+        this.posts.forEach(function (post: PostInfo) {
             try {
                 var row = post.rowElement;
-                var nameelt = row.querySelector("span.name") as Element;
                 var menu = post.getContextMenu();
-                var threadblocked = this.isThreadTroll(""+post.threadId, ""+post.posterid);
+                var threadblocked = this.isThreadTroll("" + post.threadId, "" + post.posterid);
                 var blocked = this.forumTrolls.has(post.posterid);
-                menu.addAction(this.tr(this.UNBLOCK_MENUITEM), blocked, function() {
-                    if (this.isThreadTroll(""+post.threadId, ""+post.posterid)) {
-                        this.removeThreadTroll(""+post.threadId, ""+post.posterid);
+                menu.addAction(this.tr(this.UNBLOCK_MENUITEM), blocked, function () {
+                    if (this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
+                        this.removeThreadTroll("" + post.threadId, "" + post.posterid);
                         this.storeThreadTrolls();
                     } else {
                         this.forumTrolls.delete(post.posterid);
                         this.storeForumTrolls();
                     }
-                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
+                    this.posts.forEach(function (other: PostInfo) {
                         if (other.posterid == post.posterid) {
                             other.rowElement.style.display = "";
                             other.buttonRowElement.style.display = "";
@@ -122,10 +117,10 @@ export class UserFilter implements ExtensionModule {
                         }
                     }.bind(this));
                 }.bind(this));
-                menu.addAction(this.tr(this.BLOCK_MENUITEM), !blocked, function() {
+                menu.addAction(this.tr(this.BLOCK_MENUITEM), !blocked, function () {
                     this.forumTrolls.add(post.posterid);
                     this.storeForumTrolls();
-                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
+                    this.posts.forEach(function (other: PostInfo) {
                         if (other.posterid == post.posterid) {
                             other.rowElement.style.display = "none";
                             other.buttonRowElement.style.display = "none";
@@ -137,10 +132,10 @@ export class UserFilter implements ExtensionModule {
                         }
                     }.bind(this));
                 }.bind(this));
-                menu.addAction(this.tr(this.THREADBLOCK_MENUITEM), !threadblocked, function() {
-                    this.addThreadTroll(""+post.threadId, ""+post.posterid);
+                menu.addAction(this.tr(this.THREADBLOCK_MENUITEM), !threadblocked, function () {
+                    this.addThreadTroll("" + post.threadId, "" + post.posterid);
                     this.storeThreadTrolls();
-                    this.posts.forEach(function(other: PostInfo, idx: number, posts: PostInfo[]) {
+                    this.posts.forEach(function (other: PostInfo) {
                         if (other.posterid == post.posterid) {
                             other.rowElement.style.display = "none";
                             other.buttonRowElement.style.display = "none";
@@ -158,7 +153,7 @@ export class UserFilter implements ExtensionModule {
         }.bind(this));
 
         // hide all troll posts, and insert troll buttons
-        this.posts.forEach(function(post, idx, posts) {
+        this.posts.forEach(function (post) {
             try {
                 //console.log("poster id: '" + post.posterid + "'");
                 var posterid = post.posterid;
@@ -166,16 +161,16 @@ export class UserFilter implements ExtensionModule {
                 var buttons = post.buttonRowElement as HTMLTableRowElement;
                 buttons.insertAdjacentHTML('afterend', '<tr>' +
                     '<td class="row2" colspan="2">' +
-                    '<a class="nav trollbutton" name="showpost-'+post.postId+'">' + post.posterNickname + '</a>' +
+                    '<a class="nav trollbutton" name="showpost-' + post.postId + '">' + post.posterNickname + '</a>' +
                     '</td></tr>');
                 var addition = buttons.nextElementSibling as HTMLTableRowElement;
                 var button = addition.querySelector("a") as HTMLAnchorElement;
-                button.addEventListener("click", function(ev) {
+                button.addEventListener("click", function () {
                     row.style.display = "";
                     buttons.style.display = "";
                     addition.style.display = "none";
                 }.bind(this));
-                if (this.forumTrolls.has(posterid) || this.isThreadTroll(""+post.threadId, ""+posterid))
+                if (this.forumTrolls.has(posterid) || this.isThreadTroll("" + post.threadId, "" + posterid))
                     row.style.display = buttons.style.display = "none";
                 else
                     addition.style.display = "none";
@@ -187,17 +182,13 @@ export class UserFilter implements ExtensionModule {
 
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private getForumTrollConfig(): Set<number> {
         var trolls = new Set<number>();
         try {
-            var settings = this.cfg.GetSetting("forumTrolls") as string;
+            var settings = this._cfg.GetSetting("forumTrolls") as string;
             //console.log("loaded forumTrolls: " + settings);
             var trollids = JSON.parse(settings || "[]");
-            trollids.forEach(function(troll, idx, trollids) {
+            trollids.forEach(function (troll) {
                 trolls.add(+troll);
             }.bind(this));
         } catch (e) {
@@ -210,14 +201,14 @@ export class UserFilter implements ExtensionModule {
     private getThreadTrollConfig(): Map<string, Object> {
         var threadtrolls = new Map<string, Object>();
         try {
-            var threadtrollstr = this.cfg.GetSetting("threadTrolls") as string;
+            var threadtrollstr = this._cfg.GetSetting("threadTrolls") as string;
             var config = JSON.parse(threadtrollstr);
             var treshold = this.getTresholdTime();
             var filtered = false;
-            Object.keys(config).forEach(function(threadid: string, idx, keys) {
+            Object.keys(config).forEach(function (threadid: string) {
                 var threadinfo = {};
                 var obj = config[threadid];
-                Object.keys(obj).forEach(function(troll, idx, trolls) {
+                Object.keys(obj).forEach(function (troll) {
                     var timestamp = +(obj[troll]);
                     if (timestamp < treshold) {
                         filtered = true;
@@ -236,7 +227,7 @@ export class UserFilter implements ExtensionModule {
     }
 
     private getTresholdTime(): number {
-        return (new Date()).getTime() - (1000*60*60*24*2);
+        return (new Date()).getTime() - (1000 * 60 * 60 * 24 * 2);
     }
 
     private isThreadTroll(thread: string, userid: string): boolean {
@@ -270,21 +261,21 @@ export class UserFilter implements ExtensionModule {
 
     private storeForumTrolls(): void {
         var items = [];
-        this.forumTrolls.forEach(function(troll, idx, forumTrolls) {
+        this.forumTrolls.forEach(function (troll, idx, forumTrolls) {
             items.push(+troll);
         }.bind(this));
         var settings = JSON.stringify(items);
         //console.log("storing forumTrolls: '" + settings + "'");
-        this.cfg.ChangeSetting("forumTrolls", settings);
+        this._cfg.ChangeSetting("forumTrolls", settings);
     }
 
     private storeThreadTrolls(): void {
         var setting = {};
-        this.threadTrolls.forEach(function(value, key, trolls) {
+        this.threadTrolls.forEach(function (value, key) {
             setting[key] = value;
         })
         var dictstr = JSON.stringify(setting);
         //console.log("storing threadTrolls: '" + dictstr + "'");
-        this.cfg.ChangeSetting("threadTrolls", dictstr);
+        this._cfg.ChangeSetting("threadTrolls", dictstr);
     }
 }

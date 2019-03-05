@@ -1,29 +1,24 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
-import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_Bookmarks - modul for å tilby bokmerking av innlegg på RBKweb.
  */
 
-export class Bookmarks implements ExtensionModule {
+export class Bookmarks extends ModuleBase {
     readonly name: string = "Bookmarks";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_FORUMLIST,
         RBKwebPageType.RBKweb_FORUM_POSTLIST,
         RBKwebPageType.RBKweb_FORUM_BOOKMARKS,
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -76,13 +71,14 @@ export class Bookmarks implements ExtensionModule {
     unstarredPNG: string;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
+        super.init(config);
+
         this.starredPNG = chrome.runtime.getURL('/img/starred.png');
         this.unstarredPNG = chrome.runtime.getURL('/img/unstarred.png');
-        this.bookmarkedThreads = JSON.parse(this.cfg.GetSetting("bookmarkedThreads") as string);
-        this.bookmarkedPosts = JSON.parse(this.cfg.GetSetting("bookmarkedPosts") as string);
-        this.accountNames = JSON.parse(this.cfg.GetSetting('accountNames') as string);
-        this.threadNames = JSON.parse(this.cfg.GetSetting('threadNames') as string);
+        this.bookmarkedThreads = JSON.parse(this._cfg.GetSetting("bookmarkedThreads") as string);
+        this.bookmarkedPosts = JSON.parse(this._cfg.GetSetting("bookmarkedPosts") as string);
+        this.accountNames = JSON.parse(this._cfg.GetSetting('accountNames') as string);
+        this.threadNames = JSON.parse(this._cfg.GetSetting('threadNames') as string);
 
         return null;
     }
@@ -252,10 +248,6 @@ export class Bookmarks implements ExtensionModule {
         }
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private addBookmarksHeader(contentTag: HTMLTableElement): void {
         contentTag.insertAdjacentHTML('beforebegin',
             '<table width="100%">' +
@@ -299,24 +291,24 @@ export class Bookmarks implements ExtensionModule {
     private saveThreadNames(): void {
         var json = JSON.stringify(this.threadNames);
         //console.log("storing thread names: '" + json + "'");
-        this.cfg.ChangeSetting("threadNames", json);
+        this._cfg.ChangeSetting("threadNames", json);
     }
 
     private saveAccountNames(): void {
         var json = JSON.stringify(this.accountNames);
         //console.log("storing account names: '" + json + "'");
-        this.cfg.ChangeSetting("accountNames", json);
+        this._cfg.ChangeSetting("accountNames", json);
     }
 
     private saveBookmarkedThreads(): void {
         var json = JSON.stringify(this.bookmarkedThreads);
         //console.log("storing thread bookmarks: '" + json + "'");
-        this.cfg.ChangeSetting("bookmarkedThreads", json);
+        this._cfg.ChangeSetting("bookmarkedThreads", json);
     }
 
     private saveBookmarkedPosts(): void {
         var json = JSON.stringify(this.bookmarkedPosts);
         //console.log("storing post bookmarks: '" + json + "'");
-        this.cfg.ChangeSetting("bookmarkedPosts", json);
+        this._cfg.ChangeSetting("bookmarkedPosts", json);
     }
 }

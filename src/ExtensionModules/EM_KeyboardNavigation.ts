@@ -1,17 +1,15 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { PageContext } from "../Context/PageContext";
 import { RUSKUI } from "../UI/RUSKUI";
-import { HotkeyAction } from "../Utility/HotkeyAction";
 import { Log } from "../Utility/Log";
 import { PostInfo } from "../Utility/PostInfo";
+import { ModuleBase } from "./ModuleBase";
 
-export class KeyboardNavigation implements ExtensionModule {
+export class KeyboardNavigation extends ModuleBase {
 
     readonly name = "KeyboardNavigation";
-    private _cfg: ModuleConfiguration;
     private _ctx: PageContext;
     private _quickReplyElement: HTMLDivElement;
 
@@ -22,9 +20,6 @@ export class KeyboardNavigation implements ExtensionModule {
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
     ];
-
-    runBefore = [];
-    runAfter = [];
 
     configSpec = () =>
         ConfigBuilder
@@ -127,7 +122,7 @@ export class KeyboardNavigation implements ExtensionModule {
             .Build();
 
     init = (cfg: ModuleConfiguration) => {
-        this._cfg = cfg;
+        super.init(cfg);
 
         let ui = new RUSKUI();
         ui.ExtractHotkeys(cfg);
@@ -135,11 +130,8 @@ export class KeyboardNavigation implements ExtensionModule {
         return ui;
     }
 
-    preprocess = (ctx: PageContext) => {
-        this._ctx = ctx;
-    }
-
     execute = (ctx: PageContext) => {
+        this._ctx = ctx;
     }
 
     invoke = function (cmd: string): boolean {

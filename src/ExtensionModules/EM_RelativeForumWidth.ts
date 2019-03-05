@@ -1,25 +1,20 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_RelativeForumWidth - Extension module for RBKweb.
  */
 
-export class RelativeForumWidth implements ExtensionModule {
+export class RelativeForumWidth extends ModuleBase {
     readonly name: string = "RelativeForumWidth";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -37,12 +32,6 @@ export class RelativeForumWidth implements ExtensionModule {
                     .WithVisibility(ConfigurationOptionVisibility.Always)
             )
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
 
     preprocess = (context: PageContext) => {
         (async function() {
@@ -69,17 +58,13 @@ export class RelativeForumWidth implements ExtensionModule {
         }
     };
 
-    execute = (context: PageContext) => {
-    }
-
-    invoke = function (cmd: string): boolean {
-        return false;
+    execute = () => {
     }
 
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];
         keys.push("$RUSKForumWidth$");
-        values.push(this.cfg.GetSetting('RUSKForumWidth'));
+        values.push(this._cfg.GetSetting('RUSKForumWidth'));
 
         for (let i = 0; i < keys.length; i++) {
             template = template.replace(keys[i], values[i]);

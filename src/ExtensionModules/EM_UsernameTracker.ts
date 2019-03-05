@@ -1,4 +1,3 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
@@ -7,21 +6,18 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_UsernameTracker - Extension module for RBKweb.
  */
 
-export class UsernameTracker implements ExtensionModule {
+export class UsernameTracker extends ModuleBase {
     readonly name : string = "UsernameTracker";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -42,9 +38,10 @@ export class UsernameTracker implements ExtensionModule {
     names: Map<number, string> = new Map<number, string>();
 
     init = (config: ModuleConfiguration) => {
+        super.init(config);
+
         try {
-            this.cfg = config;
-            var dictstr = this.cfg.GetSetting("knownUsernames") as string;
+            var dictstr = this._cfg.GetSetting("knownUsernames") as string;
             this.names = JSON.parse(dictstr || "{}");
             var count = 0;
             for (var key in this.names) { count += 1; }
@@ -64,7 +61,7 @@ export class UsernameTracker implements ExtensionModule {
         try {
             this.posts = context.RUSKPage.items as Array<PostInfo>;
             var updated = false;
-            this.posts.forEach(function(post: PostInfo, idx, posts) {
+            this.posts.forEach(function(post: PostInfo) {
                 var username = post.posterNickname;
                 var userid = post.posterid;
                 if (userid != -1 && !this.names[userid]) {
@@ -80,9 +77,9 @@ export class UsernameTracker implements ExtensionModule {
         }
     }
 
-    execute = (context: PageContext) => {
+    execute = () => {
         try {
-            this.posts.forEach(function(post: PostInfo, idx, posts) {
+            this.posts.forEach(function(post: PostInfo) {
                 var username = post.posterNickname;
                 var userid = post.posterid;
                 if (userid == -1) return;
@@ -94,9 +91,9 @@ export class UsernameTracker implements ExtensionModule {
                                                 '<img src="' + chrome.runtime.getURL("/img/checkmark.png") +
                                                 '" width="12" height="12" border="0" valign="bottom" /></a></span>');
                     var anchor = (spanelt.closest("td") as HTMLTableCellElement).querySelector('a.aka' + userid) as HTMLAnchorElement;
-                    anchor.addEventListener('click', function(ev) {
+                    anchor.addEventListener('click', function() {
                         var table = spanelt.closest('table') as HTMLTableElement;
-                        table.querySelectorAll('span.aka' + userid).forEach(function(elt: HTMLSpanElement, idx, parent) {
+                        table.querySelectorAll('span.aka' + userid).forEach(function(elt: HTMLSpanElement) {
                             elt.style.display = 'none';
                         }.bind(this));
                         this.names[userid] = username;
@@ -109,12 +106,8 @@ export class UsernameTracker implements ExtensionModule {
         }
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private storeKnownUsernames(): void {
         var dictstr = JSON.stringify(this.names);
-        this.cfg.ChangeSetting("knownUsernames", dictstr);
+        this._cfg.ChangeSetting("knownUsernames", dictstr);
     }
 }

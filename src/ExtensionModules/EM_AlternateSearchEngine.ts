@@ -1,25 +1,21 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_Empowerment - Extension module for RBKweb.
  */
 
-export class AlternateSearchEngine implements ExtensionModule {
+export class AlternateSearchEngine extends ModuleBase {
     readonly name: string = "AlternateSearchEngine";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_SEARCH_FORM
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -51,14 +47,12 @@ export class AlternateSearchEngine implements ExtensionModule {
     useDuckDuckGo: boolean;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        this.useGoogle = this.cfg.GetSetting("UseGoogle") as boolean;
-        this.useDuckDuckGo = this.cfg.GetSetting("UseDuckDuckGo") as boolean;
+        super.init(config);
+
+        this.useGoogle = this._cfg.GetSetting("UseGoogle") as boolean;
+        this.useDuckDuckGo = this._cfg.GetSetting("UseDuckDuckGo") as boolean;
 
         return null;
-    }
-
-    preprocess = (context: PageContext) => {
     }
 
     execute = (context: PageContext) => {
@@ -87,9 +81,5 @@ export class AlternateSearchEngine implements ExtensionModule {
                 window.location.href = 'https://www.google.com/search?q='+encodeURIComponent(keywords.value)+'+site:rbkweb.no';
             }.bind(this));
         }
-    }
-
-    invoke = function (cmd: string): boolean {
-        return false;
     }
 }

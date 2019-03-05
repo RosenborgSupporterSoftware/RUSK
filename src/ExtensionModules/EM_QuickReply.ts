@@ -1,24 +1,19 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
 import { PostInfo } from "../Utility/PostInfo";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_QuickReply - Extension modul for å kunne skrive svarinnlegg rett i tråd-siden på RBKweb.
  */
 
-export class QuickReply implements ExtensionModule {
+export class QuickReply extends ModuleBase {
     readonly name: string = "QuickReply";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -28,12 +23,6 @@ export class QuickReply implements ExtensionModule {
             .WithDisplayName(this.name)
             .WithDescription('Adds the possibility to write posts directly in the thread page.')
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
 
     i18n_no = {
         'Quick Reply': 'Hurtigsvar',
@@ -217,10 +206,6 @@ export class QuickReply implements ExtensionModule {
                 }.bind(this));
             }
         }.bind(this));
-    }
-
-    invoke = function (cmd: string): boolean {
-        return false;
     }
 
     private getSelPost(): PostInfo {

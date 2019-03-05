@@ -7,6 +7,7 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
 import * as autosize from "autosize";
 import { Log } from "../Utility/Log";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_EnhancePosting - Extension module for RBKweb.
@@ -18,9 +19,8 @@ import { Log } from "../Utility/Log";
  *  - Scroller når tekstboksen blir kjempestor for å holde OK-knappen synlig nederst
  */
 
-export class EnhancePosting implements ExtensionModule {
+export class EnhancePosting extends ModuleBase {
     readonly name: string = "EnhancePosting";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_EDITPOST,
@@ -28,9 +28,6 @@ export class EnhancePosting implements ExtensionModule {
         RBKwebPageType.RBKweb_FORUM_REPLYTOTOPIC,
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     private _txtArea: HTMLTextAreaElement = null;
     private get textArea(): HTMLTextAreaElement {
@@ -103,8 +100,9 @@ export class EnhancePosting implements ExtensionModule {
     topicTitles: Array<string>;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        var visitstr = this.cfg.GetSetting(this.THREAD_VISITS) as string;
+        super.init(config);
+
+        var visitstr = this._cfg.GetSetting(this.THREAD_VISITS) as string;
         if (visitstr) {
             var obj = JSON.parse(visitstr);
             if (obj.ids) this.topicIds = obj.ids as Array<number>;
@@ -148,10 +146,6 @@ export class EnhancePosting implements ExtensionModule {
             this.setupTitle();
         }
     };
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
 
     private setupHotkeys(): void {
         document.addEventListener("keyup", (ev) => {
@@ -216,14 +210,14 @@ export class EnhancePosting implements ExtensionModule {
 
     private storeThreadVisits(): void {
         var visitstr = JSON.stringify({ ids: this.topicIds, titles: this.topicTitles });
-        this.cfg.ChangeSetting(this.THREAD_VISITS, visitstr);
+        this._cfg.ChangeSetting(this.THREAD_VISITS, visitstr);
     }
 
     private getConfigItem(setting: string): string {
         try {
-            for (let i = 0; i < this.cfg.settings.length; i++) {
-                if (this.cfg.settings[i].setting == setting) {
-                    return this.cfg.settings[i].value as string;
+            for (let i = 0; i < this._cfg.settings.length; i++) {
+                if (this._cfg.settings[i].setting == setting) {
+                    return this._cfg.settings[i].value as string;
                 }
             }
             console.log("did not find setting '" + setting);

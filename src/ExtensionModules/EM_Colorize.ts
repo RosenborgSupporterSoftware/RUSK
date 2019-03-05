@@ -1,4 +1,3 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { IRUSKPageItem } from "../PageHandler/IRUSKPageItem";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
@@ -6,6 +5,7 @@ import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { PageContext } from "../Context/PageContext";
 import { SettingType } from "../Configuration/SettingType";
 import { Log } from "../Utility/Log";
+import { ModuleBase } from "./ModuleBase";
 
 const SCROLLDIRECTION_KEY = "RUSK-ThreadPage-ScrollDirection";
 
@@ -13,10 +13,9 @@ const SCROLLDIRECTION_KEY = "RUSK-ThreadPage-ScrollDirection";
  * EM_Colorize - colorizing forums, threads and posts according to status.
  *
  */
-export class Colorize implements ExtensionModule {
+export class Colorize extends ModuleBase {
 
     readonly name = "Colorize";
-    private _cfg: ModuleConfiguration;
     private _currentlySelectedItem: IRUSKPageItem = null;
     private _allItems: Array<IRUSKPageItem> = null;
 
@@ -32,9 +31,6 @@ export class Colorize implements ExtensionModule {
         RBKwebPageType.RBKweb_FORUM_TOPICLIST,
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore = [];
-    runAfter = [];
 
     configSpec = () =>
         ConfigBuilder
@@ -94,7 +90,7 @@ export class Colorize implements ExtensionModule {
             .Build();
 
     init = (cfg: ModuleConfiguration) => {
-        this._cfg = cfg;
+        super.init(cfg);
 
         this._unreadColorEven = this._cfg.GetSetting("UnreadColorEven") as string;
         this._unreadColorOdd = this._cfg.GetSetting("UnreadColorOdd") as string;
@@ -126,10 +122,6 @@ export class Colorize implements ExtensionModule {
         });
 
         ctx.RUSKPage.DetermineInitiallySelectedItem();
-    }
-
-    invoke = function (cmd: string): boolean {
-        return false;
     }
 
     private tagItem(thread: IRUSKPageItem, index: number): void {

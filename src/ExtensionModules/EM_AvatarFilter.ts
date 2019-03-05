@@ -1,4 +1,3 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
@@ -7,21 +6,18 @@ import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_AvatarFilter - Extension module for RBKweb.
  */
 
-export class AvatarFilter implements ExtensionModule {
+export class AvatarFilter extends ModuleBase {
     readonly name: string = "Avatarfilter";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -52,9 +48,10 @@ export class AvatarFilter implements ExtensionModule {
     hideUserAvatars: Array<number>;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        this.hideAvatars = this.cfg.GetSetting("HideAvatars") as boolean;
-        this.hideUserAvatars = JSON.parse(this.cfg.GetSetting("HideAvatarUsers") as string);
+        super.init(config);
+
+        this.hideAvatars = this._cfg.GetSetting("HideAvatars") as boolean;
+        this.hideUserAvatars = JSON.parse(this._cfg.GetSetting("HideAvatarUsers") as string);
 
         return null;
     }
@@ -127,13 +124,9 @@ export class AvatarFilter implements ExtensionModule {
         }.bind(this));
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private saveHideUserAvatars(): void {
         var arraystr = JSON.stringify(this.hideUserAvatars);
         // console.log("storing avatar-hidden users: '" + arraystr + "'");
-        this.cfg.ChangeSetting("HideAvatarUsers", arraystr);
+        this._cfg.ChangeSetting("HideAvatarUsers", arraystr);
     }
 }

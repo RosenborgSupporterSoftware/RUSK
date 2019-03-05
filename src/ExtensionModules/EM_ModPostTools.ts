@@ -1,27 +1,22 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PostInfo } from "../Utility/PostInfo";
 import { PageContext } from "../Context/PageContext";
 import { RUSKUI } from "../UI/RUSKUI";
-import { throws } from "assert";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_ModPostTools - Extension module for RBKweb.
  * Adds moderator functionality to posts if user is a moderator.
  */
 
-export class ModPostTools implements ExtensionModule {
+export class ModPostTools extends ModuleBase {
     readonly name: string = "ModPostTools";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST
     ];
-
-    runBefore: Array<string> = [];
-    runAfter: Array<string> = [];
 
     configSpec = () =>
         ConfigBuilder
@@ -32,7 +27,7 @@ export class ModPostTools implements ExtensionModule {
             .WithDescription("Legger til nyttige verktøy for moderatorer i context-menyen på innlegg.")
             .InvisibleToConfig()
             .WithHotkey(
-                hk => 
+                hk =>
                     hk
                         .WithHotkeyName('CopyIPInfo')
                         .WithKeyCombos(['C'])
@@ -44,7 +39,7 @@ export class ModPostTools implements ExtensionModule {
     userIsModerator: boolean = false;
 
     init = (config: ModuleConfiguration): RUSKUI => {
-        this.cfg = config;
+        super.init(config);
 
         let ruskUI = new RUSKUI();
         ruskUI.ExtractHotkeys(config);

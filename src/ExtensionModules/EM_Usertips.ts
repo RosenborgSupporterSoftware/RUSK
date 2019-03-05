@@ -1,8 +1,7 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { PageContext } from "../Context/PageContext";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_Brukertips - Extension module for displaying "tooltips" on RBKweb.
@@ -10,41 +9,38 @@ import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
  * Should evolve to an actual tooltips module eventually.
  */
 
-export class Usertips implements ExtensionModule {
+export class Usertips extends ModuleBase {
 
-    readonly name: string = "Brukertips";
-    cfg: ModuleConfiguration;
+  public get name(): string {
+    return "Brukertips";
+  }
 
-    pageTypesToRunOn: Array<RBKwebPageType> = [
-        RBKwebPageType.RBKweb_FORUM_ALL
-    ];
+  pageTypesToRunOn: Array<RBKwebPageType> = [
+    RBKwebPageType.RBKweb_FORUM_ALL
+  ];
 
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
+  configSpec = () =>
+    ConfigBuilder
+      .Define()
+      .EnabledByDefault()
+      .WithExtensionModuleName(this.name)
+      .WithDisplayName(this.name)
+      .WithDescription("Denne modulen viser enkle brukertips oppe til høyre på RBKweb-siden, rett under sitatene.")
+      .Build();
 
-    configSpec = () =>
-        ConfigBuilder
-            .Define()
-            .EnabledByDefault()
-            .WithExtensionModuleName(this.name)
-            .WithDisplayName(this.name)
-            .WithDescription("Denne modulen viser enkle brukertips oppe til høyre på RBKweb-siden, rett under sitatene.")
-            .Build();
+  execute = (context: PageContext) => {
 
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
-
-    preprocess = () => {
-    }
-
-    execute = async (context: PageContext) => {
+    fetch(chrome.runtime.getURL('data/usertips.json'))
+      .then(function(result) {
+        return result.json();
+      })
+      .then(function(json) {
+        let numberOfTips = json.tips.length;
+        let tipNumber = Math.floor(Math.random() * numberOfTips);
 
         let tabell = document.querySelectorAll('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(6) > font > table:nth-child(2) > tbody')[0] as HTMLTableElement;
         if (tabell == undefined) {
-            return; // Nothing to do here.
+          return; // Nothing to do here.
         }
 
         // Spacer
@@ -60,24 +56,9 @@ export class Usertips implements ExtensionModule {
         tabell.appendChild(tabell.firstChild.cloneNode(true));
 
         // Innhold
-        let userTip = await this.getUserTip();
         var contentrow = tabell.insertRow(-1);
         var contentcell = contentrow.insertCell(0);
-        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">" + userTip + "</font>";
-    }
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
-    private async getUserTip(): Promise<string> {
-        let request = await fetch(chrome.runtime.getURL("data/usertips.json"));
-        let text = await request.text();
-        let data = JSON.parse(text);
-
-        let numberOfTips = data.tips.length;
-        let tipNumber = Math.floor(Math.random() * numberOfTips);
-
-        return data.tips[tipNumber];
-    }
+        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">" + json.tips[tipNumber] + "</font>";
+      });
+  }
 }

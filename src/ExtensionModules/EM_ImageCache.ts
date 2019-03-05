@@ -1,22 +1,17 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_ImageCache - Extension module for RBKweb.
  */
 
-export class ImageCache implements ExtensionModule {
+export class ImageCache extends ModuleBase {
     readonly name: string = "ImageCache";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -26,15 +21,6 @@ export class ImageCache implements ExtensionModule {
             .WithDisplayName(this.name)
             .WithDescription("Denne modulen bruker lokalt cachede ikoner for RBKweb.")
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
-
-    preprocess = () => {
-    }
 
     execute = () => {
         var cached = [
@@ -141,12 +127,4 @@ export class ImageCache implements ExtensionModule {
             }
         }
     }
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
 };
-
-
-

@@ -6,14 +6,14 @@ import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_InboxAlert - Extension module for RBKweb.
  */
 
-export class InboxAlert implements ExtensionModule {
+export class InboxAlert extends ModuleBase {
     readonly name: string = "InboxAlert";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_START,
@@ -26,9 +26,6 @@ export class InboxAlert implements ExtensionModule {
         RBKwebPageType.RBKweb_FORUM_USERPROFILE,
         RBKwebPageType.RBKweb_FORUM_SEARCH_BYAUTHOR,
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -46,12 +43,6 @@ export class InboxAlert implements ExtensionModule {
                     .WithVisibility(ConfigurationOptionVisibility.Always)
             )
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
 
     preprocess = (context: PageContext) => {
         fetch(chrome.runtime.getURL("/data/pmAlert.css"))
@@ -85,14 +76,10 @@ export class InboxAlert implements ExtensionModule {
         }
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private hydrateTemplate(template: string): string {
         let keys = [], values = [];
         keys.push("$PMAlertColor$");
-        values.push(this.cfg.GetSetting('PMAlertColor'));
+        values.push(this._cfg.GetSetting('PMAlertColor'));
 
         for (let i = 0; i < keys.length; i++) {
             template = template.replace(keys[i], values[i]);

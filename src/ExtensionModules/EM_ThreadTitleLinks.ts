@@ -2,21 +2,18 @@ import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_ThradTitleLinks - Extension module for RBKweb.
  */
 
-export class ThreadTitleLinks implements ExtensionModule {
+export class ThreadTitleLinks extends ModuleBase {
     readonly name: string = "ThreadTitleLinks";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_ALL
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -26,15 +23,6 @@ export class ThreadTitleLinks implements ExtensionModule {
             .WithDisplayName(this.name)
             .WithDescription("Denne modulen gjør at linker for tråder med nytt innhold flytter deg til der de nye postene er.")
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
-
-    preprocess = () => {
-    }
 
     execute = () => {
         var titleelts = document.querySelectorAll('span.topictitle a img[src*="icon_newest_reply.gif"]');
@@ -49,9 +37,4 @@ export class ThreadTitleLinks implements ExtensionModule {
             }
         }.bind(this));
     }
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
 };

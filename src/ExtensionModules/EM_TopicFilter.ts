@@ -1,5 +1,3 @@
-import { ExtensionModule } from "./ExtensionModule";
-import { ConfigOptions } from "../Configuration/ConfigOptions";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
@@ -9,6 +7,7 @@ import { PageContext } from "../Context/PageContext";
 import { ThreadInfo } from "../Utility/ThreadInfo";
 import { ContextMenu } from "../Utility/ContextMenu";
 import { Log } from "../Utility/Log";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_TopicFilter - Extension module for RBKweb.
@@ -17,16 +16,12 @@ import { Log } from "../Utility/Log";
 // FIXME: common preprocessing step with UsernameTracker, SignatureFilter (marking userid
 // on username DOM objects)
 
-export class TopicFilter implements ExtensionModule {
+export class TopicFilter extends ModuleBase {
     readonly name : string = "TopicFilter";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_TOPICLIST
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -49,8 +44,8 @@ export class TopicFilter implements ExtensionModule {
     topics: Array<ThreadInfo>;
 
     init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-        var cfgstring = this.cfg.GetSetting("hideThreads") as string;
+        super.init(config);
+        var cfgstring = this._cfg.GetSetting("hideThreads") as string;
         this.hideThreads = JSON.parse(cfgstring || "[]");
 
         return null;
@@ -81,7 +76,7 @@ export class TopicFilter implements ExtensionModule {
 
     topmenu: ContextMenu = null;
 
-    execute = (context: PageContext) => {
+    execute = () => {
         if (!this.topics) return;
 
         // set up top-menu
@@ -101,7 +96,7 @@ export class TopicFilter implements ExtensionModule {
                 }
             }
             if (this.topmenu == null) {
-                document.body.querySelectorAll("tr td span.nav a").forEach(function(elt, idx, parent) {
+                document.body.querySelectorAll("tr td span.nav a").forEach(function(elt, idx) {
                     if (idx == 0 && elt.getAttribute('href') == "index.php") {
                         this.topmenu = new ContextMenu(elt.closest("tr"), "forumline");
                     }
@@ -111,14 +106,14 @@ export class TopicFilter implements ExtensionModule {
                 this.topmenu.addAction(this.tr(this.SHOW_THREADS), true, function() {
                     this.topmenu.getAction(this.tr(this.SHOW_THREADS)).hide();
                     this.topmenu.getAction(this.tr(this.HIDE_THREADS)).show();
-                    this.topics.forEach(function(thread: ThreadInfo, idx, threads) {
+                    this.topics.forEach(function(thread: ThreadInfo) {
                         thread.rowElement.classList.remove("RUSKHiddenItem");
                     }.bind(this));
                 }.bind(this));
                 this.topmenu.addAction(this.tr(this.HIDE_THREADS), true, function() {
                     this.topmenu.getAction(this.tr(this.SHOW_THREADS)).show();
                     this.topmenu.getAction(this.tr(this.HIDE_THREADS)).hide();
-                    this.topics.forEach(function(thread: ThreadInfo, idx, threads) {
+                    this.topics.forEach(function(thread: ThreadInfo) {
                         if (this.hideThreads.indexOf(thread.threadid) != -1)
                             thread.rowElement.classList.add("RUSKHiddenItem");
                     }.bind(this));
@@ -129,7 +124,7 @@ export class TopicFilter implements ExtensionModule {
         }
 
         var hiddencount = 0;
-        this.topics.forEach(function(topic: ThreadInfo, idx, topics) {
+        this.topics.forEach(function(topic: ThreadInfo, idx) {
             var menu = topic.getContextMenu();
             var idx = this.hideThreads.indexOf(topic.threadid);
             var visible = idx == -1;
@@ -164,7 +159,7 @@ export class TopicFilter implements ExtensionModule {
                         Log.Error("no thread " + topic.threadid + ' in hidethreads: ' + JSON.stringify(this.hideThreads));
                     }
                     var count = 0;
-                    this.topics.forEach(function(thread, idx, threads) {
+                    this.topics.forEach(function(thread) {
                         if (this.hideThreads.indexOf(thread.threadid) != -1) { count += 1; }
                     }.bind(this));
                     if (count == 0) this.topmenu.menuElement.classList.add("RUSKHiddenItem");
@@ -193,12 +188,8 @@ export class TopicFilter implements ExtensionModule {
         }
     }
 
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
     private saveHideThreads(): void {
         var hidden = JSON.stringify(this.hideThreads);
-        this.cfg.ChangeSetting("hideThreads", hidden);
+        this._cfg.ChangeSetting("hideThreads", hidden);
     }
 }

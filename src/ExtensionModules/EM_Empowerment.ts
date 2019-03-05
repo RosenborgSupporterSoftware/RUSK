@@ -1,23 +1,18 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_Empowerment - Extension module for RBKweb.
  */
 
-export class Empowerment implements ExtensionModule {
+export class Empowerment extends ModuleBase {
     readonly name: string = "Empowerment";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -28,15 +23,6 @@ export class Empowerment implements ExtensionModule {
             .WithDescription('Denne modulen viser på RBKweb at RUSK er aktiv')
             .InvisibleToConfig()
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
-
-    preprocess = (context: PageContext) => {
-    }
 
     execute = (context: PageContext) => {
         if (context.Username) {
@@ -50,16 +36,16 @@ export class Empowerment implements ExtensionModule {
         if (copyright) {
             function brighten(color, amount) {
                 function print2x(num) { return ("0" + num.toString(16)).slice(-2); }
-                var r = Math.min(parseInt(color.substring(1,3), 16) + amount, 255);
-                var g = Math.min(parseInt(color.substring(3,5), 16) + amount, 255);
-                var b = Math.min(parseInt(color.substring(5,7), 16) + amount, 255);
+                var r = Math.min(parseInt(color.substring(1, 3), 16) + amount, 255);
+                var g = Math.min(parseInt(color.substring(3, 5), 16) + amount, 255);
+                var b = Math.min(parseInt(color.substring(5, 7), 16) + amount, 255);
                 return "#" + print2x(r) + print2x(g) + print2x(b);
             }
             function darken(color, amount) {
                 function print2x(num) { return ("0" + num.toString(16)).slice(-2); }
-                var r = Math.max(parseInt(color.substring(1,3), 16) - amount, 0);
-                var g = Math.max(parseInt(color.substring(3,5), 16) - amount, 0);
-                var b = Math.max(parseInt(color.substring(5,7), 16) - amount, 0);
+                var r = Math.max(parseInt(color.substring(1, 3), 16) - amount, 0);
+                var g = Math.max(parseInt(color.substring(3, 5), 16) - amount, 0);
+                var b = Math.max(parseInt(color.substring(5, 7), 16) - amount, 0);
                 return "#" + print2x(r) + print2x(g) + print2x(b);
             }
             var tablecell = copyright.closest("td") as HTMLTableCellElement;
@@ -79,12 +65,4 @@ export class Empowerment implements ExtensionModule {
             }
         }
     }
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
 };
-
-
-

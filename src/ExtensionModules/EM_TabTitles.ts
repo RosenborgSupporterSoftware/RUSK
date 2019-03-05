@@ -1,22 +1,17 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_TabTitle - Extension module for RBKweb.
  */
 
-export class TabTitles implements ExtensionModule {
+export class TabTitles extends ModuleBase {
     readonly name: string = "Fanetittel";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_ALL
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -26,15 +21,6 @@ export class TabTitles implements ExtensionModule {
             .WithDisplayName(this.name)
             .WithDescription("Denne modulen fjerner fanetittel-prefix fra RBKweb-sider.")
             .Build();
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
-    }
-
-    preprocess = () => {
-    }
 
     execute = () => {
         var titleelt = document.querySelector('head title');
@@ -58,9 +44,4 @@ export class TabTitles implements ExtensionModule {
                 titleelt.textContent = title.substring(title.indexOf(" - ") + 3);
         }
     }
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
 };

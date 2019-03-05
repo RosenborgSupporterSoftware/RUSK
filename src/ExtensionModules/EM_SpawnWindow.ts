@@ -1,25 +1,19 @@
-
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
-import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
 import { PostInfo } from "../Utility/PostInfo";
+import { ModuleBase } from "./ModuleBase";
 
 /**
  * EM_SpawnWindow - Extension module for RBKweb.
  */
 
-export class SpawnWindow implements ExtensionModule {
+export class SpawnWindow extends ModuleBase {
     readonly name: string = "SpawnWindow";
-    cfg: ModuleConfiguration;
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST,
     ];
-
-    runBefore: Array<string> = ['late-extmod'];
-    runAfter: Array<string> = ['early-extmod'];
 
     configSpec = () =>
         ConfigBuilder
@@ -38,12 +32,6 @@ export class SpawnWindow implements ExtensionModule {
 
     tr = (text: string): string => {
         return this.i18n[text] || text;
-    }
-
-    init = (config: ModuleConfiguration) => {
-        this.cfg = config;
-
-        return null;
     }
 
     posts: Array<PostInfo>;
@@ -84,9 +72,4 @@ export class SpawnWindow implements ExtensionModule {
             }.bind(this));
         }.bind(this));
     }
-
-    invoke = function (cmd: string): boolean {
-        return false;
-    }
-
 }
