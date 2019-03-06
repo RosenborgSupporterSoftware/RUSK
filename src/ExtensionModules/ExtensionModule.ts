@@ -37,6 +37,11 @@ export interface ExtensionModule {
     readonly runAfter: Array<string>;
 
     /**
+     * Indicates whether this module is currently enabled or not
+     */
+    readonly moduleEnabled: boolean;
+
+    /**
      * Gets a collection of options objects that represent the settings available for this module.
      */
     configSpec(): ModuleConfiguration;

@@ -15,6 +15,13 @@ export abstract class ModuleBase implements ExtensionModule {
     runBefore: string[];
     runAfter: string[];
 
+    public get moduleEnabled(): boolean {
+        if (this._cfg == null) {
+            return false;
+        }
+        return this._cfg.moduleEnabled;
+    }
+
     abstract configSpec(): ModuleConfiguration;
 
     preprocess(context: PageContext): void {
