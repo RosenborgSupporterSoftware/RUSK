@@ -161,14 +161,15 @@ export class MediaEmbedder extends ModuleBase {
                             // console.log("skipping decorated link " + href);
                         }
                         else if (this.embedYoutube && (href.match(/youtube\.com/i) || href.match(/youtu\.be/i))) {
-                            // FIXME: support t=NNN for time-start
                             // FIXME: use oembed instead?
                             // console.log("found: " + href);
-                            var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/\?#]*)/);
-                            if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([^\.\?#]*)/);
-                            if (!match) match = href.match(/https?:\/\/(youtu)\.be\/([^\/\?#]*)/);
+                            var match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\/([^\/\&\?#]*)/);
+                            if (!match) match = href.match(/https?:\/\/(m\.|www\.)?youtube\.com\/watch\?v=([^\.\?\&#]*)/);
+                            if (!match) match = href.match(/https?:\/\/(youtu)\.be\/([^\/\&\?#]*)/);
                             if (match) {
+                                var time = href.match(/\&(t=[0-9ms]*)/);
                                 var code = match[2];
+                                if (time) code = code + "&" + time;
                                 anchor.insertAdjacentHTML('afterend', '<br>' +
                                     '<object width="460" height="270" data="https://www.youtube.com/embed/' + code +
                                              '" frameborder="0" allow="encrypted-media"></object>');
