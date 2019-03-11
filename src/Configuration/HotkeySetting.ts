@@ -27,6 +27,11 @@ export class HotkeySetting {
         return new HotkeySetting(this.name, this.label, this.hotkeys, this.validPages, this.visibility);
     }
 
+    public setKeyCombos(keyCombos: Array<KeyCombo>) {
+        this.hotkeys.length = 0;
+        keyCombos.forEach(kc => this.hotkeys.push(kc));
+    }
+
     public ToStorageObject(): any {
         let keyDefs = new Array<string>();
         this.hotkeys.forEach(hk => {

@@ -31,28 +31,28 @@ export class KeyboardNavigation extends ModuleBase {
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('NextItem')
-                    .WithLabel('Hurtigtast for å gå til neste forum/tråd/innlegg osv.')
+                    .WithLabel('Gå til neste forum/tråd/innlegg osv.')
                     .WithKeyCombos(['J', '.'])
                     .WithPageTypes([RBKwebPageType.RBKweb_FORUM_FORUMLIST, RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('PrevItem')
-                    .WithLabel('Hurtigtast for å gå til forrige forum/tråd/innlegg osv.')
+                    .WithLabel('Gå til forrige forum/tråd/innlegg osv.')
                     .WithKeyCombos(['K', ','])
                     .WithPageTypes([RBKwebPageType.RBKweb_FORUM_FORUMLIST, RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('NextPage')
-                    .WithLabel('Hurtigtast for å gå til neste side med tråder/innlegg')
+                    .WithLabel('Gå til neste side med tråder/innlegg')
                     .WithKeyCombos(['Shift J'])
                     .WithPageTypes([RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('PrevPage')
-                    .WithLabel('Hurtigtast for å gå til forrige side med tråder/innlegg')
+                    .WithLabel('Gå til forrige side med tråder/innlegg')
                     .WithKeyCombos(['Shift K'])
                     .WithPageTypes([RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
             )

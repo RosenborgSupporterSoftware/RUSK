@@ -99,7 +99,7 @@ export class ModuleConfiguration {
                     let neo = HotkeySetting.FromStorageObject(hk);
                     modConf.hotkeys.forEach(origHotkey => {
                         if (origHotkey.name == hk.name) {
-                            modConf.hotkeys[modConf.hotkeys.indexOf(origHotkey)] = neo;
+                            origHotkey.setKeyCombos(neo.hotkeys);
                         }
                     })
                 } else {
