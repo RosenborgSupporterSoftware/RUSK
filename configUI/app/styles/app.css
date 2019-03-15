@@ -6,7 +6,11 @@ div.colorbox {
 }
 
 td.configValue {
-  margin: auto;
+  vertical-align: middle;
+}
+
+th.thcenter {
+  text-align: center;
 }
 
 input[type=color] {

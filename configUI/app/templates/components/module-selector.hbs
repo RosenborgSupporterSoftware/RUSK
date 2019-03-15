@@ -8,15 +8,28 @@
       mod.moduleName
       class="list-group-item list-group-item-action"
     }}
-      {{#if mod.moduleEnabled}}
+      {{!-- {{#if mod.moduleEnabled}}
         {{fa-icon "toggle-on"}}
       {{else}}
         {{fa-icon "toggle-off"}}
-      {{/if}}
+      {{/if}} --}}
+      {{fa-icon "cog"}}
       {{mod.displayName}}
       {{#if mod.isDirty}}
         *
       {{/if}}
+      {{#if mod.enableDisableOnly}}
+        []
+      {{/if}}
     {{/link-to}}
   {{/each}}
+  {{#if hasSettinglessModules}}
+    {{#link-to
+      "index.other"
+      class="list-group-item list-group-item-action"
+    }}
+    {{fa-icon "gift"}}
+      Andre moduler
+    {{/link-to}}
+  {{/if}}
 </ul>

@@ -22,8 +22,30 @@ export default Component.extend({
     return this.get('modules').map(mod => mod.moduleName);
   }),
 
-  moduleSorting: Object.freeze(['moduleName']),
+  moduleSorting: Object.freeze(['displayName']),
 
-  sortedModules: sort('modules', 'moduleSorting')
+  sortedModules: sort('modulesWithSettings', 'moduleSorting'),
+
+  /**
+   * Lists all modules that have settings and/or hotkeys to edit
+   */
+  modulesWithSettings: computed('modules', 'modules.@each.enableDisableOnly', function () {
+    return this.get('modules').filter(mod => {
+      return mod.get('enableDisableOnly') === false;
+    });
+  }),
+
+  /**
+   * Lists all modules that have no settings and/nor hotkeys to edit
+   */
+  settinglessModules: computed('modules', 'modules.@each.enableDisableOnly', function () {
+    return this.get('modules').filter(mod => {
+      return mod.get('enableDisableOnly') === true;
+    });
+  }),
+
+  hasSettinglessModules: computed('settinglessModules', function () {
+    return this.get('settinglessModules').length > 0;
+  })
 
 });

@@ -9,6 +9,7 @@ const Router = EmberRouter.extend({
 Router.map(function () {
   this.route('index', { path: '/' }, function () {
     this.route('module', { path: '/:id' });
+    this.route('other');
   });
   this.route('config', function() {
     this.route('module', { path: '/config/:module_id' });

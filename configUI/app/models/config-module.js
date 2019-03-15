@@ -115,6 +115,12 @@ export default EmberObject.extend({
 
   hasHotkeys: computed('visibleHotkeys', function () {
     return this.get('visibleHotkeys').length > 0;
+  }),
+
+  enableDisableOnly: computed('hasSettings', 'hasHotkeys', function () {
+    if (this.get('hasSettings')) return false;
+    if (this.get('hasHotkeys')) return false;
+    return true;
   })
 
 });
