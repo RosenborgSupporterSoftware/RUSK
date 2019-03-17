@@ -5,6 +5,17 @@ div.colorbox {
   /* background-color: lightgreen; */
 }
 
+div.colorsplotch {
+  border: 2px solid black;
+  width: 1em;
+  height: 1em;
+  margin: 0.2em;
+}
+
+li.flex-inline {
+  display: inline-flex;
+}
+
 td.configValue {
   vertical-align: middle;
 }
@@ -39,6 +50,15 @@ div.config {
   /* margin-top: 100px !important; */
   top: 100px;
   position: absolute;
+}
+
+div.config-bottom {
+  margin-top: 10px;
+  padding-bottom: 1em;
+}
+
+div.config-bottom button {
+  margin: 0.5em;
 }
 
 a.closebutton {
@@ -92,4 +112,16 @@ span.hotkey-key {
   border-radius: 3px;
   background-color: #EFEFEF;
   padding: 1px 5px;
+}
+
+:-webkit-any(button,input[type="button"],input[type="submit"]), select, input[type="checkbox"], input[type="radio"] {
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+:enabled:hover:-webkit-any(button,input[type="button"],input[type="submit"]), select, input[type="checkbox"], input[type="radio"] {
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
 }

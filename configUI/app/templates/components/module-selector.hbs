@@ -1,6 +1,6 @@
 <ul class="list-group">
   <div class="card-header">
-    Moduler
+    {{fa-icon "cogs"}} <b>Moduler</b>
   </div>
   {{#each sortedModules as |mod|}}
     {{#link-to
@@ -8,12 +8,11 @@
       mod.moduleName
       class="list-group-item list-group-item-action"
     }}
-      {{!-- {{#if mod.moduleEnabled}}
-        {{fa-icon "toggle-on"}}
+      {{#if mod.moduleEnabled}}
+        {{fa-icon "circle"}}
       {{else}}
-        {{fa-icon "toggle-off"}}
-      {{/if}} --}}
-      {{fa-icon "cog"}}
+        {{fa-icon "circle-o"}}
+      {{/if}}
       {{mod.displayName}}
       {{#if mod.isDirty}}
         *

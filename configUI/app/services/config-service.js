@@ -23,6 +23,30 @@ export default Service.extend({
     }
   },
 
+  /**
+   * Send messages to RUSK backend to store changed configurations
+   * @param callback - Callback to call once all configs are confirmed to be stored
+   */
+  saveDirtyConfigs(callback) {
+    let dirty = this.get('dirtyModules');
+    let unconfirmed = 0;
+
+    dirty.forEach(mod => {
+      unconfirmed++;
+      chrome.runtime.sendMessage({
+        storeConfigFor: mod.moduleName,
+        config: mod.toStorageObject()
+      }, () => {
+          mod.setClean();
+          if (--unconfirmed == 0) {
+            if (callback != null) {
+              callback();
+            }
+          }
+      })
+    })
+  },
+
   getConfigSections() {
     var cfgs = this.get("configs");
 

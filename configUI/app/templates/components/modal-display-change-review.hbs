@@ -1,0 +1,38 @@
+{{#bs-modal
+  open=changeReviewOpen
+  closeTitle="Lukk"
+as |modal|
+}}
+  {{#modal.header}}
+    <h4 class="modal-title">{{fa-icon "eye"}} Oversikt over endringer</h4>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    <p>Du har gjort endringer på følgende moduler som ikke er lagret:</p>
+    <ul>
+      {{#each configService.dirtyModules as |module|}}
+        <li>{{module.displayName}}</li>
+        <ul>
+          {{#if module.enabledChanged}}
+            <li>Modulen er skrudd {{if module.moduleEnabled "på" "av"}}</li>
+          {{/if}}
+          {{#each module.changedSettings as |setting|}}
+            {{#if (eq setting.type "ST_COLOR")}}
+              <li class="flex-inline"><b>{{setting.label}}</b>: {{color-splotch color=setting.originalValue}} {{fa-icon "long-arrow-right"}} {{color-splotch color=setting.value}}</li>
+            {{/if}}
+            {{#if (eq setting.type "ST_TEXT")}}
+              <li>Text: {{setting.setting}}</li>
+            {{/if}}
+            {{#if (eq setting.type "ST_BOOL")}}
+              <li><b>{{setting.label}}</b>: {{if setting.value "På" "Av"}}.</li>
+            {{/if}}
+          {{/each}}
+        </ul>
+      {{/each}}
+    </ul>
+  {{/modal.body}}
+
+  {{#modal.footer}}
+    {{#bs-button onClick=(action "performCloseReview") type="success"}}Lukk{{/bs-button}}
+  {{/modal.footer}}
+{{/bs-modal}}

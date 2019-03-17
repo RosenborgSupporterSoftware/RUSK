@@ -89,6 +89,18 @@ export default EmberObject.extend({
     return false;
   }),
 
+  /** A bool that is true if the moduleEnabled property has been changed */
+  enabledChanged: computed('moduleEnabled', 'originalModuleEnabled', function () {
+    return this.get('moduleEnabled') !== this.get('originalModuleEnabled');
+  }),
+
+  /** A list of settings with changed values */
+  changedSettings: computed('visibleSettings', 'visibleSettings.@each.isDirty', function () {
+    return this.get('visibleSettings').filter(s => {
+      return s.isDirty;
+    });
+  }),
+
   visibleSettings: computed('settings', function () {
     return this.get('settings').filter(s => {
       // FIXME: Logikk for når vi viser alpha/beta settings her.

@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-center">
+  {{#if configDirty}}
+
+    {{#bs-button type="success" onClick=(action "saveConfiguration") as |button|}}
+      {{#if button.isPending}}
+        {{fa-icon "spinner" spin=true}} Lagrer...
+      {{else}}
+        {{fa-icon "floppy-o"}} Lagre endringer
+      {{/if}}
+    {{/bs-button}}
+
+    {{#bs-button type="primary" onClick=(action "reviewChanges")}}
+      {{fa-icon "eye"}} Sjekk endringer
+    {{/bs-button}}
+
+  {{/if}}
+
+  {{#bs-button type="danger" onClick=(action "closeConfigUI")}}
+    {{fa-icon "times-circle"}} {{discardButtonText}}
+  {{/bs-button}}
+
+</div>

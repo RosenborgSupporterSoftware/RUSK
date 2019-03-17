@@ -13,15 +13,6 @@
         {{module.displayName}}
       </span>
     </div>
-    <div class="col-md-auto">
-      {{#bs-button
-        type="primary"
-        disabled=(if module.isDirty false true)
-        onClick=(action "saveConfiguration")
-      }}
-        {{fa-icon "floppy-o" size="lg"}}
-      {{/bs-button}}
-    </div>
   </div>
 
   <hr>

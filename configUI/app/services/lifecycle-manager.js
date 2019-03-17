@@ -6,7 +6,11 @@ export default Service.extend({
   configService: inject('config-service'),
 
   displayCloseModal: false,
+  displayChangeReview: false,
 
+  /**
+   * The function to call in order to request a shutdown of the config UI.
+   */
   requestClose() {
     if (this.get('configService').get('isDirty')) {
       this.set('displayCloseModal', true);
