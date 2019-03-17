@@ -1,5 +1,6 @@
 {{#bs-modal
   open=changeReviewOpen
+  onHidden=(action "performCloseReview")
   closeTitle="Lukk"
 as |modal|
 }}
