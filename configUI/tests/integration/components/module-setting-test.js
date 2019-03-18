@@ -10,17 +10,27 @@ module('Integration | Component | module-setting', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{module-setting}}`);
+    let testSetting = {
+      setting: "Test",
+      type: "ST_COLOR"
+    };
+    this.set('testSetting', testSetting);
 
-    assert.equal(this.element.textContent.trim(), '');
+    await render(hbs`{{module-setting setting=testSetting}}`);
 
-    // Template block usage:
-    await render(hbs`
-      {{#module-setting}}
-        template block text
-      {{/module-setting}}
-    `);
+    let colorElement = this.element.querySelector('input[type="color"]');
+    assert.ok(colorElement, "we found the expected color element");
+    this.set('testSetting.value', '#ff00ff');
+    assert.equal(colorElement.value, '#ff00ff', 'setting the value of the setting also sets the color of the input');
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    this.set('testSetting.type', 'ST_TEXT');
+    // TODO: Text assertions if and when we actually have something here.
+
+    this.set('testSetting.type', 'ST_BOOL');
+    this.set('testSetting.value', true);
+    let boolElement = this.element.querySelector('span.x-toggle-container');
+    assert.ok(boolElement.classList.contains('x-toggle-container-checked'), 'the boolean should be toggled to on');
+    this.set('testSetting.value', false);
+    assert.notOk(boolElement.classList.contains('x-toggle-container-checked'), 'the boolean should be toggled to off');
   });
 });

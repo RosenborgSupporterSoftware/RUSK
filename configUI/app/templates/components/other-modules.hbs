@@ -8,7 +8,8 @@
   </div>
 
   <hr>
-  <p>Dette er RUSK-moduler som ikke har innstillinger/hurtigtaster - alt du kan gjøre med dem er å skru dem av og på.
+  <p>
+    Dette er RUSK-moduler som ikke har innstillinger/hurtigtaster - alt du kan gjøre med dem er å skru dem av og på.
   </p>
   <hr>
 
@@ -23,20 +24,20 @@
       </thead>
       <tbody>
         {{#each sortedModules as |mod|}}
-        <tr>
-          <td class="configLabel">
-            {{mod.moduleName}}<br>
-            <small>{{mod.moduleDescription}}</small>
-          </td>
-          <td class="configValue" align="center">
-            {{x-toggle
-              value=mod.moduleEnabled
-              onToggle=(action (mut mod.moduleEnabled))
-              theme="light"
-              size="small"
-            }}
-          </td>
-        </tr>
+          <tr>
+            <td class="configLabel">
+              {{mod.moduleName}}<br>
+              <small>{{mod.moduleDescription}}</small>
+            </td>
+            <td class="configValue" align="center">
+              {{x-toggle
+                value=mod.moduleEnabled
+                onToggle=(action (mut mod.moduleEnabled))
+                theme="light"
+                size="small"
+              }}
+            </td>
+          </tr>
         {{/each}}
       </tbody>
     </table>

@@ -19,7 +19,7 @@ as |modal|
     <p>Er du sikker på at du vil forkaste disse endringene?</p>
   {{/modal.body}}
 
-  {{#modal.footer as |footer|}}
+  {{#modal.footer}}
     {{#bs-button onClick=(action "cancelCloseConfig") type="secondary"}}Oops, ta meg tilbake!{{/bs-button}}
     {{#bs-button onClick=(action "performCloseConfig") type="danger"}}Det er greit{{/bs-button}}
   {{/modal.footer}}

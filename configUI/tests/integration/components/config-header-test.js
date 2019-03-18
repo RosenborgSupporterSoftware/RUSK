@@ -3,24 +3,18 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | fancy-checkbox', function(hooks) {
+module('Integration | Component | config-header', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{fancy-checkbox}}`);
+    await render(hbs`{{config-header}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#fancy-checkbox}}
-        template block text
-      {{/fancy-checkbox}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    let h2 = this.element.querySelector('h2');
+    assert.equal(h2.textContent, "RUSK-innstillinger", "We have the right headline");
+    let a = this.element.querySelector('a.closebutton');
+    assert.ok(a, "We have a close button");
   });
 });

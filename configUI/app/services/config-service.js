@@ -70,7 +70,9 @@ export default Service.extend({
         res.push(configModule.create(configObject[cfg]));
       }
     });
-    this.set("configs", res);
+    if (!this.isDestroyed) {
+      this.set("configs", res);
+    }
   },
 
   /** Gets a value indicating if we have any configuration changes */

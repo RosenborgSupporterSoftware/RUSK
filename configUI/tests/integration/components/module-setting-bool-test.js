@@ -3,6 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
+let setting = {
+  value: true
+};
+
 module('Integration | Component | module-setting-bool', function(hooks) {
   setupRenderingTest(hooks);
 
@@ -10,17 +14,16 @@ module('Integration | Component | module-setting-bool', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{module-setting-bool}}`);
+    this.set('setting', setting);
 
-    assert.equal(this.element.textContent.trim(), '');
+    await render(hbs`{{module-setting-bool setting=setting}}`);
 
-    // Template block usage:
-    await render(hbs`
-      {{#module-setting-bool}}
-        template block text
-      {{/module-setting-bool}}
-    `);
+    let span = this.element.querySelector('span.x-toggle-container-checked');
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.ok(span, 'the element exists with the class name signifying it is toggled on');
+
+    this.set('setting.value', false);
+
+    assert.notOk(span.classList.contains('x-toggle-container-checked'), "element should be toggled off");
   });
 });

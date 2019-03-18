@@ -17,9 +17,6 @@
       {{#if mod.isDirty}}
         *
       {{/if}}
-      {{#if mod.enableDisableOnly}}
-        []
-      {{/if}}
     {{/link-to}}
   {{/each}}
   {{#if hasSettinglessModules}}
@@ -27,7 +24,7 @@
       "index.other"
       class="list-group-item list-group-item-action"
     }}
-    {{fa-icon "gift"}}
+      {{fa-icon "gift"}}
       Andre moduler
     {{/link-to}}
   {{/if}}

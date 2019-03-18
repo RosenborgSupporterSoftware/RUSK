@@ -3,6 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
+let setting = {
+  value: '#00FF00'
+}
+
 module('Integration | Component | module-setting-color', function(hooks) {
   setupRenderingTest(hooks);
 
@@ -10,17 +14,17 @@ module('Integration | Component | module-setting-color', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{module-setting-color}}`);
+    await render(hbs`{{module-setting-color setting=setting}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    this.set('setting', setting);
 
-    // Template block usage:
-    await render(hbs`
-      {{#module-setting-color}}
-        template block text
-      {{/module-setting-color}}
-    `);
+    // At the moment this renders a color-box, which in turn is just an <input type="color">.
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    let input = this.element.querySelector('input');
+    assert.ok(input);
+    assert.equal(input.value, "#00ff00");
+
+    this.set('setting.value', '#123456');
+    assert.equal(input.value, '#123456');
   });
 });

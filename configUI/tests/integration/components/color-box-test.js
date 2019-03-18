@@ -10,17 +10,18 @@ module('Integration | Component | color-box', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{color-box}}`);
+    this.set('testColor', '#ff0000');
+    await render(hbs`{{color-box value=testColor}}`);
 
     assert.equal(this.element.textContent.trim(), '');
+    let input = this.element.querySelector('input');
+    assert.ok('input', 'Input element is rendered');
+    assert.equal(input.getAttribute('type'), "color", "Input element is color type");
+    assert.equal(input.value, '#ff0000', "Input element is connected to correct value");
+    assert.ok(input.classList.contains('form-control'));
+    assert.ok(input.classList.contains('form-control-lg'));
 
-    // Template block usage:
-    await render(hbs`
-      {{#color-box}}
-        template block text
-      {{/color-box}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    this.set('testColor', '#123456');
+    assert.equal(input.value, '#123456', 'Component picks up value changes');
   });
 });

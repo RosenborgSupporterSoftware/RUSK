@@ -2,9 +2,41 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
+
+const configStub = Service.extend({
+  init() {
+    this._super(...arguments);
+    this.set('configs', [
+      EmberObject.create({
+        moduleName: "Module 1",
+        moduleVisible: true,
+        enableDisableOnly: true,
+        moduleDescription: "Mod 1"
+      }),
+      EmberObject.create({
+        moduleName: "Module 2",
+        moduleVisible: true,
+        enableDisableOnly: false,
+        moduleDescription: "Mod 2"
+      }),
+      EmberObject.create({
+        moduleName: "Module 3",
+        moduleVisible: false,
+        enableDisableOnly: true,
+        moduleDescription: "Mod 3"
+      })
+    ]);
+  }
+});
 
 module('Integration | Component | other-modules', function(hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.owner.register('service:config-service', configStub);
+  })
 
   test('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
@@ -12,15 +44,14 @@ module('Integration | Component | other-modules', function(hooks) {
 
     await render(hbs`{{other-modules}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    let rows = [...this.element.querySelectorAll('div > table tbody tr')];
+    assert.equal(rows.length, 1, "We should have only one visible module");
 
-    // Template block usage:
-    await render(hbs`
-      {{#other-modules}}
-        template block text
-      {{/other-modules}}
-    `);
+    let td = rows[0].querySelector('td.configLabel');
+    assert.equal(td.childNodes[1].textContent, "Module 1", "Module name should be displayed");
+    assert.equal(td.childNodes[4].textContent, "Mod 1", "Module description too");
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    td = rows[0].querySelector('td.configValue');
+    assert.ok(td.querySelector('span.x-toggle-container'), "Toggle widget should be rendered");
   });
 });
