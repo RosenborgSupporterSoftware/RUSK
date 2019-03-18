@@ -6,10 +6,11 @@ export default Route.extend({
   configService: service('config-service'),
 
   async model(something) {
-    // TODO: Hent modulconfig fra configService
     let res = this.get('configService').getConfig(something.id);
+    if (res != null) {
+      localStorage.setItem('RUSK-ConfigUI-LastViewedModulePage', res.moduleName);
+    }
     return res;
   }
-
 
 });
