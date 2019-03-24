@@ -10,14 +10,14 @@ export default EmberObject.extend({
 
   init() {
     this._super(...arguments);
-    this.set('originalModuleEnabled', this.get('moduleEnabled'));
+    this.set('originalModuleEnabled', this.moduleEnabled);
 
     this.setupSettings();
     this.setupHotkeys();
   },
 
   setupSettings() {
-    let passedInSettings = this.get('settings');
+    let passedInSettings = this.settings;
     if (passedInSettings == null || passedInSettings.length == 0) return;
 
     let newSettings = [];
@@ -29,7 +29,7 @@ export default EmberObject.extend({
   },
 
   setupHotkeys() {
-    let passedInHotkeys = this.get('hotkeys');
+    let passedInHotkeys = this.hotkeys;
     if (passedInHotkeys == null || passedInHotkeys.length == 0) return;
 
     let newHotkeys = [];
@@ -47,22 +47,22 @@ export default EmberObject.extend({
     let settings = [];
     let hotkeys = [];
 
-    this.get('settings').forEach(s => {
+    this.settings.forEach(s => {
       settings.push(s.toStorageObject());
     });
-    this.get('hotkeys').forEach(hk => {
+    this.hotkeys.forEach(hk => {
       hotkeys.push(hk.toStorageObject());
     });
 
     return {
-      moduleName: this.get('moduleName'),
-      displayName: this.get('displayName'),
-      moduleDescription: this.get('moduleDescription'),
-      moduleEnabled: this.get('moduleEnabled'),
-      moduleVisible: this.get('moduleVisible'),
+      moduleName: this.moduleName,
+      displayName: this.displayName,
+      moduleDescription: this.moduleDescription,
+      moduleEnabled: this.moduleEnabled,
+      moduleVisible: this.moduleVisible,
       settings,
       hotkeys
-    }
+    };
   },
 
   /**
@@ -70,19 +70,19 @@ export default EmberObject.extend({
    * Used after saving this as the new configuration.
    */
   setClean() {
-    this.set('originalModuleEnabled', this.get('moduleEnabled'));
+    this.set('originalModuleEnabled', this.moduleEnabled);
     this.setupSettings();
     this.setupHotkeys();
   },
 
   isDirty: computed('moduleEnabled', 'settings.@each.isDirty', 'hotkeys.@each.isDirty', function () {
-    if (this.get('moduleEnabled') != this.get('originalModuleEnabled'))
+    if (this.moduleEnabled != this.originalModuleEnabled)
       return true;
-    let settings = this.get('settings');
+    let settings = this.settings;
     if (settings.any(s => s.isDirty)) {
       return true;
     }
-    let hotkeys = this.get('hotkeys');
+    let hotkeys = this.hotkeys;
     if (hotkeys.any(h => h.isDirty)) {
       return true;
     }
@@ -91,47 +91,47 @@ export default EmberObject.extend({
 
   /** A bool that is true if the moduleEnabled property has been changed */
   enabledChanged: computed('moduleEnabled', 'originalModuleEnabled', function () {
-    return this.get('moduleEnabled') !== this.get('originalModuleEnabled');
+    return this.moduleEnabled !== this.originalModuleEnabled;
   }),
 
   /** A list of settings with changed values */
   changedSettings: computed('visibleSettings', 'visibleSettings.@each.isDirty', function () {
-    return this.get('visibleSettings').filter(s => {
+    return this.visibleSettings.filter(s => {
       return s.isDirty;
     });
   }),
 
   visibleSettings: computed('settings', function () {
-    return this.get('settings').filter(s => {
+    return this.settings.filter(s => {
       // FIXME: Logikk for når vi viser alpha/beta settings her.
       if (s.visibility == "COV_ALWAYS") return true;
       if (s.visibility == "COV_ALPHA") return true;
       if (s.visibility == "COV_BETA") return true;
       return false;
-    })
+    });
   }),
 
   visibleHotkeys: computed('hotkeys', function () {
-    return this.get('hotkeys').filter(h => {
+    return this.hotkeys.filter(h => {
       // FIXME: Logikk for når vi viser alpha/beta settings her.
       if (h.visibility == "COV_ALWAYS") return true;
       if (h.visibility == "COV_ALPHA") return true;
       if (h.visibility == "COV_BETA") return true;
       return false;
-    })
+    });
   }),
 
   hasSettings: computed('visibleSettings', function () {
-    return this.get('visibleSettings').length > 0;
+    return this.visibleSettings.length > 0;
   }),
 
   hasHotkeys: computed('visibleHotkeys', function () {
-    return this.get('visibleHotkeys').length > 0;
+    return this.visibleHotkeys.length > 0;
   }),
 
   enableDisableOnly: computed('hasSettings', 'hasHotkeys', function () {
-    if (this.get('hasSettings')) return false;
-    if (this.get('hasHotkeys')) return false;
+    if (this.hasSettings) return false;
+    if (this.hasHotkeys) return false;
     return true;
   })
 

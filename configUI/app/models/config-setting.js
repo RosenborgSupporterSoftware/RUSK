@@ -8,28 +8,28 @@ export default EmberObject.extend({
 
   init() {
     this._super(...arguments);
-    this.set('originalValue', this.get('value'));
+    this.set('originalValue', this.value);
   },
 
   toStorageObject() {
     return {
-      setting: this.get('setting'),
-      type: this.get('type'),
-      value: this.get('value'),
-      label: this.get('label'),
-      isShared: this.get('isShared'),
-      visibility: this.get('visibility')
-    }
+      setting: this.setting,
+      type: this.type,
+      value: this.value,
+      label: this.label,
+      isShared: this.isShared,
+      visibility: this.visibility
+    };
   },
 
   isDirty: computed('value', 'originalValue', function () {
-    return this.get('value') != this.get('originalValue');
+    return this.value != this.originalValue;
   }),
 
   displayName: computed('label', 'setting', function () {
-    let dn = this.get('label');
+    let dn = this.label;
     if (dn == null || dn.length == 0)
-      dn = this.get('setting');
+      dn = this.setting;
 
     return dn;
   })

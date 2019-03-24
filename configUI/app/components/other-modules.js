@@ -8,7 +8,7 @@ export default Component.extend({
   configService: service('config-service'),
 
   modules: computed('configService.configs', function () {
-    return this.get('configService').get('configs').filter(mod => {
+    return this.configService.get('configs').filter(mod => {
       if (mod.moduleVisible === true) return true;
       return false;
     });
@@ -18,7 +18,7 @@ export default Component.extend({
   * Lists all modules that have no settings and/nor hotkeys to edit
   */
   settinglessModules: computed('modules', 'modules.@each.enableDisableOnly', function () {
-    return this.get('modules').filter(mod => {
+    return this.modules.filter(mod => {
       return mod.get('enableDisableOnly') === true;
     });
   }),

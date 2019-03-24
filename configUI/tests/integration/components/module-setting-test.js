@@ -29,8 +29,8 @@ module('Integration | Component | module-setting', function(hooks) {
     this.set('testSetting.type', 'ST_BOOL');
     this.set('testSetting.value', true);
     let boolElement = this.element.querySelector('span.x-toggle-container');
-    assert.ok(boolElement.classList.contains('x-toggle-container-checked'), 'the boolean should be toggled to on');
+    assert.dom(boolElement).hasClass('x-toggle-container-checked', 'the boolean should be toggled to on');
     this.set('testSetting.value', false);
-    assert.notOk(boolElement.classList.contains('x-toggle-container-checked'), 'the boolean should be toggled to off');
+    assert.dom(boolElement).hasNoClass('x-toggle-container-checked', 'the boolean should be toggled to off');
   });
 });

@@ -16,10 +16,10 @@ export default Component.extend({
     saveConfiguration() {
       chrome.runtime.sendMessage({
         storeConfigFor: this.get('module.moduleName'),
-        config: this.get('module').toStorageObject()
+        config: this.module.toStorageObject()
       }, rep => {
         if (rep == 'ok') {
-          this.get('module').setClean();
+          this.module.setClean();
         }
       })
     }

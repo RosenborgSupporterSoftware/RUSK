@@ -48,8 +48,8 @@ module('Integration | Component | other-modules', function(hooks) {
     assert.equal(rows.length, 1, "We should have only one visible module");
 
     let td = rows[0].querySelector('td.configLabel');
-    assert.equal(td.childNodes[1].textContent, "Module 1", "Module name should be displayed");
-    assert.equal(td.childNodes[4].textContent, "Mod 1", "Module description too");
+    assert.equal(td.childNodes[1].textContent.trim(), "Module 1", "Module name should be displayed");
+    assert.dom(td.childNodes[4]).hasText('Mod 1', "Module description too");
 
     td = rows[0].querySelector('td.configValue');
     assert.ok(td.querySelector('span.x-toggle-container'), "Toggle widget should be rendered");

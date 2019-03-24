@@ -8,19 +8,19 @@ export default EmberObject.extend({
   init() {
     this._super(...arguments);
 
-    this.set('shiftKey', this.get('_shiftKey'));
-    this.set('altKey', this.get('_altKey'));
-    this.set('ctrlKey', this.get('_ctrlKey'));
-    this.set('key', this.get('_key'));
+    this.set('shiftKey', this._shiftKey);
+    this.set('altKey', this._altKey);
+    this.set('ctrlKey', this._ctrlKey);
+    this.set('key', this._key);
   },
 
   toStorageObject() {
 
     return {
-      _shiftKey: this.get('shiftKey'),
-      _altKey: this.get('altKey'),
-      _ctrlKey: this.get('ctrlKey'),
-      _key: this.get('key')
+      _shiftKey: this.shiftKey,
+      _altKey: this.altKey,
+      _ctrlKey: this.ctrlKey,
+      _key: this.key
     };
 
   }

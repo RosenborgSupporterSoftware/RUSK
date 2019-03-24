@@ -12,7 +12,7 @@ export default Component.extend({
 
   // Egentlig ikke nødvendig nå som vi har standard format på alle farger i settings.
   color: computed('value', function () {
-    return this.get('value');
+    return this.value;
   })
 
 });

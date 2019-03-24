@@ -6,7 +6,7 @@ export default Route.extend({
   configService: service('config-service'),
 
   async model(something) {
-    let res = this.get('configService').getConfig(something.id);
+    let res = this.configService.getConfig(something.id);
     if (res != null) {
       localStorage.setItem('RUSK-ConfigUI-LastViewedModulePage', res.moduleName);
     }

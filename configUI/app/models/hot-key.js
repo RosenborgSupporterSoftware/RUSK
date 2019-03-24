@@ -9,7 +9,7 @@ export default EmberObject.extend({
 
   init() {
     this._super(...arguments);
-    let hotkeys = this.get('hotkeys');
+    let hotkeys = this.hotkeys;
     this.set('originalHotkeys', hotkeys);
     let newHotkeys = [];
     hotkeys.forEach(hk => {
@@ -20,22 +20,22 @@ export default EmberObject.extend({
 
   toStorageObject() {
     let keyCombos = [];
-    this.get('hotkeys').forEach(kc => {
+    this.hotkeys.forEach(kc => {
       keyCombos.push(kc.toStorageObject());
     });
 
     return {
-      name: this.get('name'),
-      label: this.get('label'),
-      visibility: this.get('visibility'),
-      validPages: this.get('validPages'),
+      name: this.name,
+      label: this.label,
+      visibility: this.visibility,
+      validPages: this.validPages,
       hotkeys: keyCombos
-    }
+    };
   },
 
   isDirty: computed('hotkeys', 'originalHotkeys', function () {
-    let original = this.get('originalHotkeys');
-    let current = this.get('hotkeys');
+    let original = this.originalHotkeys;
+    let current = this.hotkeys;
 
     if (original.length != current.length) return true;
 
@@ -44,9 +44,9 @@ export default EmberObject.extend({
   }),
 
   displayName: computed('label', 'name', function () {
-    let dn = this.get('label');
+    let dn = this.label;
     if (dn == null || dn.length == 0)
-      dn = this.get('name');
+      dn = this.name;
 
     return dn;
   })

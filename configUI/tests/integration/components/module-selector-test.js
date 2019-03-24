@@ -41,7 +41,7 @@ module('Integration | Component | module-selector', function(hooks) {
 
     let links = [...this.element.querySelectorAll('a.list-group-item')];
     assert.equal(links.length, 2, "we should have two links in the module list");
-    assert.equal(links[0].textContent.trim(), "Number 1", "we should see the displayname of the first module");
+    assert.dom(links[0]).hasText('Number 1', "we should see the displayname of the first module");
     assert.ok(links[1].textContent.trim().startsWith("Grin"), "we should see the displayname of the second module (dirty)");
     assert.ok(links[1].textContent.trim().endsWith("*"), "we should see an asterisk since the module is dirty");
   });

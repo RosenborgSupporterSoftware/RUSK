@@ -10,7 +10,7 @@ export default Component.extend({
   modules: readOnly('configService.visibleModules'),
 
   moduleNames: computed('modules', function () {
-    return this.get('modules').map(mod => mod.moduleName);
+    return this.modules.map(mod => mod.moduleName);
   }),
 
   sortedModules: readOnly('configService.sortedModules'),

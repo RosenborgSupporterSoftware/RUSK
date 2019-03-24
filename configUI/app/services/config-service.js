@@ -29,7 +29,7 @@ export default Service.extend({
    * @param callback - Callback to call once all configs are confirmed to be stored
    */
   saveDirtyConfigs(callback) {
-    let dirty = this.get('dirtyModules');
+    let dirty = this.dirtyModules;
     let unconfirmed = 0;
 
     dirty.forEach(mod => {
@@ -50,7 +50,7 @@ export default Service.extend({
 
   /** Gets the names of the config sections we have */
   getConfigSections() {
-    var cfgs = this.get("configs");
+    var cfgs = this.configs;
 
     let names = cfgs.map(mod => mod.moduleName);
     return names;
@@ -58,7 +58,7 @@ export default Service.extend({
 
   /** Gets a single, named configuration */
   getConfig(moduleName) {
-    return this.get('configs').find(m => m.moduleName == moduleName);
+    return this.configs.find(m => m.moduleName == moduleName);
   },
 
   /** Create the config array from the object provided by RUSK */
@@ -77,7 +77,7 @@ export default Service.extend({
 
   /** Gets a value indicating if we have any configuration changes */
   isDirty: computed('configs.@each.isDirty', function () {
-    return this.get('configs').any(c => c.isDirty);
+    return this.configs.any(c => c.isDirty);
   }),
 
   /** Gets all modules with unstored configuration changes */
@@ -87,7 +87,7 @@ export default Service.extend({
 
   /** Gets all modules that should be visible to the user */
   visibleModules: computed('configs', function () {
-    return this.get('configs').filter(mod => {
+    return this.configs.filter(mod => {
       if (mod.moduleVisible === true) return true;
       return false;
     });
@@ -101,7 +101,7 @@ export default Service.extend({
    * Lists all modules that have settings and/or hotkeys to edit
    */
   modulesWithSettings: computed('visibleModules', 'visibleModules.@each.enableDisableOnly', function () {
-    return this.get('visibleModules').filter(mod => {
+    return this.visibleModules.filter(mod => {
       return mod.get('enableDisableOnly') === false;
     });
   }),
@@ -110,13 +110,13 @@ export default Service.extend({
    * Lists all modules that have no settings and/nor hotkeys to edit
    */
   settinglessModules: computed('visibleModules', 'visibleModules.@each.enableDisableOnly', function () {
-    return this.get('visibleModules').filter(mod => {
+    return this.visibleModules.filter(mod => {
       return mod.get('enableDisableOnly') === true;
     });
   }),
 
   hasSettinglessModules: computed('settinglessModules', function () {
-    return this.get('settinglessModules').length > 0;
+    return this.settinglessModules.length > 0;
   })
 
 });

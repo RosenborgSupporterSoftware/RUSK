@@ -12,7 +12,7 @@ export default Component.extend({
   }),
 
   dirtyModules: computed('configService.dirtyModules', function () {
-    return this.get('configService').get('dirtyModules');
+    return this.configService.get('dirtyModules');
   }),
 
   actions: {

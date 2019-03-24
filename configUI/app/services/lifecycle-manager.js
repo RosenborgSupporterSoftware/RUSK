@@ -12,7 +12,7 @@ export default Service.extend({
    * The function to call in order to request a shutdown of the config UI.
    */
   requestClose() {
-    if (this.get('configService').get('isDirty')) {
+    if (this.configService.get('isDirty')) {
       this.set('displayCloseModal', true);
     } else {
       this.doClose();

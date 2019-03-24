@@ -24,6 +24,6 @@ module('Integration | Component | module-setting-bool', function(hooks) {
 
     this.set('setting.value', false);
 
-    assert.notOk(span.classList.contains('x-toggle-container-checked'), "element should be toggled off");
+    assert.dom(span).hasNoClass('x-toggle-container-checked', "element should be toggled off");
   });
 });

@@ -8,12 +8,12 @@ export default Component.extend({
   lifecycleManager: service('lifecycle-manager'),
 
   changeReviewOpen: computed('lifecycleManager.displayChangeReview', function () {
-    return this.get('lifecycleManager').displayChangeReview;
+    return this.lifecycleManager.displayChangeReview;
   }),
 
   actions: {
     performCloseReview: function () {
-      this.get('lifecycleManager').set('displayChangeReview', false);
+      this.lifecycleManager.set('displayChangeReview', false);
     }
   }
 

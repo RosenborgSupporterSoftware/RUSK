@@ -15,14 +15,14 @@ export default Component.extend({
 
   discardButtonText: computed('configDirty', {
     get() {
-      let changes = this.get('configDirty');
+      let changes = this.configDirty;
       return changes ? "Forkast & lukk" : "Lukk config";
     }
   }),
 
   actions: {
     saveConfiguration: function () {
-      let configService = this.get('configService');
+      let configService = this.configService;
       return new Promise(function (resolve/*), reject*/) {
 
         configService.saveDirtyConfigs(() => {
@@ -33,11 +33,11 @@ export default Component.extend({
     },
 
     closeConfigUI: function () {
-      this.get('lifecycleManager').requestClose();
+      this.lifecycleManager.requestClose();
     },
 
     reviewChanges: function () {
-      this.get('lifecycleManager').set('displayChangeReview', true);
+      this.lifecycleManager.set('displayChangeReview', true);
     }
   }
 });

@@ -5,7 +5,7 @@ export default Component.extend({
 
   color: computed('_color', {
     get() {
-      return this.get('_color');
+      return this._color;
     },
     set(key, value) {
       this.set('_color', value);
@@ -17,6 +17,6 @@ export default Component.extend({
   }),
 
   didInsertElement() {
-    this.set('color', this.get('color'));
+    this.set('color', this.color);
   }
 });
