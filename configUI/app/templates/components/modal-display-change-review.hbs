@@ -28,6 +28,19 @@ as |modal|
               <li><b>{{setting.label}}</b>: {{if setting.value "På" "Av"}}.</li>
             {{/if}}
           {{/each}}
+          {{#each module.changedHotkeys as |hotkey|}}
+            <li>
+              {{hotkey.displayName}}
+              <ul>
+                {{#each hotkey.addedKeyCombos as |keycombo|}}
+                  <li>{{fa-icon "plus-circle" class="green"}} {{keycombo.displayName}}</li>
+                {{/each}}
+                {{#each hotkey.removedKeyCombos as |keycombo|}}
+                  <li>{{fa-icon "minus-circle" class="red"}} {{keycombo.displayName}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          {{/each}}
         </ul>
       {{/each}}
     </ul>

@@ -24,6 +24,12 @@ th.thcenter {
   text-align: center;
 }
 
+div.addHotkey {
+  float: right;
+  cursor: pointer;
+  opacity: 0.2;
+}
+
 input[type=color] {
   border: none;
   width: 50px;
@@ -75,6 +81,10 @@ a.closebutton i {
   color: #FF0000;
 }
 
+.green {
+  color: #00FF00;
+}
+
 td.configValue {
   padding: 3px;
 }
@@ -103,8 +113,12 @@ div.keycombo {
 }
 
 div.keycombo:hover {
-  background-color: #FEFEFF;
+  background-color: #CCCCFF;
   cursor: pointer;
+}
+
+div.keycombo.selected {
+  background-color: #FFFFCC;
 }
 
 span.hotkey-key {
@@ -124,4 +138,34 @@ span.hotkey-key {
   background-image: none;
   text-shadow: none;
   box-shadow: none;
+}
+
+/* div.hotkeyActions {
+} */
+
+@keyframes visible {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes invisible {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+div.hotkeyActions > button {
+  margin: 1px;
+}
+
+tr div.hotkeyActions {
+  opacity: 0;
+  float: right;
+  animation-name: invisible;
+  animation-duration: 0.3s;
+}
+
+tr:hover div.hotkeyActions {
+  opacity: 1;
+  animation-name: visible;
+  animation-duration: 0.3s;
 }

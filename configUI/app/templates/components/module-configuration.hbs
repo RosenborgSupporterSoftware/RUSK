@@ -41,41 +41,8 @@
           {{/each}}
         </tbody>
       </table>
-    {{else}}
-      <p>
-        Denne modulen har ingen innstillinger. Alt du kan gjøre er å skru den av og på.
-      </p>
     {{/if}}
   </div>
 
-  <div class="hotkeyBlock">
-    {{#if module.hasHotkeys}}
-      <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Funksjon</th>
-            <th scope="col">Hurtigtast(er)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each module.visibleHotkeys as |hotkey|}}
-            <tr>
-              <td class="configLabel">
-                {{hotkey.displayName}}
-              </td>
-              <td class="configValue" align="center">
-                <ul class="hotkeylist">
-                  {{#each hotkey.hotkeys as |keycombo|}}
-                    <li>{{module-setting-hotkey keycombo=keycombo}}</li>
-                  {{/each}}
-                </ul>
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      <p>Her er det ingen hotkeys!</p>
-    {{/if}}
-  </div>
+  {{hotkey-table module=module}}
 </div>

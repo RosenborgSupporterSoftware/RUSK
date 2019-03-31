@@ -10,12 +10,32 @@ export default EmberObject.extend({
   init() {
     this._super(...arguments);
     let hotkeys = this.hotkeys;
-    this.set('originalHotkeys', hotkeys);
     let newHotkeys = [];
+    let origHotkeys = [];
     hotkeys.forEach(hk => {
-      newHotkeys.push(keyCombo.create(hk));
+      let kc = keyCombo.create(hk);
+      kc.set('parentHotkey', this);
+      newHotkeys.push(kc);
+      let okc = keyCombo.create(hk);
+      origHotkeys.push(okc);
     });
     this.set('hotkeys', newHotkeys);
+    this.set('originalHotkeys', origHotkeys);
+  },
+
+  hasKeyCombos: computed('hotkeys', function () {
+    return this.hotkeys.length > 0;
+  }),
+
+  /** Removes a KeyCombo object from this hotkey */
+  removeKeyCombo(keyCombo) {
+    this.hotkeys.removeObject(keyCombo);
+  },
+
+  /** Adds a new KeyCombo to this hotkey */
+  addKeyCombo(keyCombo) {
+    keyCombo.set('parentHotkey', this);
+    this.hotkeys.addObject(keyCombo);
   },
 
   toStorageObject() {
@@ -33,11 +53,35 @@ export default EmberObject.extend({
     };
   },
 
-  isDirty: computed('hotkeys', 'originalHotkeys', function () {
+  /** Gets a list of keyCombos that no longer exist as they have been changed/removed */
+  removedKeyCombos: computed('hotkeys', 'hotkeys.@each', 'originalHotkeys', function () {
+    let removed = this.originalHotkeys.filter(ohk => {
+      return !this.hotkeys.any(chk => chk.isEqual(ohk));
+    })
+    return removed;
+  }),
+
+  /** Gets a list of keyCombos that have been added to the hotkey */
+  addedKeyCombos: computed('hotkeys', 'hotkeys.@each', 'originalHotkeys', function () {
+    let added = this.hotkeys.filter(chk => {
+      return !this.originalHotkeys.any(ohk => chk.isEqual(ohk));
+    })
+    return added;
+  }),
+
+  isDirty: computed('hotkeys', 'hotkeys.@each', 'originalHotkeys', function () {
     let original = this.originalHotkeys;
     let current = this.hotkeys;
 
     if (original.length != current.length) return true;
+
+    let allGood = true;
+    current.forEach(curHotkey => {
+      if (!original.any(ohk => curHotkey.isEqual(ohk)))
+        allGood = false;
+    });
+
+    if (!allGood) return true;
 
     // TODO: Sammenligne hotkeys-listene
     return false;

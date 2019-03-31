@@ -101,6 +101,13 @@ export default EmberObject.extend({
     });
   }),
 
+  /** A list of hotkeys with changes made */
+  changedHotkeys: computed('visibleHotkeys', 'visibleHotkeys.@each.isDirty', function () {
+    return this.visibleHotkeys.filter(hk => {
+      return hk.isDirty;
+    });
+  }),
+
   visibleSettings: computed('settings', function () {
     return this.settings.filter(s => {
       // FIXME: Logikk for når vi viser alpha/beta settings her.

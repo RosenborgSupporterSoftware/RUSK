@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | module-setting-hotkey', function(hooks) {
+module('Integration | Component | module-setting-keycombo', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
@@ -18,7 +18,7 @@ module('Integration | Component | module-setting-hotkey', function(hooks) {
     };
     this.set('keyCombo', keyCombo);
 
-    await render(hbs`{{module-setting-hotkey keycombo=keyCombo}}`);
+    await render(hbs`{{module-setting-keycombo keycombo=keyCombo}}`);
 
     let topDiv = this.element.querySelector('div.keycombo');
     assert.ok(topDiv, 'We should have an element representing the key combination');

@@ -20,9 +20,11 @@
   "devDependencies": {
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "^0.6.3",
+    "@types/ember": "^3.1.0",
     "bootstrap": "^4.2.1",
     "broccoli-asset-rev": "^2.7.0",
     "ember-ajax": "^4.0.1",
+    "ember-auto-import": "^1.2.21",
     "ember-bootstrap": "^2.6.0",
     "ember-cli": "~3.8.1",
     "ember-cli-app-version": "^3.2.0",
@@ -50,6 +52,7 @@
     "ember-toggle": "^5.3.2",
     "ember-truth-helpers": "^2.1.0",
     "eslint-plugin-ember": "^5.2.0",
+    "keycode": "^2.2.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.0"
   },

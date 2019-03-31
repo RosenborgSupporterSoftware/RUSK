@@ -1,0 +1,35 @@
+{{#bs-modal
+  open=editHotkeyOpen
+  onHide=(action "cancel")
+  onHidden=(action "cancel")
+  onShow=(action "showModal")
+  keyboard=false
+  closeTitle="Avbryt"
+as |modal|
+}}
+  {{#modal.header}}
+    <h4 class="modal-title">{{fa-icon "keyboard-o"}} Hurtigtast</h4>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    <p><b>{{hotKey.displayName}}</b></p>
+    <p>Trykk tastekombinasjonen du ønsker å bruke for å utføre denne funksjonen.</p>
+    <center>
+      {{#if shiftKey}}
+        Shift +
+      {{/if}}
+      {{#if altKey}}
+        Alt +
+      {{/if}}
+      {{#if ctrlKey}}
+        Ctrl +
+      {{/if}}
+      {{key}}
+    </center>
+  {{/modal.body}}
+
+  {{#modal.footer}}
+    {{#bs-button onClick=(action "cancel") type="secondary"}}Avbryt{{/bs-button}}
+    {{#bs-button onClick=(action "save") type="primary"}}Lagre{{/bs-button}}
+  {{/modal.footer}}
+{{/bs-modal}}

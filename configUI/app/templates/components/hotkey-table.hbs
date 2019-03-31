@@ -1,0 +1,67 @@
+{{#if module.hasHotkeys}}
+  <div class="hotkeyBlock">
+    <table class="table table-striped table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Funksjon</th>
+          <th scope="col">Hurtigtast(er)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each module.visibleHotkeys as |hotkey|}}
+          <tr>
+            <td class="configLabel">
+              {{#if hotkey.isDirty}}
+                *
+              {{/if}}
+              {{hotkey.displayName}}
+              <div class="hotkeyActions">
+                {{#if (eq hotkey selectedHotkey)}}
+                  {{#bs-button size="sm" type="outline-danger" onClick=(action "deleteKeyCombo")}}
+                    {{fa-icon "trash"}}
+                  {{/bs-button}}
+                  {{#bs-button
+                    size="sm"
+                    type="outline-secondary"
+                    onClick=(action "editKeyCombo")
+                  }}
+                    {{fa-icon "pencil"}}
+                  {{/bs-button}}
+                {{/if}}
+                {{#bs-button
+                  size="sm"
+                  type="outline-success"
+                  onClick=(action "addKeyCombo" hotkey)
+                }}
+                  {{fa-icon "plus"}}
+                {{/bs-button}}
+              </div>
+            </td>
+            <td class="configValue" align="center">
+              {{#if hotkey.hasKeyCombos}}
+                <ul class="hotkeylist">
+                  {{#each hotkey.hotkeys as |keycombo|}}
+                    <li>
+                      {{module-setting-keycombo
+                        keycombo=keycombo
+                        selected=(eq keycombo selectedKeyCombo)
+                        click=(action "selectKeyCombo" keycombo)
+                      }}
+                    </li>
+                  {{/each}}
+                </ul>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{modal-edithotkey
+    editHotkeyOpen=modalOpen
+    keyCombo=selectedKeyCombo
+    hotKey=selectedHotkey
+    mode=modalMode
+    addNewAction=(action "storeNewKeyCombo")
+  }}
+{{/if}}
