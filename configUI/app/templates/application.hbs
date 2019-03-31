@@ -1,13 +1,19 @@
-<div class="fixed-top config-top">
-  {{config-header}}
-</div>
+<div class="pageLayout">
+  <div class="config-header">
+    {{config-header}}
+  </div>
 
-<div class="container-fluid config">
-  {{outlet}}
-</div>
+  <div class="config-modulelist">
+  {{module-selector}}
+  </div>
 
-<div class="fixed-bottom config-bottom">
-  {{config-footer}}
+  <div class="config-main">
+    {{outlet}}
+  </div>
+
+  <div class="config-footer">
+    {{config-footer}}
+  </div>
 </div>
 
 {{modal-closewithoutsave}}

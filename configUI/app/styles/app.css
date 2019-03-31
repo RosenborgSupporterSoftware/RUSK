@@ -1,3 +1,5 @@
+@import 'pagelayout.css';
+
 div.colorbox {
   border: 2px solid black;
   width: 50px;
@@ -50,31 +52,6 @@ input[type="color"]::-webkit-color-swatch {
   border: 1px solid black;
   width: 50px;
   height: 25px;
-}
-
-div.config {
-  /* margin-top: 100px !important; */
-  top: 100px;
-  position: absolute;
-}
-
-div.config-bottom {
-  margin-top: 10px;
-  padding-bottom: 1em;
-}
-
-div.config-bottom button {
-  margin: 0.5em;
-}
-
-a.closebutton {
-  position: fixed;
-  top: 5px;
-  right: 5px;
-}
-
-a.closebutton i {
-  color: #FF0000;
 }
 
 .red {
