@@ -18,14 +18,16 @@ export class HotkeyManager {
         'Alt',          // Alt på Windows
         'Control',      // Ctrl på Windows
         'AltGraph',     // Implisitt Control også
-        'Meta'          // Windows key på Windows
+        'Meta'          // Windows key på Windows, Cmd/Command-key på MacOS
     ];
 
     private _modifiersDown = {
         shift: false,
         alt: false,
         cmdCtrl: false,
-        meta: false
+        meta: false,
+        leftCmd: false,  // MacOS
+        rightCmd: false  // MacOS
     };
 
     private _hotkeys = new Array<HotkeyAction>();
@@ -79,6 +81,8 @@ export class HotkeyManager {
     }
 
     private keydownHandler(ev: KeyboardEvent) {
+        if (ev.keyCode == 91) this._modifiersDown.leftCmd = true;
+        if (ev.keyCode == 93) this._modifiersDown.rightCmd = true;
         this.getModifierKeyState(ev);
         if (this._modifierKeys.indexOf(ev.key) == -1) {
             let keyCombo = this.createKeyCombo(ev.key);
@@ -89,16 +93,17 @@ export class HotkeyManager {
     }
 
     private keyupHandler(ev: KeyboardEvent) {
+        if (ev.keyCode == 91) this._modifiersDown.leftCmd = false;
+        if (ev.keyCode == 93) this._modifiersDown.rightCmd = false;
         this.getModifierKeyState(ev);
+
     }
 
     private getModifierKeyState(ev: KeyboardEvent) {
         this._modifiersDown.shift = ev.shiftKey;
         this._modifiersDown.alt = ev.altKey;
         this._modifiersDown.cmdCtrl = ev.ctrlKey;
-
-        // TODO: See MAC Command key as Control.
-        // TODO: Handle Meta/OS key?
+        this._modifiersDown.meta = ev.metaKey || this._modifiersDown.leftCmd || this._modifiersDown.rightCmd;
     }
 
     private createKeyCombo(key: string): KeyCombo {
@@ -106,6 +111,7 @@ export class HotkeyManager {
         if (this._modifiersDown.cmdCtrl) combo += "Ctrl ";
         if (this._modifiersDown.alt) combo += "Alt ";
         if (this._modifiersDown.shift) combo += "Shift ";
+        if (this._modifiersDown.meta) combo += "Meta ";
         combo += key;
 
         return KeyCombo.FromString(combo);

@@ -5,7 +5,8 @@ export class KeyCombo {
 
     private _shiftKey: boolean = false;
     private _altKey: boolean = false;
-    private _ctrlKey: boolean = false; // FIXME: Handle Mac command keys
+    private _ctrlKey: boolean = false;
+    private _metaKey: boolean = false;
     private _key: string;
 
     /** Gets a value indicating whether this KeyCombo requires the Shift key to be pressed */
@@ -21,6 +22,11 @@ export class KeyCombo {
     /** Gets a value indicating whether this KeyCombo requires the Ctrl/Cmd key to be pressed */
     public get CtrlKey(): boolean {
         return this._ctrlKey;
+    }
+
+    /** Gets a value indicating whether this KeyCombo requires the Meta key to be pressed */
+    public get MetaKey(): boolean {
+        return this._metaKey;
     }
 
     /** Gets the main key used in this KeyCombo object */
@@ -56,6 +62,9 @@ export class KeyCombo {
                 case "CTRL":
                     keyCombo._ctrlKey = true;
                     break;
+                case "META":
+                    keyCombo._metaKey = true;
+                    break;
                 default:
                     keyCombo._key = components[i].toUpperCase();
                     break;
@@ -77,6 +86,7 @@ export class KeyCombo {
         keyCombo._altKey = storage._altKey;
         keyCombo._ctrlKey = storage._ctrlKey;
         keyCombo._shiftKey = storage._shiftKey;
+        keyCombo._metaKey = storage._metaKey;
         keyCombo._key = storage._key;
 
         return keyCombo;
@@ -88,6 +98,7 @@ export class KeyCombo {
         if (event.shiftKey != this.ShiftKey) return false;
         if (event.altKey != this.AltKey) return false;
         if (event.ctrlKey != this.CtrlKey) return false;
+        if (event.metaKey != this.MetaKey) return false;
 
         if (event.key.toUpperCase() != this.Key.toUpperCase()) return false;
 
@@ -104,6 +115,7 @@ export class KeyCombo {
         if (this._ctrlKey) result += "Ctrl ";
         if (this._altKey) result += "Alt ";
         if (this._shiftKey) result += "Shift ";
+        if (this._metaKey) result += "Meta ";
 
         result += this._key;
 
@@ -121,6 +133,7 @@ export class KeyCombo {
         if (other.AltKey != this._altKey) return false;
         if (other.ShiftKey != this._shiftKey) return false;
         if (other.CtrlKey != this._ctrlKey) return false;
+        if (other.MetaKey != this._metaKey) return false;
         if (other.Key != this._key) return false;
 
         return true;
