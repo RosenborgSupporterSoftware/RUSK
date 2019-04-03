@@ -153,16 +153,23 @@ export class UserFilter extends ModuleBase {
         }.bind(this));
 
         // hide all troll posts, and insert troll buttons
-        this.posts.forEach(function (post) {
+        this.posts.forEach(function (post: PostInfo) {
             try {
                 //console.log("poster id: '" + post.posterid + "'");
                 var posterid = post.posterid;
                 var row = post.rowElement;
                 var buttons = post.buttonRowElement as HTMLTableRowElement;
+                if (this.isThreadTroll(posterid)) {
                 buttons.insertAdjacentHTML('afterend', '<tr>' +
                     '<td class="row2" colspan="2">' +
                     '<a class="nav trollbutton" id="' + post.postid + '">' + post.posterNickname + '</a>' +
                     '</td></tr>');
+                } else {
+                    buttons.insertAdjacentHTML('afterend', '<tr>' +
+                        '<td class="row2" colspan="2">' +
+                        '<a class="nav trollbutton">' + post.posterNickname + '</a>' +
+                        '</td></tr>');
+                }
                 var addition = buttons.nextElementSibling as HTMLTableRowElement;
                 var button = addition.querySelector("a") as HTMLAnchorElement;
                 button.addEventListener("click", function () {
@@ -188,7 +195,7 @@ export class UserFilter extends ModuleBase {
             var settings = this._cfg.GetSetting("forumTrolls") as string;
             //console.log("loaded forumTrolls: " + settings);
             var trollids = JSON.parse(settings || "[]");
-            trollids.forEach(function (troll) {
+            trollids.forEach(function (troll: number) {
                 trolls.add(+troll);
             }.bind(this));
         } catch (e) {
