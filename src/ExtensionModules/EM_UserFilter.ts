@@ -161,7 +161,7 @@ export class UserFilter extends ModuleBase {
                 var buttons = post.buttonRowElement as HTMLTableRowElement;
                 buttons.insertAdjacentHTML('afterend', '<tr>' +
                     '<td class="row2" colspan="2">' +
-                    '<a class="nav trollbutton" name="showpost-' + post.postId + '">' + post.posterNickname + '</a>' +
+                    '<a class="nav trollbutton" id="' + post.postid + '">' + post.posterNickname + '</a>' +
                     '</td></tr>');
                 var addition = buttons.nextElementSibling as HTMLTableRowElement;
                 var button = addition.querySelector("a") as HTMLAnchorElement;
