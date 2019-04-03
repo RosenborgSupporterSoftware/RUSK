@@ -1,6 +1,13 @@
 # Changelog for RUSK
 
-## RUSK future
+## RUSK future (current)
+
+Bugfixes:
+- Fiks for å hoppe til riktig plass på side, selv om første uleste post er drept av
+  trollfilteret.
+- Fiks for RUSK ikke skal overstyre standard MacOS keyboard shortcuts.
+
+## RUST v0.0.10
 
 Nye funksjoner:
 
