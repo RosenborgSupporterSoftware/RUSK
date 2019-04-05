@@ -159,11 +159,11 @@ export class UserFilter extends ModuleBase {
                 var posterid = post.posterid;
                 var row = post.rowElement;
                 var buttons = post.buttonRowElement as HTMLTableRowElement;
-                if (this.isThreadTroll(posterid)) {
-                buttons.insertAdjacentHTML('afterend', '<tr>' +
-                    '<td class="row2" colspan="2">' +
-                    '<a class="nav trollbutton" id="' + post.postid + '">' + post.posterNickname + '</a>' +
-                    '</td></tr>');
+                if (this.forumTrolls.has(posterid) || this.isThreadTroll("" + post.threadId, "" + posterid)) {
+                    buttons.insertAdjacentHTML('afterend', '<tr>' +
+                        '<td class="row2" colspan="2">' +
+                        '<a class="nav trollbutton" id="' + post.postid + '">' + post.posterNickname + '</a>' +
+                        '</td></tr>');
                 } else {
                     buttons.insertAdjacentHTML('afterend', '<tr>' +
                         '<td class="row2" colspan="2">' +
