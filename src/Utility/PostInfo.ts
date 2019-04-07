@@ -61,10 +61,7 @@ export class PostInfo implements IRUSKPageItem {
     /** Whether or not the post is unread */
     private _isUnread: boolean;
     public get isUnread(): boolean {
-        return this._isUnread;
-    }
-    public set isUnread(newState: boolean) {
-        this._isUnread = newState;  // TODO: Tenk gjennom om dette er riktig approach når vi skal merke besøkte items som read
+        return this._isUnread || (this._isUnread = this.getUnreadState());
     }
 
     /** The url of the post */
@@ -152,12 +149,6 @@ export class PostInfo implements IRUSKPageItem {
     constructor(row: HTMLTableRowElement) {
         this._rowElement = row;
         this._buttonRowElement = row.nextElementSibling as HTMLTableRowElement;
-
-        try {
-            this.isUnread = this.getUnreadState();
-        } catch (e) {
-            Log.Error("PostInfo exception " + e.message + " - " + e.stack);
-        }
     }
 
     public getContextMenu(): ContextMenu {
@@ -294,5 +285,19 @@ export class PostInfo implements IRUSKPageItem {
         var topicmatch = link.href.match(/.*&t=([0-9]+)/);
         if (topicmatch) return +topicmatch[1];
         return 0;
+    }
+
+    public isFullyInView(): boolean {
+        var rect = this.rowElement.getBoundingClientRect();
+        var elemTop = rect.top;
+        var elemBottom = rect.bottom;
+        return (elemTop >= 0) && (elemBottom <= window.innerHeight);
+    }
+
+    public isPartiallyInView(): boolean {
+        var rect = this.rowElement.getBoundingClientRect();
+        var elemTop = rect.top;
+        var elemBottom = rect.bottom;
+        return elemTop < window.innerHeight && elemBottom >= 0;
     }
 }
