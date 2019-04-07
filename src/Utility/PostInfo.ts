@@ -300,4 +300,17 @@ export class PostInfo implements IRUSKPageItem {
         var elemBottom = rect.bottom;
         return elemTop < window.innerHeight && elemBottom >= 0;
     }
+
+    public isMostlyInView(): boolean {
+        var rect = this.rowElement.getBoundingClientRect();
+        var height = Math.min(rect.bottom - rect.top, window.innerHeight);
+        var inside = 0;
+        if (rect.top < 0) {
+            inside = Math.max(Math.min(rect.bottom, window.innerHeight), 0);
+        } else {
+            inside = Math.min(rect.bottom, window.innerHeight) -
+                     Math.min(rect.top, window.innerHeight);
+        }
+        return (inside / height) > 0.75;
+    }
 }

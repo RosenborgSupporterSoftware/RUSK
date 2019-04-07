@@ -1,17 +1,21 @@
 .RUSKItem.RUSKReadItem.RUSKEvenRowItem td {
     background-color: $RUSKReadItemEven$ !important;
+    transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKReadItem.RUSKOddRowItem td {
     background-color: $RUSKReadItemOdd$ !important;
+    transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKUnreadItem.RUSKEvenRowItem td {
     background-color: $RUSKUnreadItemEven$ !important;
+    transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKUnreadItem.RUSKOddRowItem td {
     background-color: $RUSKUnreadItemOdd$ !important;
+    transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKUnreadItem.RUSKSelectedItem td {

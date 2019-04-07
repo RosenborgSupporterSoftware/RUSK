@@ -25,6 +25,7 @@ import { QuickReply } from "./EM_QuickReply";
 import { Colorize } from "./EM_Colorize";
 import { KeyboardNavigation } from "./EM_KeyboardNavigation";
 import { ConfigUI } from "./EM_ConfigUI";
+import { UnreadTracker } from "./EM_UnreadTracker";
 
 /**
  * ExtensionModuleLoader
@@ -36,6 +37,7 @@ export default function loadModules(path: string): Array<ExtensionModule> {
     let allModules = [
         new ConfigUI(),
         new Empowerment(),
+        new UnreadTracker(),
         new KeyboardNavigation(),
         new RelativeForumWidth(),
         new Usertips(),
