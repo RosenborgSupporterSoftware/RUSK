@@ -1,148 +1,18 @@
+@import 'reset-rbkweb.css';
 @import 'pagelayout.css';
-
-div.colorbox {
-  border: 2px solid black;
-  width: 50px;
-  height: 25px;
-  /* background-color: lightgreen; */
-}
-
-div.colorsplotch {
-  border: 2px solid black;
-  width: 1em;
-  height: 1em;
-  margin: 0.2em;
-}
+@import 'colorsettings.css';
+@import 'hotkeys.css';
+@import 'symbolcolors.css';
 
 li.flex-inline {
   display: inline-flex;
-}
-
-td.configValue {
-  vertical-align: middle;
 }
 
 th.thcenter {
   text-align: center;
 }
 
-div.addHotkey {
-  float: right;
-  cursor: pointer;
-  opacity: 0.2;
-}
-
-input[type=color] {
-  border: none;
-  width: 50px;
-  height: 25px;
-  -webkit-appearance: none;
-  padding: 0px;
-  /*border-radius: 0px;
-  height: calc(2.0rem + 2px)!important; */
-}
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-  border: none;
-  width: 50px;
-  height: 25px;
-}
-input[type="color"]::-webkit-color-swatch {
-  padding: 0;
-  border: 1px solid black;
-  width: 50px;
-  height: 25px;
-}
-
-.red {
-  color: #FF0000;
-}
-
-.green {
-  color: #00FF00;
-}
-
 td.configValue {
+  vertical-align: middle;
   padding: 3px;
-}
-
-ul.hotkeylist {
-  border: 1px solid #DDDDDD;
-  /* background-color: #FAFAFA; */
-  border-radius: 5px;
-  margin: 3px;
-  padding-inline-start: 5px;
-}
-
-ul.hotkeylist li {
-  list-style-type: none;
-  margin: 0px 3px;
-  padding: 2px;
-}
-
-div.keycombo {
-  border: 1px solid #AAAAFF;
-  border-radius: 5px;
-  background-color: #EEEEFF;
-  /* margin: 3px 1px; */
-  padding: 3px 2px;
-  display: inline-block;
-}
-
-div.keycombo:hover {
-  background-color: #CCCCFF;
-  cursor: pointer;
-}
-
-div.keycombo.selected {
-  background-color: #FFFFCC;
-}
-
-span.hotkey-key {
-  border: 1px solid #CACACA;
-  border-radius: 3px;
-  background-color: #EFEFEF;
-  padding: 1px 5px;
-}
-
-:-webkit-any(button,input[type="button"],input[type="submit"]), select, input[type="checkbox"], input[type="radio"] {
-  background-image: none;
-  text-shadow: none;
-  box-shadow: none;
-}
-
-:enabled:hover:-webkit-any(button,input[type="button"],input[type="submit"]), select, input[type="checkbox"], input[type="radio"] {
-  background-image: none;
-  text-shadow: none;
-  box-shadow: none;
-}
-
-/* div.hotkeyActions {
-} */
-
-@keyframes visible {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes invisible {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-div.hotkeyActions > button {
-  margin: 1px;
-}
-
-tr div.hotkeyActions {
-  opacity: 0;
-  float: right;
-  animation-name: invisible;
-  animation-duration: 0.3s;
-}
-
-tr:hover div.hotkeyActions {
-  opacity: 1;
-  animation-name: visible;
-  animation-duration: 0.3s;
 }

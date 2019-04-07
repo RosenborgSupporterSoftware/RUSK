@@ -6,8 +6,10 @@ Bugfixes:
 - Fiks for å hoppe til riktig plass på side, selv om første uleste post er drept av
   trollfilteret.
 - Fiks for RUSK ikke skal overstyre standard MacOS keyboard shortcuts.
+- Fiks for CSS-feil i configUI, spesielt på hotkeys og sidelayout.
+- Farge-innstillinger viser nå korrekt at de er endret.
 
-## RUST v0.0.10
+## RUSK v0.0.10
 
 Nye funksjoner:
 

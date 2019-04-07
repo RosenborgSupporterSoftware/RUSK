@@ -8,6 +8,9 @@ export default EmberObject.extend({
 
   init() {
     this._super(...arguments);
+    if (this.type == "ST_COLOR") {
+      this.set('value', this.value.toLowerCase());
+    }
     this.set('originalValue', this.value);
   },
 

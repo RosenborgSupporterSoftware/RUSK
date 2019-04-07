@@ -1,0 +1,19 @@
+/*
+ * These seem to be necessary in order to get certain Bootstrap buttons etc. to look right.
+ *
+ * They look right when running the configUI standalone, but when used in RUSK (inside an iframe), several visual bugs appear.
+ *
+ * These "resets" seem to fix the issues found so far.
+ */
+
+:-webkit-any(button,input[type="button"],input[type="submit"]), select, input[type="checkbox"], input[type="radio"] {
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+:enabled:hover:-webkit-any(button,input[type="button"],input[type="submit"]), select, input[type="checkbox"], input[type="radio"] {
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}

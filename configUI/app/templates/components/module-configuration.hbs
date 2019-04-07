@@ -25,13 +25,16 @@
         <thead class="thead-dark">
           <tr>
             <th scope="col">Innstilling</th>
-            <th scope="col">Verdi</th>
+            <th scope="col" class="thcenter">Verdi</th>
           </tr>
         </thead>
         <tbody>
           {{#each module.visibleSettings as |setting|}}
             <tr>
               <td class="configLabel">
+                {{#if setting.isDirty}}
+                  &#8432;
+                {{/if}}
                 {{setting.displayName}}
               </td>
               <td class="configValue" align="center">

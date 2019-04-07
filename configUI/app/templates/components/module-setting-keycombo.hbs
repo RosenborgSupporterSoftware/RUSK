@@ -1,24 +1,22 @@
-<div class="keycombo{{if selected " selected" ""}}">
-  {{#if keycombo.shiftKey}}
-    <span class="hotkey-key">
-     &nbsp;Shift&nbsp;
-    </span>
-    &nbsp;+
-  {{/if}}
+{{#if keycombo.shiftKey}}
+  <span class="hotkey-key">
+    Shift
+  </span>
+  +
+{{/if}}
 
-  {{#if keycombo.altKey}}
-    <span class="hotkey-key">
-     &nbsp;Alt&nbsp;
-    </span>
-    &nbsp;+
-  {{/if}}
+{{#if keycombo.altKey}}
+  <span class="hotkey-key">
+    Alt
+  </span>
+  +
+{{/if}}
 
-  {{#if keycombo.ctrlKey}}
-    <span class="hotkey-key">
-     &nbsp;Ctrl&nbsp;
-    </span>
-    &nbsp;+
-  {{/if}}
+{{#if keycombo.ctrlKey}}
+  <span class="hotkey-key">
+    Ctrl
+  </span>
+  +
+{{/if}}
 
-  <span class="hotkey-key">&nbsp;{{keycombo.key}}&nbsp;</span>
-</div>
+<span class="hotkey-key">{{keycombo.key}}</span>

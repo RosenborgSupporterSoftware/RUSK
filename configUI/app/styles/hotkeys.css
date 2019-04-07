@@ -1,0 +1,74 @@
+ul.hotkeylist {
+  border: 1px solid #DDDDDD;
+  /* background-color: #FAFAFA; */
+  border-radius: 5px;
+  margin: 3px;
+  padding-inline-start: 5px;
+  padding: 0px;
+  width: 200px;
+}
+
+li.keycombo {
+  border: 1px solid #AAAAFF;
+  border-radius: 5px;
+  background-color: #EEEEFF;
+  margin: 2px;
+  display: inline-block;
+}
+
+li.keycombo:hover {
+  background-color: #CCCCFF;
+  cursor: pointer;
+}
+
+li.keycombo.selected {
+  background-color: #FFFFCC;
+}
+
+span.hotkey-key {
+  display: inline-block;
+  border: 1px solid #CACACA;
+  border-radius: 3px;
+  background-color: #EFEFEF;
+  padding: 1px 3px;
+  min-width: 1.5em;
+  margin: 2px;
+}
+
+div.addHotkey {
+  float: right;
+  cursor: pointer;
+  opacity: 0.2;
+}
+
+div.hotkeyActions {
+  width: 100px;
+}
+
+@keyframes visible {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes invisible {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+div.hotkeyActions > button {
+  margin: 1px;
+  float: right;
+}
+
+tr div.hotkeyActions {
+  opacity: 0;
+  float: right;
+  animation-name: invisible;
+  animation-duration: 0.3s;
+}
+
+tr:hover div.hotkeyActions {
+  opacity: 1;
+  animation-name: visible;
+  animation-duration: 0.3s;
+}

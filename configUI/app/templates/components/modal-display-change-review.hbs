@@ -12,14 +12,14 @@ as |modal|
     <p>Du har gjort endringer på følgende moduler som ikke er lagret:</p>
     <ul>
       {{#each configService.dirtyModules as |module|}}
-        <li>{{module.displayName}}</li>
+        <li><b>{{module.displayName}}</b></li>
         <ul>
           {{#if module.enabledChanged}}
             <li>Modulen er skrudd {{if module.moduleEnabled "på" "av"}}</li>
           {{/if}}
           {{#each module.changedSettings as |setting|}}
             {{#if (eq setting.type "ST_COLOR")}}
-              <li class="flex-inline"><b>{{setting.label}}</b>: {{color-splotch color=setting.originalValue}} {{fa-icon "long-arrow-right"}} {{color-splotch color=setting.value}}</li>
+              <li class="flex-inline">{{setting.label}}: {{color-splotch color=setting.originalValue}} &#10142; {{color-splotch color=setting.value}}</li>
             {{/if}}
             {{#if (eq setting.type "ST_TEXT")}}
               <li>Text: {{setting.setting}}</li>

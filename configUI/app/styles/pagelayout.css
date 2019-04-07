@@ -11,7 +11,8 @@ div.pageLayout {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr auto;
-  min-height: 100%
+  width: 100vw;
+  height: 100vh;
 }
 
 div.config-header {
@@ -35,6 +36,11 @@ div.config-main {
 div.config-footer {
   grid-column: 1 / span 2;
   grid-row: 3;
+  padding: 1em 0px;
+}
+
+div.config-footer button {
+  margin: 0px 5px;
 }
 
 a.closebutton {

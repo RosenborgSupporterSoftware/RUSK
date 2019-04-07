@@ -20,14 +20,14 @@ module('Integration | Component | module-setting-keycombo', function(hooks) {
 
     await render(hbs`{{module-setting-keycombo keycombo=keyCombo}}`);
 
-    let topDiv = this.element.querySelector('div.keycombo');
+    let topDiv = this.element.querySelector('li.keycombo');
     assert.ok(topDiv, 'We should have an element representing the key combination');
 
     let spanQuery = 'span.hotkey-key';
     let spans = [...topDiv.querySelectorAll(spanQuery)];
     assert.equal(spans.length, 1, 'We should only have one span - the one with the A key - at this point');
     //assert.equal(spans[0].textContent.trim(), "A");
-    assert.dom(spans[0]).hasText(/^\sA\s$/, 'Only the key should be displayed currently');
+    assert.dom(spans[0]).hasText(/^A$/, 'Only the key should be displayed currently');
 
     this.set('keyCombo.shiftKey', true);
     spans = [...topDiv.querySelectorAll(spanQuery)];

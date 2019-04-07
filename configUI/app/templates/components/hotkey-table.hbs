@@ -4,7 +4,7 @@
       <thead class="thead-dark">
         <tr>
           <th scope="col">Funksjon</th>
-          <th scope="col">Hurtigtast(er)</th>
+          <th scope="col" class="thcenter">Hurtigtast(er)</th>
         </tr>
       </thead>
       <tbody>
@@ -12,10 +12,17 @@
           <tr>
             <td class="configLabel">
               {{#if hotkey.isDirty}}
-                *
+                &#8432;
               {{/if}}
               {{hotkey.displayName}}
               <div class="hotkeyActions">
+                {{#bs-button
+                  size="sm"
+                  type="outline-success"
+                  onClick=(action "addKeyCombo" hotkey)
+                }}
+                  {{fa-icon "plus"}}
+                {{/bs-button}}
                 {{#if (eq hotkey selectedHotkey)}}
                   {{#bs-button size="sm" type="outline-danger" onClick=(action "deleteKeyCombo")}}
                     {{fa-icon "trash"}}
@@ -28,26 +35,17 @@
                     {{fa-icon "pencil"}}
                   {{/bs-button}}
                 {{/if}}
-                {{#bs-button
-                  size="sm"
-                  type="outline-success"
-                  onClick=(action "addKeyCombo" hotkey)
-                }}
-                  {{fa-icon "plus"}}
-                {{/bs-button}}
               </div>
             </td>
             <td class="configValue" align="center">
               {{#if hotkey.hasKeyCombos}}
                 <ul class="hotkeylist">
                   {{#each hotkey.hotkeys as |keycombo|}}
-                    <li>
-                      {{module-setting-keycombo
-                        keycombo=keycombo
-                        selected=(eq keycombo selectedKeyCombo)
-                        click=(action "selectKeyCombo" keycombo)
-                      }}
-                    </li>
+                    {{module-setting-keycombo
+                      keycombo=keycombo
+                      selected=(eq keycombo selectedKeyCombo)
+                      click=(action "selectKeyCombo" keycombo)
+                    }}
                   {{/each}}
                 </ul>
               {{/if}}

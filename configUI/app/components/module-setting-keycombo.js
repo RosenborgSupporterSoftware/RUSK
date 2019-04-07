@@ -1,8 +1,11 @@
 import Component from '@ember/component';
-//import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
 
 export default Component.extend({
+
+  tagName: 'li',
+  classNames: 'keycombo',
+  classNameBindings: ['selected'],
 
   selected: computed('keycombo.selected', {
     get() {
