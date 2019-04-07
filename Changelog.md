@@ -2,9 +2,12 @@
 
 ## RUSK future (current)
 
+Nye funksjoner:
+- RUSK tar nå vare på ulest-status på forumposter, uavhengig av rbkweb-cookien.
+
 Bugfixes:
-- Fiks for å hoppe til riktig plass på side, selv om første uleste post er drept av
-  trollfilteret.
+- Fiks for å hoppe til riktig plass på side, selv om første uleste post
+  er drept av trollfilteret.
 - Fiks for RUSK ikke skal overstyre standard MacOS keyboard shortcuts.
 - Fiks for CSS-feil i configUI, spesielt på hotkeys og sidelayout.
 - Farge-innstillinger viser nå korrekt at de er endret.

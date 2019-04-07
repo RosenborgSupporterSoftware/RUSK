@@ -65,6 +65,14 @@ export class UnreadTracker extends ModuleBase {
                 this.viewScrolled();
             }.bind(this), 100);
         }.bind(this));
+        window.addEventListener('beforeunload', function(e: Event) {
+            if (this.unreadChanged) {
+                this.unreadChanged = false;
+                console.log("storing unread posts state");
+                this.saveReadPosts();
+                this.saveReadPages();
+            }
+        }.bind(this));
         return null;
     }
 
@@ -131,6 +139,12 @@ export class UnreadTracker extends ModuleBase {
                 // console.log("post " + post.postid + " is in view");
                 post.rowElement.classList.add("RUSKReadItem");
                 post.rowElement.classList.remove("RUSKUnreadItem");
+                this.posts.forEach(function(other: PostInfo, i: number) {
+                    if (i < idx && other.rowElement.classList.contains("RUSKUnreadItem")) {
+                        other.rowElement.classList.add("RUSKReadItem");
+                        other.rowElement.classList.remove("RUSKUnreadItem");
+                    }
+                })
                 if (!this.readPosts[this.topic] || this.readPosts[this.topic] < post.postid) {
                     this.readPosts[this.topic] = post.postid;
                     this.scheduleStorage();
@@ -140,16 +154,20 @@ export class UnreadTracker extends ModuleBase {
         }.bind(this));
     }
 
+    unreadChanged: boolean = false;
     storeReadPostsTask: NodeJS.Timeout;
 
     private scheduleStorage(): void {
+        this.unreadChanged = true;
         if (this.storeReadPostsTask != null)
             clearTimeout(this.storeReadPostsTask);
         this.storeReadPostsTask = setTimeout(function() {
+            console.log("storing unread posts state");
+            this.unreadChanged = false;
             this.storeReadPostsTask = null;
             this.saveReadPosts();
             this.saveReadPages();
-        }.bind(this), 2000);
+        }.bind(this), 10000);
     }
 
     private bumpRead(postid: number): void {
