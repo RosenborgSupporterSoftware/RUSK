@@ -2,8 +2,11 @@
 
 ## RUSK future (current)
 
+## RUSK v0.0.11
+
 Nye funksjoner:
 - RUSK tar nå vare på ulest-status på forumposter, uavhengig av rbkweb-cookien.
+- RUSK fungerer nå med RBKweb over https.
 
 Bugfixes:
 - Fiks for å hoppe til riktig plass på side, selv om første uleste post
