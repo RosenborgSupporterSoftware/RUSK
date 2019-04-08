@@ -41,7 +41,13 @@
     "http://www.rbkweb.com/*",
     "http://rbkweb.com/*",
     "http://www.rosenborg.info/*",
-    "http://rosenborg.info/*"
+    "http://rosenborg.info/*",
+    "https://*.rbkweb.no/*",
+    "https://rbkweb.no/*",
+    "https://www.rbkweb.com/*",
+    "https://rbkweb.com/*",
+    "https://www.rosenborg.info/*",
+    "https://rosenborg.info/*"
   ],
   "web_accessible_resources": [
     "img/*",
