@@ -46,6 +46,7 @@ export class UnreadTracker extends ModuleBase {
 
     readPages: Map<number, number>;
     readPosts: Map<number, number>;
+    fadeDelay: number = 1000; 
 
     posts: Array<PostInfo>;
 
@@ -59,11 +60,11 @@ export class UnreadTracker extends ModuleBase {
         this.readPosts = JSON.parse(cfgstring || "{}");
         window.addEventListener('scroll', function(e: Event) {
             if (this.scrollThrottle != null)
-                clearTimeout(this.scrollThrottle);
+                return;
             this.scrollThrottle = setTimeout(function() {
                 this.scrollThrottle = null;
                 this.viewScrolled();
-            }.bind(this), 100);
+            }.bind(this), 200);
         }.bind(this));
         window.addEventListener('beforeunload', function(e: Event) {
             if (this.unreadChanged) {
@@ -133,22 +134,31 @@ export class UnreadTracker extends ModuleBase {
         */
     }
 
+    read: Set<number> = new Set<number>();
+
     private viewScrolled(): void {
         this.posts.forEach(function(post: PostInfo, idx: number) {
             if (post.isMostlyInView()) {
                 // console.log("post " + post.postid + " is in view");
-                post.rowElement.classList.add("RUSKReadItem");
-                post.rowElement.classList.remove("RUSKUnreadItem");
+                this.read.add(post.postid);
                 this.posts.forEach(function(other: PostInfo, i: number) {
-                    if (i < idx && other.rowElement.classList.contains("RUSKUnreadItem")) {
-                        other.rowElement.classList.add("RUSKReadItem");
-                        other.rowElement.classList.remove("RUSKUnreadItem");
+                    if (!this.read.has(other.postid) && i < idx && other.rowElement.classList.contains("RUSKUnreadItem")) {
+                        this.read.add(other.postid);
+                        var p = other;
+                        setTimeout(function() {
+                            p.rowElement.classList.add("RUSKReadItem");
+                            p.rowElement.classList.remove("RUSKUnreadItem");
+                        }.bind(this), this.fadeDelay);
                     }
-                })
+                }.bind(this));
+                var p = post;
+                setTimeout(function() {
+                    p.rowElement.classList.add("RUSKReadItem");
+                    p.rowElement.classList.remove("RUSKUnreadItem");
+                    }.bind(this), this.fadeDelay+100);
                 if (!this.readPosts[this.topic] || this.readPosts[this.topic] < post.postid) {
                     this.readPosts[this.topic] = post.postid;
                     this.scheduleStorage();
-
                 }
             }
         }.bind(this));
