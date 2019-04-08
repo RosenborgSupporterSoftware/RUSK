@@ -9,6 +9,7 @@ import { ModuleConfiguration } from './Configuration/ModuleConfiguration';
 import { HotkeyManager } from './Utility/HotkeyManager';
 import { RUSKUI } from './UI/RUSKUI';
 import { HotkeyAction } from './Utility/HotkeyAction';
+import { CssBuilder } from './UI/CssBuilder';
 
 var state = {
     configured: false,
@@ -167,6 +168,10 @@ function installUIMods(uimods: Array<RUSKUI>): void {
         mod.Hotkeys.forEach(hk => allHotkeys.push(hk));
     });
     HotkeyManager.Instance.AddHotkeys(allHotkeys);
+
+    new CssBuilder().BuildCSS(uimods, css => {
+        chrome.runtime.sendMessage({ css: css, from: 'CssBuilder' });
+    });
 }
 
 // following is not triggered if not on rbkweb (manifest config), so always true

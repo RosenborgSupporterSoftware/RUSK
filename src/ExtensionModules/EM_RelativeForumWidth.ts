@@ -4,6 +4,8 @@ import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { PageContext } from "../Context/PageContext";
 import { ModuleBase } from "./ModuleBase";
+import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
+import { RUSKUI } from "../UI/RUSKUI";
 
 /**
  * EM_RelativeForumWidth - Extension module for RBKweb.
@@ -33,13 +35,17 @@ export class RelativeForumWidth extends ModuleBase {
             )
             .Build();
 
+    init = (cfg: ModuleConfiguration) => {
+        super.init(cfg);
+
+        let ui = new RUSKUI();
+        ui.FetchCSS('forumWidth.css', new Map<string, string>([
+            ['--RUSKForumWidth', this._cfg.GetSetting('RUSKForumWidth') as string]
+        ]));
+        return ui;
+    }
+
     preprocess = (context: PageContext) => {
-        (async function() {
-            let request = await fetch(chrome.runtime.getURL("/data/forumWidth.css"));
-            let text = await request.text();
-            let css = this.hydrateTemplate(text);
-            chrome.runtime.sendMessage({ css: css, from: this.name });
-        }.bind(this))();
 
         // Forum table
         const forumTable = document.querySelectorAll('html > body > table > tbody > tr > td > table')[1] as HTMLTableElement;
@@ -59,17 +65,5 @@ export class RelativeForumWidth extends ModuleBase {
     };
 
     execute = () => {
-    }
-
-    private hydrateTemplate(template: string): string {
-        let keys = [], values = [];
-        keys.push("$RUSKForumWidth$");
-        values.push(this._cfg.GetSetting('RUSKForumWidth'));
-
-        for (let i = 0; i < keys.length; i++) {
-            template = template.replace(keys[i], values[i]);
-        }
-
-        return template;
-    }
+    };
 };

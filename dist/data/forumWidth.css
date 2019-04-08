@@ -1,6 +1,6 @@
 html > body > table {
     min-width: 980px;
-    width: $RUSKForumWidth$ !important;
+    width: var(--RUSKForumWidth) !important;
     margin-left: auto;
     margin-right: auto;
 }

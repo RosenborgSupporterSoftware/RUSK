@@ -1,11 +1,10 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { SettingType } from "../Configuration/SettingType";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
-import { Log } from "../Utility/Log";
 import { ModuleBase } from "./ModuleBase";
+import { RUSKUI } from "../UI/RUSKUI";
 
 /**
  * EM_HighlightColor - Extension module for RBKweb.
@@ -35,40 +34,21 @@ export class HighlightColor extends ModuleBase {
             )
             .Build();
 
-    preprocess = () => {
-        fetch(chrome.runtime.getURL("/data/highlightColor.css"))
-        .then(function (result) {
-            return result.text();
-        }.bind(this))
-        .then(function (text) {
-            let css = this.hydrateTemplate(text);
-            chrome.runtime.sendMessage({ css: css, from: this.name });
-        }.bind(this))
-        .catch(function (err) {
-            Log.Error("Colorize css error: " + err.message + " - " + err.stack);
-        }.bind(this));
+    init = (cfg:ModuleConfiguration) => {
+        super.init(cfg);
+
+        let ui = new RUSKUI();
+        ui.FetchCSS('highlightColor.css', new Map<string, string>([
+            ['--RUSKHighlightColor', cfg.GetSetting('HighlightColor') as string]
+        ]));
+        return ui;
     }
 
     execute = () => {
         var highlights = document.body.querySelectorAll('b[style="color:#FFFFFF"]');
-        highlights.forEach(function(elt: HTMLElement, key, parent) {
+        highlights.forEach(function(elt: HTMLElement) {
             elt.style.color = "";
             elt.classList.add("RUSKHighlightColor");
         }.bind(this));
     };
-
-    private hydrateTemplate(template: string): string {
-        let keys = [], values = [];
-        keys.push("$RUSKHighlightColor$");
-        values.push(this._cfg.GetSetting('HighlightColor'));
-
-        for (let i = 0; i < keys.length; i++) {
-            template = template.replace(keys[i], values[i]);
-        }
-
-        return template;
-    }
 };
-
-
-

@@ -3,6 +3,7 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { ModuleBase } from "./ModuleBase";
+import { RUSKUI } from "../UI/RUSKUI";
 
 /**
  * EM_MatchView - Extension module for RBKweb.
@@ -68,14 +69,13 @@ export class SeasonViews extends ModuleBase {
         this.weekday = this._cfg.GetSetting("displayWeekday") as boolean;
         this.colorize = this._cfg.GetSetting("colorizeResult") as boolean;
 
-        return null;
-    }
-
-    preprocess = async () => {
-        let request = await fetch(chrome.runtime.getURL("/data/matchView.css"));
-        let text = await request.text();
-        let css = this.hydrateTemplate(text);
-        chrome.runtime.sendMessage({ css: css, from: this.name });
+        let ui = new RUSKUI();
+        ui.FetchCSS('matchView.css', new Map<string, string>([
+            ['--RUSKMatchWin', this._cfg.GetSetting('MatchWinColor') as string],
+            ['--RUSKMatchDraw', this._cfg.GetSetting('MatchDrawColor') as string],
+            ['--RUSKMatchLoss', this._cfg.GetSetting('MatchLossColor') as string],
+        ]));
+        return ui;
     }
 
     execute = () => {
@@ -123,21 +123,5 @@ export class SeasonViews extends ModuleBase {
                 });
             }
         }
-    }
-
-    private hydrateTemplate(template: string): string {
-        let keys = [], values = [];
-        keys.push("$RUSKMatchWin$");
-        values.push(this._cfg.GetSetting('MatchWinColor'));
-        keys.push("$RUSKMatchDraw$");
-        values.push(this._cfg.GetSetting('MatchDrawColor'));
-        keys.push("$RUSKMatchLoss$");
-        values.push(this._cfg.GetSetting('MatchLossColor'));
-
-        for (let i = 0; i < keys.length; i++) {
-            template = template.replace(keys[i], values[i]);
-        }
-
-        return template;
     }
 }

@@ -1,27 +1,27 @@
 .RUSKItem.RUSKReadItem.RUSKEvenRowItem td {
-    background-color: $RUSKReadItemEven$ !important;
+    background-color: var(--readColorEven) !important;
     transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKReadItem.RUSKOddRowItem td {
-    background-color: $RUSKReadItemOdd$ !important;
+    background-color: var(--readColorOdd) !important;
     transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKUnreadItem.RUSKEvenRowItem td {
-    background-color: $RUSKUnreadItemEven$ !important;
+    background-color: var(--unreadColorEven) !important;
     transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKUnreadItem.RUSKOddRowItem td {
-    background-color: $RUSKUnreadItemOdd$ !important;
+    background-color: var(--unreadColorOdd) !important;
     transition: all 0.5s linear 0s;
 }
 
 .RUSKItem.RUSKUnreadItem.RUSKSelectedItem td {
-    background-color: $RUSKSelectedUnread$ !important;
+    background-color: var(--selectedUnread) !important;
 }
 
 .RUSKItem.RUSKReadItem.RUSKSelectedItem td {
-    background-color: $RUSKSelectedRead$ !important;
+    background-color: var(--selectedRead) !important;
 }

@@ -1,12 +1,11 @@
-import { ExtensionModule } from "./ExtensionModule";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { SettingType } from "../Configuration/SettingType";
 import { ConfigurationOptionVisibility } from "../Configuration/ConfigurationOptionVisibility";
-import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
 import { ModuleBase } from "./ModuleBase";
+import { RUSKUI } from "../UI/RUSKUI";
 
 /**
  * EM_InboxAlert - Extension module for RBKweb.
@@ -44,18 +43,17 @@ export class InboxAlert extends ModuleBase {
             )
             .Build();
 
+    init = (cfg: ModuleConfiguration) => {
+        super.init(cfg);
+
+        let ui = new RUSKUI();
+        ui.FetchCSS('pmAlert.css', new Map<string, string>([
+            ['--PMAlertColor', this._cfg.GetSetting('PMAlertColor') as string]
+        ]))
+        return ui;
+    }
+
     preprocess = (context: PageContext) => {
-        fetch(chrome.runtime.getURL("/data/pmAlert.css"))
-            .then(function(result) {
-                return result.text();
-            }.bind(this))
-            .then(function(text) {
-                let css = this.hydrateTemplate(text);
-                chrome.runtime.sendMessage({ css: css, from: this.name });
-            }.bind(this))
-            .catch(function(err) {
-                Log.Error("InboxAlert css error: " + err.message + " - " + err.stack);
-            }.bind(this));
     }
 
     execute = (context: PageContext) => {
@@ -74,17 +72,5 @@ export class InboxAlert extends ModuleBase {
                     '</div>');
             }
         }
-    }
-
-    private hydrateTemplate(template: string): string {
-        let keys = [], values = [];
-        keys.push("$PMAlertColor$");
-        values.push(this._cfg.GetSetting('PMAlertColor'));
-
-        for (let i = 0; i < keys.length; i++) {
-            template = template.replace(keys[i], values[i]);
-        }
-
-        return template;
     }
 };
