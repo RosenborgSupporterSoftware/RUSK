@@ -12,7 +12,7 @@ import { ModuleBase } from "./ModuleBase";
  * EM_UnreadTracker - Extension module for RBKweb.
  */
 
-// http://www.rbkweb.no/forum/viewtopic.php?t=6754&view=newest
+// https://www.rbkweb.no/forum/viewtopic.php?t=6754&view=newest
 
 export class UnreadTracker extends ModuleBase {
     readonly name : string = "UnreadTracker";
@@ -91,14 +91,16 @@ export class UnreadTracker extends ModuleBase {
         if (match) this.topic = +match[1];
         //console.log("topic: " + this.topic);
 
-        var lastRead = this.readPosts[this.topic] || 0;
-        this.posts.forEach(function(post: PostInfo, idx: number) {
-            if (post.postid > lastRead) {
-                this.markUnread(post);
-            } else {
-                this.markRead(post);
-            }
-        }.bind(this));
+        var lastRead = this.readPosts[this.topic] || -1;
+        if (lastRead != -1) {
+            this.posts.forEach(function(post: PostInfo, idx: number) {
+                if (post.postid > lastRead) {
+                    this.markUnread(post);
+                } else {
+                    this.markRead(post);
+                }
+            }.bind(this));
+        }
     }
 
     private markUnread(post: PostInfo): void {
@@ -137,10 +139,20 @@ export class UnreadTracker extends ModuleBase {
     read: Set<number> = new Set<number>();
 
     private viewScrolled(): void {
+        var lastRead = this.readPosts[this.topic] || -1;
         this.posts.forEach(function(post: PostInfo, idx: number) {
             if (post.isMostlyInView()) {
                 // console.log("post " + post.postid + " is in view");
                 this.read.add(post.postid);
+                if (lastRead == -1) {
+                    if (post.rowElement.classList.contains("RUSKUnreadItem")) {
+                        lastRead = post.postid;
+                        this.readPosts[this.topic] = post.postid;
+                    }
+                    else {
+                        return;
+                    }
+                }
                 this.posts.forEach(function(other: PostInfo, i: number) {
                     if (!this.read.has(other.postid) && i < idx && other.rowElement.classList.contains("RUSKUnreadItem")) {
                         this.read.add(other.postid);
