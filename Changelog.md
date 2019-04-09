@@ -2,6 +2,9 @@
 
 ## RUSK future (current)
 
+Bugfixes:
+- Hotkey for å gå opp fra innleggslista fungerer nå selv om man har uleste private meldinger.
+
 ## RUSK v0.0.11
 
 Nye funksjoner:

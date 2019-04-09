@@ -16,10 +16,10 @@ export class PostListPage extends RUSKPage {
     }
 
     GoUp(): void {
-        window.location.href = (document
-            .querySelector(
-                'body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(4) > table > tbody > tr > td > font > p:nth-child(3) > table:nth-child(3) > tbody > tr > td:nth-child(2) > span > a:nth-child(2)'
-            ) as HTMLAnchorElement).href;
+        window.location.href = document
+            .querySelector<HTMLAnchorElement>(
+                'a[href^="viewforum"]'
+            ).href;
     }
 
     GoToNextPage(): void {
