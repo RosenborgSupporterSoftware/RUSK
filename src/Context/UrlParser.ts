@@ -10,7 +10,7 @@ export class UrlParser {
     /** Parse a URL and return the correct RBKwebPageType value */
     ParsePageType(url: string): RBKwebPageType {
 
-        if (url.length == 0)
+        if (url == null || url.length == 0)
             return RBKwebPageType.RBKweb_NON_RBKWEB_URL;
 
         // Check if we're even at RBKweb - extension should not run otherwise, but just for making sure we're catching everything
@@ -42,7 +42,7 @@ export class UrlParser {
                 return this.parseForumUrl(restUrl, queryString, hashArg);
             }
         } catch (e) {
-            chrome.runtime.sendMessage({ module: "UrlParser", message: e.message, exception: e });
+            Log.Error('UrlParser.parseForumUrl exception: ' + e.message);
         }
 
         // TODO: Resten av RBKweb
@@ -82,6 +82,9 @@ export class UrlParser {
         if (url == 'forum/viewtopic.php')
             return RBKwebPageType.RBKweb_FORUM_POSTLIST;
 
+        if(url == 'forum/modcp.php')
+            return RBKwebPageType.RBKweb_FORUM_MODCONTROLPANEL;
+
         if (url == 'forum/posting.php')
             return this.parseForumPostingUrl(url, query);
 
@@ -100,7 +103,7 @@ export class UrlParser {
                 return RBKwebPageType.RBKweb_FORUM_USERPROFILE_SAVED;
         }
 
-        Log.Error('UrlParser could not parse forum url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum url ' + url + '?' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -112,7 +115,7 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_SEARCH_BYAUTHOR;
         if (query.match(/mode=results/))
             return RBKwebPageType.RBKweb_FORUM_SEARCH_RESULTS;
-        Log.Error('UrlParser could not parse forum search url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum search url ' + url + '?' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -133,7 +136,7 @@ export class UrlParser {
         if (query.match(/folder=inbox/) && query.match(/mode=read/))
             return RBKwebPageType.RBKweb_FORUM_PM_READINBOX;
 
-        Log.Error('UrlParser could not parse forum privmsg url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum privmsg url ' + url + '?' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 
@@ -152,10 +155,12 @@ export class UrlParser {
             return RBKwebPageType.RBKweb_FORUM_SMILEYS;
         if (query.match(/mode=topicreview/))
             return RBKwebPageType.RBKweb_FORUM_REVIEW_IFRAME;
+        if(query.match(/mode=delete/))
+            return RBKwebPageType.RBKweb_FORUM_DELETEPOST;
         if (query == "") // after pressing preview
             return RBKwebPageType.RBKweb_FORUM_EDITPOST;
 
-        Log.Error('UrlParser could not parse forum posting url ' + url + '&' + query);
+        Log.Error('UrlParser could not parse forum posting url ' + url + '?' + query);
         return RBKwebPageType.RBKweb_UNKNOWN_URL;
     }
 }

@@ -25,6 +25,8 @@
     RBKweb_FORUM_POSTINGLANDINGPAGE,// http://www.rbkweb.no/forum/posting.php
     RBKweb_FORUM_SMILEYS,           // http://www.rbkweb.no/forum/posting.php?mode=smilies
     RBKweb_FORUM_REVIEW_IFRAME,     // http://www.rbkweb.no/forum/posting.php?mode=topicreview
+    RBKweb_FORUM_DELETEPOST,        // https://www.rbkweb.no/forum/posting.php?mode=delete&p=1031074
+    RBKweb_FORUM_MODCONTROLPANEL,   // https://www.rbkweb.no/forum/modcp.php?t=8585&mode=delete
 
     RBKweb_FORUM_PM_INBOX,          // http://www.rbkweb.no/forum/privmsg.php?folder=inbox
     RBKweb_FORUM_PM_SENTBOX,        // http://www.rbkweb.no/forum/privmsg.php?folder=sentbox
