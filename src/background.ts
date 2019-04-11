@@ -126,10 +126,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.onRBKweb) {
         chrome.pageAction.show(sender.tab.id);
-        chrome.pageAction.setPopup({
-            tabId: sender.tab.id,
-            popup: "popup.html"
-        });
+        //chrome.pageAction.setPopup({
+        //    tabId: sender.tab.id,
+        //    popup: "popup.html"
+        //});
         return;
     }
 });
