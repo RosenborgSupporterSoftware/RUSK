@@ -93,7 +93,6 @@ export class UserFilter extends ModuleBase {
         // mark each username with red/orange/green
         this.posts.forEach(function (post: PostInfo) {
             try {
-                var row = post.rowElement;
                 var menu = post.getContextMenu();
                 var threadblocked = this.isThreadTroll("" + post.threadId, "" + post.posterid);
                 var blocked = this.forumTrolls.has(post.posterid);
@@ -209,22 +208,20 @@ export class UserFilter extends ModuleBase {
         var threadtrolls = new Map<string, Object>();
         try {
             var threadtrollstr = this._cfg.GetSetting("threadTrolls") as string;
+            //console.log("loaded thread-trolls: " + threadtrollstr);
             var config = JSON.parse(threadtrollstr);
             var treshold = this.getTresholdTime();
             var filtered = false;
-            Object.keys(config).forEach(function (threadid: string) {
+            Object.keys(config).forEach(function (threadid: string, idx: number, array) {
                 var threadinfo = {};
-                var obj = config[threadid];
-                Object.keys(obj).forEach(function (troll) {
-                    var timestamp = +(obj[troll]);
-                    if (timestamp < treshold) {
+                Object.keys(config[threadid]).forEach(function (troll: string, idx: number, array) {
+                    var timestamp = +(config[threadid][troll]);
+                    if (timestamp < treshold)
                         filtered = true;
-                    }
-                    else {
+                    else
                         threadinfo[troll] = timestamp;
-                    }
                 }.bind(this));
-                this.threadTrolls.set(threadid, threadinfo);
+                threadtrolls.set(threadid, threadinfo);
             }.bind(this));
             if (filtered) this.storeThreadTrolls();
         } catch (e) {
@@ -268,7 +265,7 @@ export class UserFilter extends ModuleBase {
 
     private storeForumTrolls(): void {
         var items = [];
-        this.forumTrolls.forEach(function (troll, idx, forumTrolls) {
+        this.forumTrolls.forEach(function (troll: string, idx: number, forumTrolls) {
             items.push(+troll);
         }.bind(this));
         var settings = JSON.stringify(items);
@@ -278,7 +275,7 @@ export class UserFilter extends ModuleBase {
 
     private storeThreadTrolls(): void {
         var setting = {};
-        this.threadTrolls.forEach(function (value, key) {
+        this.threadTrolls.forEach(function (value: Object, key: string) {
             setting[key] = value;
         })
         var dictstr = JSON.stringify(setting);
