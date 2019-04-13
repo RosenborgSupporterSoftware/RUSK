@@ -16,6 +16,19 @@ import { ModuleBase } from "./ModuleBase";
 
 export class UserFilter extends ModuleBase {
     readonly name: string = "UserFilter";
+    private _unblockables: Array<number> = [
+        2,      // 2mas
+        26,     // Hedon
+        31,     // haavarl
+        648,    // Harald
+        1177,   // Troilonge
+        1190,   // attach
+        2120,   // Kjello
+        6289,   // larsarus
+        6500,   // OrionPax
+        8235,   // Putte
+        8674,   // RUSK
+    ];
 
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_POSTLIST // FIXME: only post views
@@ -93,6 +106,9 @@ export class UserFilter extends ModuleBase {
         // mark each username with red/orange/green
         this.posts.forEach(function (post: PostInfo) {
             try {
+                if (this._unblockables.indexOf(post.posterid) > -1) return; // No need for menu items for these guys
+
+                var row = post.rowElement;
                 var menu = post.getContextMenu();
                 var threadblocked = this.isThreadTroll("" + post.threadId, "" + post.posterid);
                 var blocked = this.forumTrolls.has(post.posterid);
@@ -195,7 +211,8 @@ export class UserFilter extends ModuleBase {
             //console.log("loaded forumTrolls: " + settings);
             var trollids = JSON.parse(settings || "[]");
             trollids.forEach(function (troll: number) {
-                trolls.add(+troll);
+                if(this._unblockables.indexOf(+troll) == -1)
+                    trolls.add(+troll);
             }.bind(this));
         } catch (e) {
             console.error("getForumTrollConfig exception: " + e.message);

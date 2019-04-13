@@ -13,7 +13,7 @@ export class MenuRigger {
         let sorted = menuItems.sort((a, b) => b.SortOrder - a.SortOrder);
 
         // Sett inn HTML
-        let table = document.querySelector<HTMLTableElement>('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(2) > table');
+        let table = document.querySelector<HTMLAnchorElement>('a[href$="om.php"]').closest('table') as HTMLTableElement;
         let allRows = Array.from(table.querySelectorAll('tr'));
         let headerRow = (allRows[0].cloneNode(true)) as HTMLTableRowElement;
         let linkRow = (allRows[1].cloneNode(true)) as HTMLTableRowElement;
