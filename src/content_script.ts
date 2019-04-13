@@ -10,6 +10,8 @@ import { HotkeyManager } from './Utility/HotkeyManager';
 import { RUSKUI } from './UI/RUSKUI';
 import { HotkeyAction } from './Utility/HotkeyAction';
 import { CssBuilder } from './UI/CssBuilder';
+import { MainMenuItem } from './UI/MainMenuItem';
+import { MenuRigger } from './UI/MenuRigger';
 
 var state = {
     configured: false,
@@ -75,7 +77,7 @@ function initPage(modules: Array<ExtensionModule>, context: PageContext): void {
         }
         state.configured = true;
         stateChanged(state);
-        installUIMods(uimods);
+        installUIMods(uimods, context);
     });
 }
 
@@ -162,16 +164,21 @@ function filterModules(modules: Array<ExtensionModule>, context: PageContext): A
     return filteredModules;
 }
 
-function installUIMods(uimods: Array<RUSKUI>): void {
+function installUIMods(uimods: Array<RUSKUI>, ctx: PageContext): void {
     let allHotkeys = new Array<HotkeyAction>();
+    let allMenuItems = new Array<MainMenuItem>();
+
     uimods.forEach(mod => {
         mod.Hotkeys.forEach(hk => allHotkeys.push(hk));
+        mod.MenuItems.forEach(mmi => allMenuItems.push(mmi));
     });
     HotkeyManager.Instance.AddHotkeys(allHotkeys);
 
     new CssBuilder().BuildCSS(uimods, css => {
         chrome.runtime.sendMessage({ css: css, from: 'CssBuilder' });
     });
+
+    new MenuRigger().RigMenus(allMenuItems, ctx);
 }
 
 // following is not triggered if not on rbkweb (manifest config), so always true

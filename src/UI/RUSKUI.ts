@@ -2,6 +2,8 @@ import { HotkeyAction } from "../Utility/HotkeyAction";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { file } from "@babel/types";
 import { Log } from "../Utility/Log";
+import { MainMenuItem } from "../UI/MainMenuItem";
+import { PageContext } from "../Context/PageContext";
 
 /**
  * RUSKUI.ts
@@ -17,6 +19,7 @@ export class RUSKUI {
     private _hotkeys = new Array<HotkeyAction>();
     private _cssFilename: string;
     private _cssProperties: Map<string, string>;
+    private _menuItems = new Array<MainMenuItem>();
 
     /** Gets the hotkeys defined by this module */
     public get Hotkeys(): Array<HotkeyAction> {
@@ -31,6 +34,11 @@ export class RUSKUI {
     /** Gets the CSS properties to use */
     public get CSSProperties(): Map<string, string> {
         return this._cssProperties;
+    }
+
+    /** Gets the MainMenuItem objects to use */
+    public get MenuItems(): Array<MainMenuItem> {
+        return this._menuItems;
     }
 
     public constructor() {
@@ -51,14 +59,27 @@ export class RUSKUI {
      * @param filename - The CSS file to load into RBKweb
      * @param properties - The CSS properties (if any) to use
      */
-    public FetchCSS(filename: string, properties: Map<string, string>) {
+    public FetchCSS(filename: string, properties: Map<string, string> = null) {
         this.guardCSSProps(properties);
 
         this._cssFilename = filename;
-        this._cssProperties = properties;
+        this._cssProperties = properties || new Map<string,string>();
+    }
+
+    /**
+     * Adds a menu item to the main RUSK menu - on the bottom of the RBKweb menu on the left
+     * @param label - The visible label to display for this menu item
+     * @param sortOrder - The sort order for this menu item - lower number = earlier
+     * @param action - The action to execute when the user clicks the menu item
+     * @param context - The context used when executing the action
+     */
+    public AddMenuItem(label: string, sortOrder: number, action: (ctx: PageContext) => void,  context: any = null) {
+        this._menuItems.push(new MainMenuItem(label, sortOrder, action, context));
     }
 
     private guardCSSProps(props: Map<string, string>) {
+        if (props == null || props.entries.length == 0) return;
+
         for (let prop of props) {
             if (!prop[0].startsWith('--')) {
                 Log.Error(`Invalid CSS property name ${prop[0]} - CSS properties must start with --`);
