@@ -103,21 +103,23 @@ export class UserFilter extends ModuleBase {
     }
 
     execute = () => {
-        // mark each username with red/orange/green
+        // set up filter context menu items for each post
         this.posts.forEach(function (post: PostInfo) {
             try {
-                if (this._unblockables.indexOf(post.posterid) > -1) return; // No need for menu items for these guys
+                if (this._unblockables.indexOf(post.posterid) > -1)
+                    return; // No need for menu items for these guys
 
                 var row = post.rowElement;
                 var menu = post.getContextMenu();
+                var forumblocked = this.isForumTroll(post.posterid);
                 var threadblocked = this.isThreadTroll("" + post.threadId, "" + post.posterid);
-                var blocked = this.forumTrolls.has(post.posterid);
+                var blocked = forumblocked || threadblocked;
                 menu.addAction(this.tr(this.UNBLOCK_MENUITEM), blocked, function () {
                     if (this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
                         this.removeThreadTroll("" + post.threadId, "" + post.posterid);
                         this.storeThreadTrolls();
                     } else {
-                        this.forumTrolls.delete(post.posterid);
+                        this.removeForumTroll(post.posterid);
                         this.storeForumTrolls();
                     }
                     this.posts.forEach(function (other: PostInfo) {
@@ -133,7 +135,7 @@ export class UserFilter extends ModuleBase {
                     }.bind(this));
                 }.bind(this));
                 menu.addAction(this.tr(this.BLOCK_MENUITEM), !blocked, function () {
-                    this.forumTrolls.add(post.posterid);
+                    this.addForumTroll(post.posterid);
                     this.storeForumTrolls();
                     this.posts.forEach(function (other: PostInfo) {
                         if (other.posterid == post.posterid) {
@@ -147,7 +149,7 @@ export class UserFilter extends ModuleBase {
                         }
                     }.bind(this));
                 }.bind(this));
-                menu.addAction(this.tr(this.THREADBLOCK_MENUITEM), !threadblocked, function () {
+                menu.addAction(this.tr(this.THREADBLOCK_MENUITEM), !blocked, function () {
                     this.addThreadTroll("" + post.threadId, "" + post.posterid);
                     this.storeThreadTrolls();
                     this.posts.forEach(function (other: PostInfo) {
@@ -171,10 +173,9 @@ export class UserFilter extends ModuleBase {
         this.posts.forEach(function (post: PostInfo) {
             try {
                 //console.log("poster id: '" + post.posterid + "'");
-                var posterid = post.posterid;
                 var row = post.rowElement;
                 var buttons = post.buttonRowElement as HTMLTableRowElement;
-                if (this.forumTrolls.has(posterid) || this.isThreadTroll("" + post.threadId, "" + posterid)) {
+                if (this.isForumTroll(post.posterid) || this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
                     buttons.insertAdjacentHTML('afterend', '<tr>' +
                         '<td class="row2" colspan="2">' +
                         '<a class="nav trollbutton" id="' + post.postid + '">' + post.posterNickname + '</a>' +
@@ -192,23 +193,23 @@ export class UserFilter extends ModuleBase {
                     buttons.style.display = "";
                     addition.style.display = "none";
                 }.bind(this));
-                if (this.forumTrolls.has(posterid) || this.isThreadTroll("" + post.threadId, "" + posterid))
+                if (this.isForumTroll(post.posterid) || this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
                     row.style.display = buttons.style.display = "none";
-                else
+                }
+                else {
                     addition.style.display = "none";
+                }
             } catch (e) {
                 console.log("UserFilter: " + e.message);
             }
-
         }.bind(this));
-
     }
 
     private getForumTrollConfig(): Set<number> {
         var trolls = new Set<number>();
         try {
             var settings = this._cfg.GetSetting("forumTrolls") as string;
-            //console.log("loaded forumTrolls: " + settings);
+            //console.log("loaded forum-trolls: " + settings);
             var trollids = JSON.parse(settings || "[]");
             trollids.forEach(function (troll: number) {
                 if(this._unblockables.indexOf(+troll) == -1)
@@ -251,6 +252,24 @@ export class UserFilter extends ModuleBase {
         return (new Date()).getTime() - (1000 * 60 * 60 * 24 * 2);
     }
 
+    private isForumTroll(userid: number): boolean {
+        return this.forumTrolls.has(userid);
+    }
+
+    private addForumTroll(userid: number): void {
+        console.log("adding forum-troll " + userid);
+        if (!this.forumTrolls.has(userid)) {
+            this.forumTrolls.add(userid);
+        }
+    }
+
+    private removeForumTroll(userid: number) {
+        console.log("clearing forum-troll " + userid);
+        if (this.forumTrolls.has(userid)) {
+            this.forumTrolls.delete(userid);
+        }
+    }
+
     private isThreadTroll(thread: string, userid: string): boolean {
         var threadinfo = {};
         if (this.threadTrolls.has(thread))
@@ -261,6 +280,7 @@ export class UserFilter extends ModuleBase {
     }
 
     private addThreadTroll(thread: string, userid: string) {
+        console.log("adding thread-troll " + userid);
         var threadinfo = {};
         if (this.threadTrolls.has(thread))
             threadinfo = this.threadTrolls.get(thread);
@@ -269,6 +289,7 @@ export class UserFilter extends ModuleBase {
     }
 
     private removeThreadTroll(thread: string, userid: string) {
+        console.log("clearing thread-troll " + userid);
         var threadinfo = {};
         if (this.threadTrolls.has(thread))
             threadinfo = this.threadTrolls.get(thread);
@@ -286,17 +307,18 @@ export class UserFilter extends ModuleBase {
             items.push(+troll);
         }.bind(this));
         var settings = JSON.stringify(items);
-        //console.log("storing forumTrolls: '" + settings + "'");
+        //console.log("storing forum-trolls: '" + settings + "'");
         this._cfg.ChangeSetting("forumTrolls", settings);
     }
 
     private storeThreadTrolls(): void {
+        //console.log("storing thread-trolls");
         var setting = {};
         this.threadTrolls.forEach(function (value: Object, key: string) {
             setting[key] = value;
         })
         var dictstr = JSON.stringify(setting);
-        //console.log("storing threadTrolls: '" + dictstr + "'");
+        //console.log("storing thread-trolls: '" + dictstr + "'");
         this._cfg.ChangeSetting("threadTrolls", dictstr);
     }
 }
