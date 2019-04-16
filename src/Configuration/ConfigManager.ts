@@ -32,13 +32,12 @@ export class ConfigManager {
     private init() {
         chrome.storage.sync.get(null, data => { // This gets ALL keys stored in sync storage
             this._moduleConfigs = new Map<string, ModuleConfiguration>();
-            for (let i = 0; i < Object.keys(data).length; i++) {
-                let key = Object.keys(data)[i];
+            Object.keys(data).forEach(function(key: string, idx: number, keys: string[]) {
                 if (key.startsWith(this._moduleConfPrefix)) {
                     // Dette er en ModuleConfiguration pojo
                     let modname = key.substr(this._moduleConfPrefix.length);
                     let mod = this.getModule(modname);
-                    if (mod == null) continue;  // The config is for a module we do not have. FIXME: Delete
+                    if (mod == null) return;  // The config is for a module we do not have. FIXME: Delete
                     let modConf = ModuleConfiguration.FromStorageObject(data[key], mod);
                     this._moduleConfigs.set(key, modConf);
                     if (modConf.IsDirty) {
@@ -48,7 +47,7 @@ export class ConfigManager {
                     // Annen data. Håndter.
                     console.log('Unhandled config object: ' + key);
                 }
-            }
+            }.bind(this));
         });
     }
 
