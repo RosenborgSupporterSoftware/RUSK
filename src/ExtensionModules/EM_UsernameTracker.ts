@@ -7,6 +7,7 @@ import { PostInfo } from "../Utility/PostInfo";
 import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
 import { ModuleBase } from "./ModuleBase";
+import * as LZString from "lz-string";
 
 /**
  * EM_UsernameTracker - Extension module for RBKweb.
@@ -39,20 +40,7 @@ export class UsernameTracker extends ModuleBase {
 
     init = (config: ModuleConfiguration) => {
         super.init(config);
-        try {
-            var dictstr = this._cfg.GetSetting("knownUsernames") as string;
-            var dict = JSON.parse(dictstr || "{}");
-            this.names = new Map<number, string>();
-            Object.keys(dict).forEach(function(key: string, idx: number, array: string[]) {
-                this.names.set(+key, dict[key]);
-            }.bind(this));
-            var logmsg = this.name + ": tracking " + this.names.size + " account names (" + dictstr.length + " bytes)";
-            Log.Debug(logmsg);
-            if (dictstr.length > 7500) Log.Warning("UsernameTracker closing in on 8K limit!");
-        } catch (e) {
-            console.error(this.name + " init failed: " + e.message);
-            Log.Error(this.name + " init failed: " + e.message);
-        }
+        this.names = this.getKnownUsernamesConfig();
         return null;
     }
 
@@ -65,8 +53,8 @@ export class UsernameTracker extends ModuleBase {
             this.posts.forEach(function(post: PostInfo) {
                 var username = post.posterNickname;
                 var userid = post.posterid;
-                if (userid != -1 && !this.names[userid]) {
-                    this.names[userid] = username;
+                if (userid != -1 && !this.names.has(userid)) {
+                    this.names.set(userid, username);
                     updated = true;
                 }
                 post.rowElement.querySelectorAll("table tr td span.genmed b").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
@@ -86,7 +74,7 @@ export class UsernameTracker extends ModuleBase {
                 }.bind(this));
             }.bind(this));
             if (updated) { // we found some new names
-                this.storeKnownUsernames();
+                this.storeKnownUsernamesConfig();
             }
         } catch (e) {
             console.error("error finding usernames: " + e.message + " - " + e.stack);
@@ -99,7 +87,7 @@ export class UsernameTracker extends ModuleBase {
                 var username = post.posterNickname;
                 var userid = post.posterid;
                 if (userid == -1) return;
-                if (this.names[userid] && this.names[userid] != username) {
+                if (this.names.has(userid) && this.names.get(userid) != username) {
                     var spanelt = post.rowElement.querySelector('td span.name') as HTMLSpanElement;
                     spanelt.insertAdjacentHTML('afterend', '<span class="nav aka' + userid +
                                                 '"><br>aka&nbsp;' + this.names[userid] +
@@ -112,7 +100,7 @@ export class UsernameTracker extends ModuleBase {
                         table.querySelectorAll('span.aka' + userid).forEach(function(elt: HTMLSpanElement) {
                             elt.style.display = 'none';
                         }.bind(this));
-                        this.names[userid] = username;
+                        this.names.set(userid, username);
                         this.storeKnownUsernames();
                     }.bind(this));
                 }
@@ -122,8 +110,41 @@ export class UsernameTracker extends ModuleBase {
         }
     }
 
-    private storeKnownUsernames(): void {
-        var dictstr = JSON.stringify(this.names);
+    private getKnownUsernamesConfig(): Map<number, string> {
+        var names = new Map<number, string>();
+        try {
+            var dictstr = this._cfg.GetSetting("knownUsernames") as string;
+            if (dictstr.startsWith("lz:")) {
+                var compressed = dictstr.substring(3);
+                dictstr = LZString.decompress(compressed);
+            }
+            var dict = JSON.parse(dictstr || "{}");
+            Object.keys(dict).forEach(function(key: string, idx: number, array) {
+                names.set(+key, dict[key]);
+            }.bind(this));
+        } catch (ex) {
+            console.error("exception reading usernames: ", ex);
+            Log.Error("reading usernames: " + ex.message);
+        }
+        return names;
+    }
+
+    private storeKnownUsernamesConfig(): void {
+        var dict = {};
+        this.names.forEach(function(value: string, key: number, map: Map<number, string>) {
+            dict[key] = value;
+        }.bind(this));
+        var dictstr = JSON.stringify(dict);
+        var length = dictstr.length;
+        var lengthstr = "" + length + " characters";
+        if (length > 1024) {
+            var compressed = LZString.compress(dictstr);
+            dictstr = "lz:" + compressed;
+            lengthstr = "compressed from " + length + " to " + dictstr.length + " characters";
+        }
+        var logmsg = this.name + ": tracking " + this.names.size + " account names (" + lengthstr + ")";
+        Log.Debug(logmsg);
+        if (dictstr.length > 7500) Log.Warning("UsernameTracker closing in on 8K limit!");
         this._cfg.ChangeSetting("knownUsernames", dictstr);
     }
 }
