@@ -35,23 +35,24 @@ export class UsernameTracker extends ModuleBase {
             )
             .Build();
 
-    names: Map<number, string> = new Map<number, string>();
+    names: Map<number, string>;
 
     init = (config: ModuleConfiguration) => {
         super.init(config);
-
         try {
             var dictstr = this._cfg.GetSetting("knownUsernames") as string;
-            this.names = JSON.parse(dictstr || "{}");
-            var count = 0;
-            for (var key in this.names) { count += 1; }
-            var logmsg = this.name + ": tracking " + count + " account names (" + dictstr.length + " bytes)";
+            var dict = JSON.parse(dictstr || "{}");
+            this.names = new Map<number, string>();
+            Object.keys(dict).forEach(function(key: string, idx: number, array: string[]) {
+                this.names.set(+key, dict[key]);
+            }.bind(this));
+            var logmsg = this.name + ": tracking " + this.names.size + " account names (" + dictstr.length + " bytes)";
             Log.Debug(logmsg);
             if (dictstr.length > 7500) Log.Warning("UsernameTracker closing in on 8K limit!");
         } catch (e) {
             console.error(this.name + " init failed: " + e.message);
+            Log.Error(this.name + " init failed: " + e.message);
         }
-
         return null;
     }
 
@@ -68,6 +69,21 @@ export class UsernameTracker extends ModuleBase {
                     this.names[userid] = username;
                     updated = true;
                 }
+                post.rowElement.querySelectorAll("table tr td span.genmed b").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
+                    var bold = elt as HTMLElement;
+                    if (bold.textContent.endsWith(" wrote:") || bold.textContent.endsWith(" skrev:")) {
+                        var match = bold.textContent.match(/(.*) (wrote|skrev):/);
+                        if (match) {
+                            var table = elt.closest('table') as HTMLTableElement;
+                            table.classList.add("RUSKQuote");
+                            var username = match[1];
+                            var verb = match[2];
+                            this.names.forEach(function(value: string, key: number, map: Map<number, string>) {
+                                if (username == value) table.classList.add("RUSKQuoteUser-" + key);
+                            }.bind(this));
+                        }
+                    }
+                }.bind(this));
             }.bind(this));
             if (updated) { // we found some new names
                 this.storeKnownUsernames();

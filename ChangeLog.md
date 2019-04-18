@@ -2,6 +2,9 @@
 
 ## RUSK future (current)
 
+Nye funksjoner:
+- RUSK skjuler nå også siteringer av forumtroll, eventuelt alt av siteringer.
+
 Bugfixes:
 - Hotkey for å gå opp fra innleggslista fungerer nå selv om man har uleste private meldinger.
 

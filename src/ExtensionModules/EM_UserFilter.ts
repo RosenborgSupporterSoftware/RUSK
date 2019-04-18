@@ -55,11 +55,29 @@ export class UserFilter extends ModuleBase {
                     .WithVisibility(ConfigurationOptionVisibility.Never)
                     .WithDefaultValue('{}')
             )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("killQuotes")
+                .WithLabel("Skjul sitat fra troll")
+                .WithSettingType(SettingType.bool)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("killAllQuotes")
+                .WithLabel("Skjul all sitering")
+                .WithSettingType(SettingType.bool)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue(false)
+            )
             .Build();
 
     posts: Array<PostInfo> = new Array<PostInfo>();
     forumTrolls: Set<number> = new Set<number>();
     threadTrolls: Map<string, Object> = new Map<string, Object>();
+    killQuotes: boolean = false;
+    killAllQuotes: boolean = false;
     dotdotdotURL: string;
 
     i18n_no = {
@@ -89,6 +107,8 @@ export class UserFilter extends ModuleBase {
             this.rendered = false;
             this.forumTrolls = this.getForumTrollConfig();
             this.threadTrolls = this.getThreadTrollConfig();
+            this.killQuotes = this.getKillQuotesConfig();
+            this.killAllQuotes = this.getKillAllQuotesConfig();
             this.dotdotdotURL = chrome.runtime.getURL("/img/dotdotdot.png");
         } catch (e) {
             console.log("init exception: " + e.message);
@@ -203,6 +223,43 @@ export class UserFilter extends ModuleBase {
                 console.log("UserFilter: " + e.message);
             }
         }.bind(this));
+
+        document.body.querySelectorAll("table.RUSKQuote").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
+            var table = elt as HTMLTableElement;
+            if (table.classList.contains("RUSKSignature")) return; // does not work as of now (signature-filter execution order)
+            var handle = table.querySelector("tr td span.genmed b") as HTMLElement;
+            var match = handle.textContent.match(/(.*) (wrote|skrev):/);
+            if (match) {
+                var username = match[1];
+                var verb = match[2];
+                var userid = -1;
+                table.classList.forEach(function(value: string, key: number, parent: DOMTokenList) {
+                    if (value.startsWith("RUSKQuoteUser-")) userid = +(value.substring(14));
+                }.bind(this));
+
+                var inserted = false;
+                if (userid != -1 && this.killQuotes &&
+                     (this.isForumTroll(userid) || this.isThreadTroll(this.topic, userid))) {
+                    table.insertAdjacentHTML('afterend',
+                        '<table width="90%" align="center" class="RUSKQuoteUser-' + key + '-Button"><tr><td><span class="nav"><a class="trollbutton">' + username + ' ' + verb + '</a></span></td></tr></table>');
+                    inserted = true;
+                }
+                else if (this.killAllQuotes) {
+                    table.insertAdjacentHTML('afterend',
+                        '<table width="90%" align="center" class="RUSKQuote-Button"><tr><td><span class="nav"><a class="trollbutton">' + username + ' ' + verb + '</a></span></td></tr></table>');
+                    inserted = true;
+                }
+                if (inserted) {
+                    table.style.display = "none";
+                    var buttontable = table.nextElementSibling as HTMLTableElement;
+                    var button = buttontable.querySelector("a") as HTMLAnchorElement;
+                    button.addEventListener('click', function(ev) {
+                        buttontable.style.display = "none";
+                        table.style.display = "";
+                    }.bind(this));
+                }
+            }
+        }.bind(this));
     }
 
     private getForumTrollConfig(): Set<number> {
@@ -246,6 +303,14 @@ export class UserFilter extends ModuleBase {
             console.error('loading thread troll info: ' + e.message);
         }
         return threadtrolls;
+    }
+
+    private getKillQuotesConfig(): boolean {
+        return this._cfg.GetSetting("killQuotes") as boolean;
+    }
+
+    private getKillAllQuotesConfig(): boolean {
+        return this._cfg.GetSetting("killAllQuotes") as boolean;
     }
 
     private getTresholdTime(): number {
