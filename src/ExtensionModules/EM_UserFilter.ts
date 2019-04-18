@@ -13,6 +13,8 @@ import { ModuleBase } from "./ModuleBase";
 
 // FIXME: common preprocessing step with UsernameTracker, SignatureFilter (marking userid
 // on username DOM objects)
+// FIXME: make SignatureFilter preprocessing/tagging run before UserFilter.execute to treat
+// quotes in signatures special (not affected)
 
 export class UserFilter extends ModuleBase {
     readonly name: string = "UserFilter";
@@ -71,6 +73,14 @@ export class UserFilter extends ModuleBase {
                 .WithVisibility(ConfigurationOptionVisibility.Always)
                 .WithDefaultValue(false)
             )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("killKilledQuotePosts")
+                .WithLabel("Skjul poster med skult sitering")
+                .WithSettingType(SettingType.bool)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue(false)
+            )
             .Build();
 
     posts: Array<PostInfo> = new Array<PostInfo>();
@@ -78,6 +88,7 @@ export class UserFilter extends ModuleBase {
     threadTrolls: Map<string, Object> = new Map<string, Object>();
     killQuotes: boolean = false;
     killAllQuotes: boolean = false;
+    killKilledQuotePosts: boolean = false;
     dotdotdotURL: string;
 
     i18n_no = {
@@ -109,6 +120,7 @@ export class UserFilter extends ModuleBase {
             this.threadTrolls = this.getThreadTrollConfig();
             this.killQuotes = this.getKillQuotesConfig();
             this.killAllQuotes = this.getKillAllQuotesConfig();
+            this.killKilledQuotePosts = this.getKillKilledQuotePostsConfig();
             this.dotdotdotURL = chrome.runtime.getURL("/img/dotdotdot.png");
         } catch (e) {
             console.log("init exception: " + e.message);
@@ -132,11 +144,11 @@ export class UserFilter extends ModuleBase {
                 var row = post.rowElement;
                 var menu = post.getContextMenu();
                 var forumblocked = this.isForumTroll(post.posterid);
-                var threadblocked = this.isThreadTroll("" + post.threadId, "" + post.posterid);
+                var threadblocked = this.isThreadTroll(post.threadId, post.posterid);
                 var blocked = forumblocked || threadblocked;
                 menu.addAction(this.tr(this.UNBLOCK_MENUITEM), blocked, function () {
-                    if (this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
-                        this.removeThreadTroll("" + post.threadId, "" + post.posterid);
+                    if (this.isThreadTroll(post.threadId, post.posterid)) {
+                        this.removeThreadTroll(post.threadId, post.posterid);
                         this.storeThreadTrolls();
                     } else {
                         this.removeForumTroll(post.posterid);
@@ -170,7 +182,7 @@ export class UserFilter extends ModuleBase {
                     }.bind(this));
                 }.bind(this));
                 menu.addAction(this.tr(this.THREADBLOCK_MENUITEM), !blocked, function () {
-                    this.addThreadTroll("" + post.threadId, "" + post.posterid);
+                    this.addThreadTroll(post.threadId, post.posterid);
                     this.storeThreadTrolls();
                     this.posts.forEach(function (other: PostInfo) {
                         if (other.posterid == post.posterid) {
@@ -195,7 +207,10 @@ export class UserFilter extends ModuleBase {
                 //console.log("poster id: '" + post.posterid + "'");
                 var row = post.rowElement;
                 var buttons = post.buttonRowElement as HTMLTableRowElement;
-                if (this.isForumTroll(post.posterid) || this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
+                if (this.isForumTroll(post.posterid)
+                    || this.isThreadTroll(post.threadId, post.posterid)
+                    || (this.killKilledQuotePosts && this.hasQuotedForumTroll(post)))
+                {
                     buttons.insertAdjacentHTML('afterend', '<tr>' +
                         '<td class="row2" colspan="2">' +
                         '<a class="nav trollbutton" id="' + post.postid + '">' + post.posterNickname + '</a>' +
@@ -213,7 +228,10 @@ export class UserFilter extends ModuleBase {
                     buttons.style.display = "";
                     addition.style.display = "none";
                 }.bind(this));
-                if (this.isForumTroll(post.posterid) || this.isThreadTroll("" + post.threadId, "" + post.posterid)) {
+                if (this.isForumTroll(post.posterid)
+                    || this.isThreadTroll(post.threadId, post.posterid)
+                    || (this.killKilledQuotePosts && this.hasQuotedForumTroll(post)))
+                {
                     row.style.display = buttons.style.display = "none";
                 }
                 else {
@@ -313,12 +331,30 @@ export class UserFilter extends ModuleBase {
         return this._cfg.GetSetting("killAllQuotes") as boolean;
     }
 
+    private getKillKilledQuotePostsConfig(): boolean {
+        return this._cfg.GetSetting("killKilledQuotePosts") as boolean;
+    }
+
     private getTresholdTime(): number {
         return (new Date()).getTime() - (1000 * 60 * 60 * 24 * 2);
     }
 
     private isForumTroll(userid: number): boolean {
         return this.forumTrolls.has(userid);
+    }
+
+    private hasQuotedForumTroll(post: PostInfo): boolean {
+        var quotedTroll = false;
+        post.rowElement.querySelectorAll("table.RUSKQuote").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
+            elt.classList.forEach(function(value: string, idx: number, classlist: DOMTokenList) {
+                if (value.startsWith("RUSKQuoteUser-")) {
+                    var userid = +(value.substring(14));
+                    if (this.isForumTroll(userid) || this.isThreadTroll(this.topic, userid))
+                        quotedTroll = true;
+                }
+            }.bind(this));
+        }.bind(this));
+        return quotedTroll;
     }
 
     private addForumTroll(userid: number): void {
@@ -335,35 +371,35 @@ export class UserFilter extends ModuleBase {
         }
     }
 
-    private isThreadTroll(thread: string, userid: string): boolean {
+    private isThreadTroll(thread: number, userid: number): boolean {
         var threadinfo = {};
-        if (this.threadTrolls.has(thread))
-            threadinfo = this.threadTrolls.get(thread);
-        if (threadinfo[userid] && (threadinfo[userid] > this.getTresholdTime()))
+        if (this.threadTrolls.has("" + thread))
+            threadinfo = this.threadTrolls.get("" + thread);
+        if (threadinfo["" + userid] && (threadinfo["" + userid] > this.getTresholdTime()))
             return true;
         return false;
     }
 
-    private addThreadTroll(thread: string, userid: string) {
+    private addThreadTroll(thread: number, userid: number) {
         console.log("adding thread-troll " + userid);
         var threadinfo = {};
-        if (this.threadTrolls.has(thread))
-            threadinfo = this.threadTrolls.get(thread);
-        threadinfo[userid] = (new Date()).getTime();
-        this.threadTrolls.set(thread, threadinfo);
+        if (this.threadTrolls.has("" + thread))
+            threadinfo = this.threadTrolls.get("" + thread);
+        threadinfo["" + userid] = (new Date()).getTime();
+        this.threadTrolls.set("" + thread, threadinfo);
     }
 
-    private removeThreadTroll(thread: string, userid: string) {
+    private removeThreadTroll(thread: number, userid: number) {
         console.log("clearing thread-troll " + userid);
         var threadinfo = {};
-        if (this.threadTrolls.has(thread))
-            threadinfo = this.threadTrolls.get(thread);
-        if (threadinfo[userid])
-            delete threadinfo[userid];
+        if (this.threadTrolls.has("" + thread))
+            threadinfo = this.threadTrolls.get("" + thread);
+        if (threadinfo["" + userid])
+            delete threadinfo["" + userid];
         if (Object.keys(threadinfo).length == 0)
-            this.threadTrolls.delete(thread);
+            this.threadTrolls.delete("" + thread);
         else
-            this.threadTrolls.set(thread, threadinfo);
+            this.threadTrolls.set("" + thread, threadinfo);
     }
 
     private storeForumTrolls(): void {
