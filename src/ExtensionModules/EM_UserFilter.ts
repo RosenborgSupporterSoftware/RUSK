@@ -6,6 +6,7 @@ import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleConfiguration } from "../Configuration/ModuleConfiguration";
 import { PageContext } from "../Context/PageContext";
 import { ModuleBase } from "./ModuleBase";
+import { Log } from "../Utility/Log";
 
 /**
  * EM_UserFilter - Extension module for RBKweb.
@@ -59,6 +60,13 @@ export class UserFilter extends ModuleBase {
             )
             .WithConfigOption(opt =>
                 opt
+                    .WithSettingName("forumQuoteAbusers")
+                    .WithSettingType(SettingType.text)
+                    .WithVisibility(ConfigurationOptionVisibility.Never)
+                    .WithDefaultValue('[]')
+            )
+            .WithConfigOption(opt =>
+                opt
                 .WithSettingName("killQuotes")
                 .WithLabel("Skjul sitat fra troll")
                 .WithSettingType(SettingType.bool)
@@ -85,6 +93,7 @@ export class UserFilter extends ModuleBase {
 
     posts: Array<PostInfo> = new Array<PostInfo>();
     forumTrolls: Set<number> = new Set<number>();
+    forumQuoteAbusers: Set<number> = new Set<number>();
     threadTrolls: Map<string, Object> = new Map<string, Object>();
     killQuotes: boolean = false;
     killAllQuotes: boolean = false;
@@ -93,6 +102,8 @@ export class UserFilter extends ModuleBase {
 
     i18n_no = {
         "Block user": "Blokker bruker",
+        "Block user quoting": "Skjul siteringer for bruker",
+        "Unblock user quotes": "Vis siteringer for bruker",
         "Thread block 48H": "Blokker i tråd for 2 dager",
         "Unblock": "Stopp blokkering",
     }
@@ -104,6 +115,8 @@ export class UserFilter extends ModuleBase {
     }
 
     BLOCK_MENUITEM: string = "Block user";
+    BLOCK_QUOTES_MENUITEM: string = "Block user quoting";
+    UNBLOCK_QUOTES_MENUITEM: string = "Unblock user quoting";
     THREADBLOCK_MENUITEM: string = "Thread block 48H";
     UNBLOCK_MENUITEM: string = "Unblock";
 
@@ -118,6 +131,7 @@ export class UserFilter extends ModuleBase {
             this.rendered = false;
             this.forumTrolls = this.getForumTrollConfig();
             this.threadTrolls = this.getThreadTrollConfig();
+            this.forumQuoteAbusers = this.getForumQuoteAbusersConfig();
             this.killQuotes = this.getKillQuotesConfig();
             this.killAllQuotes = this.getKillAllQuotesConfig();
             this.killKilledQuotePosts = this.getKillKilledQuotePostsConfig();
@@ -130,6 +144,7 @@ export class UserFilter extends ModuleBase {
     }
 
     preprocess = (context: PageContext) => {
+        Log.Debug("UserFilter.preprocess");
         this.posts = context.RUSKPage.items as Array<PostInfo>;
         if (context.Language == "norwegian") this.i18n = this.i18n_no;
     }
@@ -196,6 +211,21 @@ export class UserFilter extends ModuleBase {
                         }
                     }.bind(this));
                 }.bind(this));
+                var quotesBlocked = this.forumQuoteAbusers.has(post.posterid);
+                menu.addAction(this.tr(this.BLOCK_QUOTES_MENUITEM), !quotesBlocked, function() {
+                    this.addQuoteAbuser(post.posterid);
+                    this.storeForumQuoteAbusers();
+                    var cmenu = post.getContextMenu();
+                    cmenu.getAction(this.tr(this.BLOCK_QUOTES_MENUITEM)).hide();
+                    cmenu.getAction(this.tr(this.UNBLOCK_QUOTES_MENUITEM)).show();
+                }.bind(this));
+                menu.addAction(this.tr(this.UNBLOCK_QUOTES_MENUITEM), quotesBlocked, function() {
+                    this.removeQuoteAbuser(post.posterid);
+                    this.storeForumQuoteAbusers();
+                    var cmenu = post.getContextMenu();
+                    cmenu.getAction(this.tr(this.BLOCK_QUOTES_MENUITEM)).show();
+                    cmenu.getAction(this.tr(this.UNBLOCK_QUOTES_MENUITEM)).hide();
+                }.bind(this));
             } catch (e) {
                 console.error("exception: " + e.message);
             }
@@ -242,7 +272,13 @@ export class UserFilter extends ModuleBase {
             }
         }.bind(this));
 
-        document.body.querySelectorAll("table.RUSKQuote").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
+        this.posts.forEach(function(post: PostInfo) {
+            this.insertQuoteButtons(post);
+        }.bind(this));
+    }
+
+    private insertQuoteButtons(post: PostInfo): void {
+        post.rowElement.querySelectorAll("table.RUSKQuote").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
             var table = elt as HTMLTableElement;
             if (table.classList.contains("RUSKSignature")) return; // does not work as of now (signature-filter execution order)
             var handle = table.querySelector("tr td span.genmed b") as HTMLElement;
@@ -262,10 +298,21 @@ export class UserFilter extends ModuleBase {
                         '<table width="90%" align="center" class="RUSKQuoteUser-' + key + '-Button"><tr><td><span class="nav"><a class="trollbutton">' + username + ' ' + verb + '</a></span></td></tr></table>');
                     inserted = true;
                 }
-                else if (this.killAllQuotes) {
+                else if (this.killAllQuotes || this.isQuoteAbuser(post.posterid)) {
                     table.insertAdjacentHTML('afterend',
                         '<table width="90%" align="center" class="RUSKQuote-Button"><tr><td><span class="nav"><a class="trollbutton">' + username + ' ' + verb + '</a></span></td></tr></table>');
                     inserted = true;
+                }
+                else {
+                    table.insertAdjacentHTML('afterend',
+                        '<table width="90%" align="center" class="RUSKQuote-Button"><tr><td><span class="nav"><a class="trollbutton">' + username + ' ' + verb + '</a></span></td></tr></table>');
+                    var buttontable = table.nextElementSibling as HTMLTableElement;
+                    buttontable.style.display = "none";
+                    var button = buttontable.querySelector("a") as HTMLAnchorElement;
+                    button.addEventListener('click', function(ev) {
+                        buttontable.style.display = "none";
+                        table.style.display = "";
+                    }.bind(this));
                 }
                 if (inserted) {
                     table.style.display = "none";
@@ -275,6 +322,39 @@ export class UserFilter extends ModuleBase {
                         buttontable.style.display = "none";
                         table.style.display = "";
                     }.bind(this));
+                }
+            }
+        }.bind(this));
+    }
+
+    private updateQuoteButtons(post: PostInfo): void {
+        post.rowElement.querySelectorAll("table.RUSKQuote").forEach(function(elt: Element, key: number, parent: NodeListOf<Element>) {
+            var table = elt as HTMLTableElement;
+            if (table.classList.contains("RUSKSignature")) return; // does not work as of now (signature-filter execution order)
+            var buttontable = table.nextElementSibling as HTMLTableElement;
+
+            var handle = table.querySelector("tr td span.genmed b") as HTMLElement;
+            var match = handle.textContent.match(/(.*) (wrote|skrev):/);
+            if (match) {
+                var username = match[1];
+                var verb = match[2];
+                var userid = -1;
+                table.classList.forEach(function(value: string, key: number, parent: DOMTokenList) {
+                    if (value.startsWith("RUSKQuoteUser-")) userid = +(value.substring(14));
+                }.bind(this));
+
+                if (userid != -1 && this.killQuotes &&
+                     (this.isForumTroll(userid) || this.isThreadTroll(this.topic, userid))) {
+                    table.style.display = "none";
+                    buttontable.style.display = "";
+                }
+                else if (this.killAllQuotes || this.isQuoteAbuser(post.posterid)) {
+                    table.style.display = "none";
+                    buttontable.style.display = "";
+                }
+                else {
+                    table.style.display = "";
+                    buttontable.style.display = "none";
                 }
             }
         }.bind(this));
@@ -323,6 +403,23 @@ export class UserFilter extends ModuleBase {
         return threadtrolls;
     }
 
+    private getForumQuoteAbusersConfig(): Set<number> {
+        var abusers = new Set<number>();
+        try {
+            var settings = this._cfg.GetSetting("forumQuoteAbusers") as string;
+            //console.log("loaded forum-quote-abusers: " + settings);
+            var abuserids = JSON.parse(settings || "[]");
+            abuserids.forEach(function (troll: number) {
+                if (this._unblockables.indexOf(+troll) == -1)
+                    abusers.add(+troll);
+            }.bind(this));
+        } catch (e) {
+            console.error("getForumQuoteAbusersConfig exception: " + e.message);
+        }
+        //console.log("returning forumQuoteAbusers = " + JSON.stringify(abusers));
+        return abusers;
+    }
+
     private getKillQuotesConfig(): boolean {
         return this._cfg.GetSetting("killQuotes") as boolean;
     }
@@ -358,17 +455,17 @@ export class UserFilter extends ModuleBase {
     }
 
     private addForumTroll(userid: number): void {
-        console.log("adding forum-troll " + userid);
         if (!this.forumTrolls.has(userid)) {
             this.forumTrolls.add(userid);
         }
+        Log.Debug("added userid=" + userid + " to forum-trolls");
     }
 
     private removeForumTroll(userid: number) {
-        console.log("clearing forum-troll " + userid);
         if (this.forumTrolls.has(userid)) {
             this.forumTrolls.delete(userid);
         }
+        Log.Debug("removed userid=" + userid + " from forum-trolls");
     }
 
     private isThreadTroll(thread: number, userid: number): boolean {
@@ -380,17 +477,20 @@ export class UserFilter extends ModuleBase {
         return false;
     }
 
+    private isQuoteAbuser(userid: number): boolean {
+        return this.forumQuoteAbusers.has(userid);
+    }
+
     private addThreadTroll(thread: number, userid: number) {
-        console.log("adding thread-troll " + userid);
         var threadinfo = {};
         if (this.threadTrolls.has("" + thread))
             threadinfo = this.threadTrolls.get("" + thread);
         threadinfo["" + userid] = (new Date()).getTime();
         this.threadTrolls.set("" + thread, threadinfo);
+        Log.Debug("added userid=" + userid + " to thread-trolls(threadid=" + thread + ")");
     }
 
     private removeThreadTroll(thread: number, userid: number) {
-        console.log("clearing thread-troll " + userid);
         var threadinfo = {};
         if (this.threadTrolls.has("" + thread))
             threadinfo = this.threadTrolls.get("" + thread);
@@ -400,24 +500,57 @@ export class UserFilter extends ModuleBase {
             this.threadTrolls.delete("" + thread);
         else
             this.threadTrolls.set("" + thread, threadinfo);
+        Log.Debug("removed userid=" + userid + " from thread-trolls(threadid=" + thread + ")");
+    }
+
+    private addQuoteAbuser(userid: number): void {
+        if (!this.forumQuoteAbusers.has(userid))
+            this.forumQuoteAbusers.add(userid);
+        this.posts.forEach(function(post: PostInfo, idx: number, array: PostInfo[]) {
+            if (post.posterid == userid) {
+                this.updateQuoteButtons(post);
+            }
+        }.bind(this));
+        Log.Debug("added userid=" + userid + " to quote-abusers");
+    }
+
+    private removeQuoteAbuser(userid: number): void {
+        if (this.forumQuoteAbusers.has(userid))
+            this.forumQuoteAbusers.delete(userid);
+        this.posts.forEach(function(post: PostInfo, idx: number, array: PostInfo[]) {
+            if (post.posterid == userid) {
+                this.updateQuoteButtons(post);
+            }
+        }.bind(this));
+        Log.Debug("removed userid=" + userid + " from quote-abusers");
     }
 
     private storeForumTrolls(): void {
         var items = [];
-        this.forumTrolls.forEach(function (troll: string, idx: number, forumTrolls) {
-            items.push(+troll);
+        this.forumTrolls.forEach(function(troll: number, idx: number, forumTrolls) {
+            items.push(troll);
         }.bind(this));
         var settings = JSON.stringify(items);
         //console.log("storing forum-trolls: '" + settings + "'");
         this._cfg.ChangeSetting("forumTrolls", settings);
     }
 
+    private storeForumQuoteAbusers(): void {
+        var items = [];
+        this.forumQuoteAbusers.forEach(function(abuser: number, idx: number, forumTrolls) {
+            items.push(abuser);
+        }.bind(this));
+        var settings = JSON.stringify(items);
+        //console.log("storing forum-quote-abusers: '" + settings + "'");
+        this._cfg.ChangeSetting("forumQuoteAbusers", settings);
+    }
+
     private storeThreadTrolls(): void {
         //console.log("storing thread-trolls");
         var setting = {};
-        this.threadTrolls.forEach(function (value: Object, key: string) {
+        this.threadTrolls.forEach(function(value: Object, key: string) {
             setting[key] = value;
-        })
+        }.bind(this));
         var dictstr = JSON.stringify(setting);
         //console.log("storing thread-trolls: '" + dictstr + "'");
         this._cfg.ChangeSetting("threadTrolls", dictstr);

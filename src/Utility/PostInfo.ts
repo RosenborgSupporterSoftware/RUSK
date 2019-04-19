@@ -59,9 +59,10 @@ export class PostInfo implements IRUSKPageItem {
     }
 
     /** Whether or not the post is unread */
-    private _isUnread: boolean;
+    //private _isUnread: boolean;
     public get isUnread(): boolean {
-        return this._isUnread || (this._isUnread = this.getUnreadState());
+        // return this._isUnread || (this._isUnread = this.getUnreadState());
+        return this.getUnreadState();
     }
 
     /** The url of the post */
@@ -288,21 +289,36 @@ export class PostInfo implements IRUSKPageItem {
     }
 
     public isFullyInView(): boolean {
-        var rect = this.rowElement.getBoundingClientRect();
+        var visiblePart = this.rowElement;
+        if (visiblePart.style.display == "none")
+            visiblePart = visiblePart.nextElementSibling.nextElementSibling as HTMLTableRowElement;
+        var rect = visiblePart.getBoundingClientRect();
         var elemTop = rect.top;
         var elemBottom = rect.bottom;
-        return (elemTop >= 0) && (elemBottom <= window.innerHeight);
+        if ((elemTop >= 0) && (elemBottom <= window.innerHeight))
+            return true; // full post visible
+        if ((elemTop <= 0) && (elemBottom >= window.innerHeight))
+            return true; // post fills all you see and more
+        return false;
     }
 
     public isPartiallyInView(): boolean {
-        var rect = this.rowElement.getBoundingClientRect();
+        var visiblePart = this.rowElement;
+        if (visiblePart.style.display == "none")
+            visiblePart = visiblePart.nextElementSibling.nextElementSibling as HTMLTableRowElement;
+        var rect = visiblePart.getBoundingClientRect();
         var elemTop = rect.top;
         var elemBottom = rect.bottom;
         return elemTop < window.innerHeight && elemBottom >= 0;
     }
 
     public isMostlyInView(): boolean {
-        var rect = this.rowElement.getBoundingClientRect();
+        var visiblePart = this.rowElement;
+        if (visiblePart.style.display == "none")
+            visiblePart = visiblePart.nextElementSibling.nextElementSibling as HTMLTableRowElement;
+        var rect = visiblePart.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight)
+            return false;
         var height = Math.min(rect.bottom - rect.top, window.innerHeight);
         var inside = 0;
         if (rect.top < 0) {
