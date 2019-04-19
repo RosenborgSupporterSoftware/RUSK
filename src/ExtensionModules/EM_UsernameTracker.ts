@@ -7,6 +7,7 @@ import { PostInfo } from "../Utility/PostInfo";
 import { Log } from "../Utility/Log";
 import { PageContext } from "../Context/PageContext";
 import { ModuleBase } from "./ModuleBase";
+import { RUSKUI } from "../UI/RUSKUI";
 import * as LZString from "lz-string";
 
 /**
@@ -25,7 +26,7 @@ export class UsernameTracker extends ModuleBase {
             .Define()
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
-            .WithDescription('Varsle endrede brukernavn')
+            .WithDescription('Holder styr på brukernavn')
             .WithDisplayName(this.name)
             .WithConfigOption(opt =>
                 opt
@@ -34,14 +35,58 @@ export class UsernameTracker extends ModuleBase {
                     .WithVisibility(ConfigurationOptionVisibility.Never)
                     .WithDefaultValue('')
             )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("highlightSelfPosts")
+                .WithLabel("Uthev egne poster")
+                .WithSettingType(SettingType.bool)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("highlightSelfPostsColor")
+                .WithLabel("Farve for utheving av egne poster")
+                .WithSettingType(SettingType.color)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue('#4682b4')
+            )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("highlightSelfMentions")
+                .WithLabel("Uthev poster som angår deg")
+                .WithSettingType(SettingType.bool)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue(true)
+            )
+            .WithConfigOption(opt =>
+                opt
+                .WithSettingName("highlightSelfMentionsColor")
+                .WithLabel("Farve for utheving av poster som angår deg")
+                .WithSettingType(SettingType.color)
+                .WithVisibility(ConfigurationOptionVisibility.Always)
+                .WithDefaultValue('#B22222')
+            )
             .Build();
 
     names: Map<number, string>;
+    highlightSelfPosts: boolean;
+    highlightSelfMentions: boolean;
 
-    init = (config: ModuleConfiguration) => {
-        super.init(config);
+    init = (cfg: ModuleConfiguration) => {
+        super.init(cfg);
         this.names = this.getKnownUsernamesConfig();
-        return null;
+        this.highlightSelfPosts = this.getHighlightSelfPostsConfig();
+        this.highlightSelfMentions = this.getHighlightSelfMentionsConfig();
+
+        let ui = new RUSKUI();
+        ui.FetchCSS('usernames.css', new Map([
+            ['--selfPostsColor', this._cfg.GetSetting("highlightSelfPostsColor") as string],
+            ['--selfPostsLineWidth', this.highlightSelfPosts ? "5px" : "0px"],
+            ['--selfMentionsColor', this._cfg.GetSetting("highlightSelfMentionsColor") as string],
+            ['--selfMentionsLineWidth', this.highlightSelfMentions ? "5px" : "0px"]
+        ]));
+        return ui;
     }
 
     posts: Array<PostInfo>;
@@ -142,6 +187,14 @@ export class UsernameTracker extends ModuleBase {
             Log.Error("reading usernames: " + ex.message);
         }
         return names;
+    }
+
+    private getHighlightSelfPostsConfig(): boolean {
+        return this._cfg.GetSetting("highlightSelfPosts") as boolean;
+    }
+
+    private getHighlightSelfMentionsConfig(): boolean {
+        return this._cfg.GetSetting("highlightSelfMentions") as boolean;
     }
 
     private storeKnownUsernamesConfig(): void {

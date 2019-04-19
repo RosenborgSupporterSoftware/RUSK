@@ -5,9 +5,14 @@
 Nye funksjoner:
 - RUSK skjuler nå sitering av forumtroll, eventuelt alt av siterings-ruter.
 - RUSK kan folde bort all siteringsbruk for spesifikke brukere.
+- RUSK kan utheve dine egne poster
+- RUSK kan utheve poster som siterer eller titulerer deg med "@brukernavn".
 
 Bugfixes:
 - Hotkey for å gå opp fra innleggslista fungerer nå selv om man har uleste private meldinger.
+
+Annet:
+- Mods har blitt unntatt fra bruker-filtrering.
 
 ## RUSK v0.0.11
 
