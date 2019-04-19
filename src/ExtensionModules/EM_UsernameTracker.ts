@@ -72,6 +72,21 @@ export class UsernameTracker extends ModuleBase {
                         }
                     }
                 }.bind(this));
+
+                if (context.Username) {
+                    var postcontent = post.rowElement.querySelector('tr td').nextElementSibling as HTMLTableDataCellElement;
+                    var html = postcontent.innerHTML;
+                    if (html.includes("@" + context.Username)
+                        || html.includes("<b>" + context.Username + " wrote:</b>")
+                        || html.includes("<b>" + context.Username + " skrev:</b>"))
+                    {
+                        // mentions will not track username changes, and stop working for previous usernames
+                        post.rowElement.classList.add("RUSKSelfMention");
+                    }
+                    if (post.posterNickname == context.Username) {
+                        post.rowElement.classList.add("RUSKSelfPost");
+                    }
+                }
             }.bind(this));
             if (updated) { // we found some new names
                 this.storeKnownUsernamesConfig();
