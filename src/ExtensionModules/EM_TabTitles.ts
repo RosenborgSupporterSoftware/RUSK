@@ -56,6 +56,8 @@ export class TabTitles extends ModuleBase {
                 titleelt.textContent = "Forumstatistikk";
             else if (title.startsWith("RBKweb - Endre din profil"))
                 titleelt.textContent = "Endre din profil";
+            else if (title.startsWith("RBKweb - Log in"))
+                titleelt.textContent = "Log in";
             else
                 console.log("title '" + title + "' did not match any rewrite pattern");
         }
