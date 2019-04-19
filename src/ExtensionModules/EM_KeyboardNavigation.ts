@@ -6,12 +6,15 @@ import { RUSKUI } from "../UI/RUSKUI";
 import { Log } from "../Utility/Log";
 import { PostInfo } from "../Utility/PostInfo";
 import { ModuleBase } from "./ModuleBase";
+import { HotkeySetting } from "../Configuration/HotkeySetting";
+import { HotkeyStringHelper } from "../Helpers/HotkeyStringHelper";
 
 export class KeyboardNavigation extends ModuleBase {
 
     readonly name = "KeyboardNavigation";
     private _ctx: PageContext;
     private _quickReplyElement: HTMLDivElement;
+    private _hotkeySettings: Array<HotkeySetting>;
 
     private get quickReplyElement(): HTMLDivElement {
         return this._quickReplyElement || (this._quickReplyElement = document.querySelector('div.RUSKDivTextArea'));
@@ -124,8 +127,11 @@ export class KeyboardNavigation extends ModuleBase {
     init = (cfg: ModuleConfiguration) => {
         super.init(cfg);
 
+        this.createProperConfigObjects(cfg);
+
         let ui = new RUSKUI();
         ui.ExtractHotkeys(cfg);
+        ui.AddUserTips(this.createUserTips(cfg));
 
         return ui;
     }
@@ -229,6 +235,13 @@ export class KeyboardNavigation extends ModuleBase {
 
         return shouldPreventDefault;
     }
+    
+    private createProperConfigObjects(cfg: ModuleConfiguration) {
+        this._hotkeySettings = new Array<HotkeySetting>();
+        cfg.hotkeys.forEach(hks => {
+            this._hotkeySettings.push(HotkeySetting.FromStorageObject(hks));
+        });
+    }
 
     private replyToSelected() {
         let selectedItem = this._ctx.RUSKPage.selectedItem as PostInfo;
@@ -244,6 +257,33 @@ export class KeyboardNavigation extends ModuleBase {
         let image = document.querySelector('img[src$="reply.gif"]') as HTMLImageElement;
         let anchor = image.parentNode as HTMLAnchorElement;
         window.location.href = anchor.href;
+    }
+
+    private createUserTips(cfg: ModuleConfiguration): Array<string> {
+        let res = [
+            'Tastaturnavigasjon-modulen lar deg bevege deg rundt på RBKweb med tastaturet i samarbeid med modulen for fargelegging av forumet',
+        ];
+
+        let nextItem = cfg.GetHotkeySetting('NextItem');
+        if(nextItem.hotkeys.length > 0) {
+            res.push('For å velge neste forum/tråd/innlegg, kan du trykke ' +
+                HotkeyStringHelper.HotkeySettingToListString(nextItem) +
+                ' (dette kan konfigureres i RUSK-innstillingene)');
+        }
+        let prevItem = cfg.GetHotkeySetting('PrevItem');
+        if(prevItem.hotkeys.length > 0) {
+            res.push('For å velge forrige forum/tråd/innlegg, kan du trykke ' +
+                HotkeyStringHelper.HotkeySettingToListString(prevItem) +
+                ' (dette kan konfigureres i RUSK-innstillingene)');
+        }
+        let goUp = cfg.GetHotkeySetting('GoUp');
+        if(goUp.hotkeys.length > 0) {
+            res.push('For å gå "opp" til trådlista/forumet, trykk ' +
+                HotkeyStringHelper.HotkeySettingToListString(goUp) +
+                ' (dette kan konfigureres i RUSK-innstillingene)');
+        }
+        
+        return res;
     }
 
     private quickReplyIfEnabled() {

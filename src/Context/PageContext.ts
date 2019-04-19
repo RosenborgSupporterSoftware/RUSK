@@ -12,6 +12,7 @@ import { ForumListPage } from "../PageHandler/ForumListPage";
 export class PageContext {
 
     private _username: string;
+    private _customProperties: any = {};
 
     /** Gets the username of the logged in user, or undefined if user is not logged in or unknown */
     public get Username(): string {
@@ -58,6 +59,23 @@ export class PageContext {
 
     public get Language(): string {
         return this._language || (this._language = this.getLanguage());
+    }
+
+    /**
+     * Set a custom property value on the PageContext for others to use
+     * @param key - The key name to use to set a custom property
+     * @param value - The value to set for the custom property
+     */
+    public SetCustomProperty(key: string, value: any): void {
+        this._customProperties[key] = value;
+    }
+
+    /**
+     * Get a custom property value from the PageContext
+     * @param key - The key name to use when fetching the custom property
+     */
+    public GetCustomPropery(key: string): any {
+        return this._customProperties[key];
     }
 
     private getLanguage(): string {

@@ -35,7 +35,10 @@ export class Usertips extends ModuleBase {
         return result.json();
       })
       .then(function(json) {
-        let numberOfTips = json.tips.length;
+        let allTips: Array<string> = json.tips
+          .concat(context.GetCustomPropery('ModuleUserTips'));
+
+        let numberOfTips = allTips.length;
         let tipNumber = Math.floor(Math.random() * numberOfTips);
 
         let tabell = document.querySelectorAll('body > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(6) > font > table:nth-child(2) > tbody')[0] as HTMLTableElement;
@@ -58,7 +61,7 @@ export class Usertips extends ModuleBase {
         // Innhold
         var contentrow = tabell.insertRow(-1);
         var contentcell = contentrow.insertCell(0);
-        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">" + json.tips[tipNumber] + "</font>";
+        contentcell.innerHTML = "<font face=\"Verdana,Arial,Helvetica\" size=\"1\" color=\"#000000\">" + allTips[tipNumber] + "</font>";
       });
   }
 }

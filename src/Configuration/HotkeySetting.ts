@@ -52,7 +52,7 @@ export class HotkeySetting {
             if (typeof hk == "string") {
                 keys.push(KeyCombo.FromString(hk));
             } else {
-                keys.push(hk);
+                keys.push(KeyCombo.FromStorage(hk));
             }
         });
         return new HotkeySetting(obj.name, obj.label, keys, obj.validPages, obj.visibility);

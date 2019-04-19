@@ -118,6 +118,16 @@ export class ModuleConfiguration {
         this._isDirty = newState;
     }
 
+    public GetHotkeySetting(hotkey: string): HotkeySetting {
+        let needle: HotkeySetting;
+
+        this.hotkeys.forEach(hk => {
+            if(hk.name == hotkey) needle = hk;
+        });
+
+        return needle;
+    }
+
     private doesSettingExist(setting: string): boolean {
         for (let i = 0; i < this.settings.length; i++) {
             if (this.settings[i].setting == setting) return true;

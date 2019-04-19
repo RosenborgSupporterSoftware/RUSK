@@ -20,6 +20,7 @@ export class RUSKUI {
     private _cssFilename: string;
     private _cssProperties: Map<string, string>;
     private _menuItems = new Array<MainMenuItem>();
+    private _userTips = new Array<string>();
 
     /** Gets the hotkeys defined by this module */
     public get Hotkeys(): Array<HotkeyAction> {
@@ -39,6 +40,11 @@ export class RUSKUI {
     /** Gets the MainMenuItem objects to use */
     public get MenuItems(): Array<MainMenuItem> {
         return this._menuItems;
+    }
+
+    /** Gets the usertips modules have generated */
+    public get UserTips(): Array<string> {
+        return this._userTips;
     }
 
     public constructor() {
@@ -75,6 +81,14 @@ export class RUSKUI {
      */
     public AddMenuItem(label: string, sortOrder: number, action: (ctx: PageContext) => void,  context: any = null) {
         this._menuItems.push(new MainMenuItem(label, sortOrder, action, context));
+    }
+
+    /**
+     * Add user tips (one displayed at random) to the RBKweb UI 
+     * @param tips - The user tips to add
+     */
+    public AddUserTips(tips: Array<string>) {
+        this._userTips = this._userTips.concat(tips);
     }
 
     private guardCSSProps(props: Map<string, string>) {

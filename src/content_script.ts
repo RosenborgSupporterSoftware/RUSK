@@ -167,10 +167,12 @@ function filterModules(modules: Array<ExtensionModule>, context: PageContext): A
 function installUIMods(uimods: Array<RUSKUI>, ctx: PageContext): void {
     let allHotkeys = new Array<HotkeyAction>();
     let allMenuItems = new Array<MainMenuItem>();
+    let allUserTips = new Array<string>();
 
     uimods.forEach(mod => {
         mod.Hotkeys.forEach(hk => allHotkeys.push(hk));
         mod.MenuItems.forEach(mmi => allMenuItems.push(mmi));
+        mod.UserTips.forEach(ut => allUserTips.push(ut));
     });
     HotkeyManager.Instance.AddHotkeys(allHotkeys);
 
@@ -179,6 +181,8 @@ function installUIMods(uimods: Array<RUSKUI>, ctx: PageContext): void {
     });
 
     new MenuRigger().RigMenus(allMenuItems, ctx);
+
+    ctx.SetCustomProperty('ModuleUserTips', allUserTips);
 }
 
 // following is not triggered if not on rbkweb (manifest config), so always true
