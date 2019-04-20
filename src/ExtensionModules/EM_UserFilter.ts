@@ -144,7 +144,6 @@ export class UserFilter extends ModuleBase {
     }
 
     preprocess = (context: PageContext) => {
-        Log.Debug("UserFilter.preprocess");
         this.posts = context.RUSKPage.items as Array<PostInfo>;
         if (context.Language == "norwegian") this.i18n = this.i18n_no;
     }
