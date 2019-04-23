@@ -15,6 +15,16 @@ export class KeyboardNavigation extends ModuleBase {
     private _ctx: PageContext;
     private _quickReplyElement: HTMLDivElement;
     private _hotkeySettings: Array<HotkeySetting>;
+    private _navigationPageTypes = [
+        RBKwebPageType.RBKweb_FORUM_FORUMLIST, 
+        RBKwebPageType.RBKweb_FORUM_TOPICLIST, 
+        RBKwebPageType.RBKweb_FORUM_POSTLIST,
+        RBKwebPageType.RBKweb_FORUM_PM_INBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_OUTBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_READINBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_SAVEBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_SENTBOX
+    ];
 
     private get quickReplyElement(): HTMLDivElement {
         return this._quickReplyElement || (this._quickReplyElement = document.querySelector('div.RUSKDivTextArea'));
@@ -36,42 +46,42 @@ export class KeyboardNavigation extends ModuleBase {
                     .WithHotkeyName('NextItem')
                     .WithLabel('Gå til neste forum/tråd/innlegg osv.')
                     .WithKeyCombos(['J', '.'])
-                    .WithPageTypes([RBKwebPageType.RBKweb_FORUM_FORUMLIST, RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
+                    .WithPageTypes(this._navigationPageTypes)
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('PrevItem')
                     .WithLabel('Gå til forrige forum/tråd/innlegg osv.')
                     .WithKeyCombos(['K', ','])
-                    .WithPageTypes([RBKwebPageType.RBKweb_FORUM_FORUMLIST, RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
+                    .WithPageTypes(this._navigationPageTypes)
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('NextPage')
                     .WithLabel('Gå til neste side med tråder/innlegg')
                     .WithKeyCombos(['Shift J'])
-                    .WithPageTypes([RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
+                    .WithPageTypes(this._navigationPageTypes)
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('PrevPage')
                     .WithLabel('Gå til forrige side med tråder/innlegg')
                     .WithKeyCombos(['Shift K'])
-                    .WithPageTypes([RBKwebPageType.RBKweb_FORUM_TOPICLIST, RBKwebPageType.RBKweb_FORUM_POSTLIST])
+                    .WithPageTypes(this._navigationPageTypes)
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('GoUp')
                     .WithLabel('Gå opp fra innlegg til trådlista, eller trådlista til forumlista')
                     .WithKeyCombos(['H', 'O'])
-                    .WithPageTypes([RBKwebPageType.RBKweb_FORUM_POSTLIST, RBKwebPageType.RBKweb_FORUM_TOPICLIST])
+                    .WithPageTypes(this._navigationPageTypes)
             )
             .WithHotkey(hk =>
                 hk
                     .WithHotkeyName('EnterSelected')
                     .WithLabel('Gå inn i forum/tråd')
                     .WithKeyCombos(['L', 'Enter'])
-                    .WithPageTypes([RBKwebPageType.RBKweb_FORUM_FORUMLIST, RBKwebPageType.RBKweb_FORUM_TOPICLIST])
+                    .WithPageTypes(this._navigationPageTypes)
             )
             .WithHotkey(hk =>
                 hk

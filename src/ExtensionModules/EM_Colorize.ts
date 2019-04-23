@@ -4,7 +4,6 @@ import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { PageContext } from "../Context/PageContext";
 import { SettingType } from "../Configuration/SettingType";
-import { Log } from "../Utility/Log";
 import { ModuleBase } from "./ModuleBase";
 import { RUSKUI } from "../UI/RUSKUI";
 
@@ -23,7 +22,12 @@ export class Colorize extends ModuleBase {
     pageTypesToRunOn: Array<RBKwebPageType> = [
         RBKwebPageType.RBKweb_FORUM_FORUMLIST,
         RBKwebPageType.RBKweb_FORUM_TOPICLIST,
-        RBKwebPageType.RBKweb_FORUM_POSTLIST
+        RBKwebPageType.RBKweb_FORUM_POSTLIST,
+        RBKwebPageType.RBKweb_FORUM_PM_INBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_OUTBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_READINBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_SAVEBOX,
+        RBKwebPageType.RBKweb_FORUM_PM_SENTBOX
     ];
 
     configSpec = () =>

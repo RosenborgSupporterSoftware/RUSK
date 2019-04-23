@@ -4,6 +4,7 @@ import { IRUSKPage } from "../PageHandler/IRUSKPage";
 import { PostListPage } from "../PageHandler/PostListPage";
 import { ThreadListPage } from "../PageHandler/ThreadListPage";
 import { ForumListPage } from "../PageHandler/ForumListPage";
+import { PMListPage } from "../PageHandler/PMListPage";
 
 /**
  * PageContext - Object that gets passed to each plugin at execution time
@@ -43,16 +44,21 @@ export class PageContext {
     }
 
     private getRuskPage(url: string): IRUSKPage {
-        // Verdens verste metodeimplementasjon - bytt til en switch eller noe, husk å få med ekstra sider på threadlist når vi får implementert for de
-        if(this.PageType == RBKwebPageType.RBKweb_FORUM_FORUMLIST) {
-            return new ForumListPage();
-        } else if(this.PageType == RBKwebPageType.RBKweb_FORUM_TOPICLIST) {
-            return new ThreadListPage();
-        } else if(this.PageType == RBKwebPageType.RBKweb_FORUM_POSTLIST) {
-            return new PostListPage();
-        } else {
-            return null;
+        switch(this.PageType) {
+            case RBKwebPageType.RBKweb_FORUM_FORUMLIST:
+                return new ForumListPage();
+            case RBKwebPageType.RBKweb_FORUM_TOPICLIST:
+                return new ThreadListPage();
+            case RBKwebPageType.RBKweb_FORUM_POSTLIST:
+                return new PostListPage();
+            case RBKwebPageType.RBKweb_FORUM_PM_INBOX:
+            case RBKwebPageType.RBKweb_FORUM_PM_OUTBOX:
+            case RBKwebPageType.RBKweb_FORUM_PM_READINBOX:
+            case RBKwebPageType.RBKweb_FORUM_PM_SAVEBOX:
+            case RBKwebPageType.RBKweb_FORUM_PM_SENTBOX:
+                return new PMListPage();
         }
+        return null;
     }
 
     private _language: string;
