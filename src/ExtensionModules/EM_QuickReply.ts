@@ -21,7 +21,7 @@ export class QuickReply extends ModuleBase {
             .WithExtensionModuleName(this.name)
             .EnabledByDefault()
             .WithDisplayName(this.name)
-            .WithDescription('Adds the possibility to write posts directly in the thread page.')
+            .WithDescription('Gjør det mulig å skrive innlegg direkte på lesesiden i en tråd.')
             .Build();
 
     i18n_no = {

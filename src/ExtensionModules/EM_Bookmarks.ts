@@ -25,7 +25,7 @@ export class Bookmarks extends ModuleBase {
             .Define()
             .EnabledByDefault()
             .WithExtensionModuleName(this.name)
-            .WithDisplayName(this.name)
+            .WithDisplayName("Bokmerker")
             .WithDescription("En modul som lar deg legge bokmerke på innlegg til en egen liste.")
             .WithConfigOption(opt =>
                 opt
