@@ -18,7 +18,7 @@ export class MenuRigger {
         let headerRow = (allRows[0].cloneNode(true)) as HTMLTableRowElement;
         let linkRow = (allRows[1].cloneNode(true)) as HTMLTableRowElement;
         let link = linkRow.querySelector('a') as HTMLAnchorElement;
-        let attachRow = table.querySelector<HTMLTableRowElement>('a[href="http://www.rbkweb.no/kontakt.php"]').closest('tr');
+        let attachRow = table.querySelector<HTMLTableRowElement>('a[href$="kontakt.php"]').closest('tr');
 
         // Sett inn RUSK header
         headerRow.querySelector('strong').textContent = "RUSK";
