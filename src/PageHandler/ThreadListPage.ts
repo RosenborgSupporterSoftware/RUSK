@@ -7,7 +7,7 @@ import { RUSKPage } from "./RUSKPage";
  */
 
 export class ThreadListPage extends RUSKPage {
-    private _threads: Array<ThreadInfo>;
+    private readonly _threads: Array<ThreadInfo>;
 
     get items(): Array<IRUSKPageItem> {
         return this._threads;

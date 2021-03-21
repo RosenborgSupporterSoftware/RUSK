@@ -1,11 +1,14 @@
 import { RUSKPage } from "./RUSKPage";
 import { PMInfo } from "../Utility/PMInfo";
+import { IRUSKPageItem } from "./IRUSKPageItem";
 
 export class PMListPage extends RUSKPage {
+
+    public get items(): IRUSKPageItem[] {
+        return PMInfo.GetPMsFromDocument(document);
+    }
     constructor() {
         super();
-
-        this.items = PMInfo.GetPMsFromDocument(document);
     }
 
     EnterSelectedItem(): void {

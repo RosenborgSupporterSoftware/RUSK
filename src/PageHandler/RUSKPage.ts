@@ -9,7 +9,7 @@ export abstract class RUSKPage implements IRUSKPage {
 
     protected readonly SCROLLDIRECTION_KEY: string = "RUSK-ThreadPage-ScrollDirection";
 
-    public items: Array<IRUSKPageItem>;
+    public abstract get items(): Array<IRUSKPageItem>;
     public selectedItem: IRUSKPageItem;
 
     GoToNextItem(): void {

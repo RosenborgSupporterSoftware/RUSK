@@ -80,7 +80,7 @@ export class ChunkHandler {
         for (let idx = 0; idx < encoded.length; idx += chunkSize) {
             let data = encoded.substr(idx, chunkSize);
             let csum = this.Checksum(data);
-            chunks.push(new Chunk(name, seq, csum, data));
+            chunks.push(new Chunk(chunkName, seq, csum, data));
         }
 
         return chunks;

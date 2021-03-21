@@ -7,9 +7,16 @@ import { IRUSKPageItem } from "./IRUSKPageItem";
  */
 export class ForumListPage extends RUSKPage {
 
+    private readonly _forums: Array<ForumInfo>;
+
+    public get items(): IRUSKPageItem[] {
+        return this._forums;
+    }
+
     constructor() {
         super();
-        this.items = ForumInfo.GetForumsFromDocument(document);
+
+        this._forums = ForumInfo.GetForumsFromDocument(document);
     }
 
     EnterSelectedItem(): void {

@@ -1,4 +1,5 @@
 import { PostInfo } from "../Utility/PostInfo";
+import { IRUSKPageItem } from "./IRUSKPageItem";
 import { RUSKPage } from "./RUSKPage";
 
 /**
@@ -6,9 +7,16 @@ import { RUSKPage } from "./RUSKPage";
  */
 export class PostListPage extends RUSKPage {
 
+    private readonly _posts: Array<PostInfo>;
+
+    public get items(): IRUSKPageItem[] {
+        return this._posts;
+    }
+
     constructor() {
         super();
-        this.items = PostInfo.GetPostsFromDocument(document);
+
+        this._posts = PostInfo.GetPostsFromDocument(document);
     }
 
     EnterSelectedItem(): void {
