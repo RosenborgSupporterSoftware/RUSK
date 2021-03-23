@@ -2,10 +2,12 @@ import { ConfigUpdatedMessage } from "./Messages/ConfigUpdatedMessage";
 import { ChromeSyncStorage } from "./Configuration/ChromeSyncStorage";
 import { IConfigurationStorage } from "./Configuration/IConfigurationStorage";
 import { ConfigManager } from "./Configuration/ConfigManager";
+import { KeyValueStore } from "./Utility/KeyValueStore";
 
 let configStorage = new ChromeSyncStorage() as IConfigurationStorage;
 
 let configManager = ConfigManager.Instance;
+let keyValueStore = KeyValueStore.Instance;
 
 //function polling() {
 //    console.log('polling');
@@ -79,6 +81,22 @@ chrome.runtime.onMessage.addListener(async (req, sender, reply) => {
                 break;
         }
         reply("ok");
+    }
+});
+
+// Key Value store
+chrome.runtime.onMessage.addListener( (req, sender, sendResponse) => {
+    if(req.getValueForKey) {
+        keyValueStore.GetValue(req.getValueForKey).then(res => {
+            sendResponse(res);
+        });
+        return true;
+    }
+    if(req.setValueForKey) {
+        keyValueStore.SetValue(req.setValueForKey, req.value).then(res => {
+            sendResponse(res);
+        });
+        return true;
     }
 });
 

@@ -2,6 +2,7 @@ import { PageContext } from "../Context/PageContext";
 import { RBKwebPageType } from "../Context/RBKwebPageType";
 import { ConfigBuilder } from "../Configuration/ConfigBuilder";
 import { ModuleBase } from "./ModuleBase";
+import { KeyValue } from "../Utility/KeyValue";
 
 /**
  * EM_Brukertips - Extension module for displaying "tooltips" on RBKweb.
@@ -27,6 +28,14 @@ export class Usertips extends ModuleBase {
       .WithDisplayName(this.name)
       .WithDescription("Denne modulen viser enkle brukertips oppe til høyre på RBKweb-siden, rett under sitatene.")
       .Build();
+
+  preprocess = async (context: PageContext) => {
+    let head = await KeyValue.GetValue('UserTips-KeyValue');
+    console.log('Head is ' + head);
+    let tails = head == 'Hairy' ? 'Bald' : 'Hairy';
+    var res = await KeyValue.SetValue('UserTips-KeyValue', tails);
+    console.log('Result of SetValue: ' + res);
+  };
 
   execute = (context: PageContext) => {
 
