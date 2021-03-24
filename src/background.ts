@@ -89,6 +89,9 @@ chrome.runtime.onMessage.addListener( (req, sender, sendResponse) => {
     if(req.getValueForKey) {
         keyValueStore.GetValue(req.getValueForKey).then(res => {
             sendResponse(res);
+        })
+        .catch(err => {
+            sendResponse(undefined);
         });
         return true;
     }

@@ -13,8 +13,8 @@ export class KeyValue {
      */
     public static GetValue(key: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            chrome.runtime.sendMessage({ getValueForKey: key }, (res: object) => {
-                resolve(res.toString());
+            chrome.runtime.sendMessage({ getValueForKey: key }, (res: string) => {
+                resolve(res);
             });
         });
     }

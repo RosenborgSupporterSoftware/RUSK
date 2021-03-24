@@ -37,12 +37,14 @@ export class KeyValueStore {
         });
     }
 
-    public async SetValue(key: string, value: string): Promise<boolean> {
-        try {
-            await set(key, value);
-            return true;
-        } catch (e) {
-            return false;
-        }
+    public SetValue(key: string, value: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            set(key, value).then(() => {
+                resolve(true);
+            })
+            .catch(() => {
+                resolve(false);
+            });
+        });
     }
 }
