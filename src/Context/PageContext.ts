@@ -14,6 +14,7 @@ export class PageContext {
 
     private _username: string;
     private _customProperties: any = {};
+    private _states: Array<string> = [];
 
     /** Gets the username of the logged in user, or undefined if user is not logged in or unknown */
     public get Username(): string {
@@ -82,6 +83,36 @@ export class PageContext {
      */
     public GetCustomPropery(key: string): any {
         return this._customProperties[key];
+    }
+
+    /**
+     * Sets the given state on the PageContext
+     * @param state The state to set
+     */
+    public SetState(state: string) {
+        if(this._states.indexOf(state) == -1) {
+            this._states.push(state);
+        }
+    }
+
+    /**
+     * Clears the given state from the PageContext
+     * @param state The state to clear
+     */
+    public ClearState(state: string) {
+        let index = this._states.indexOf(state);
+        if(index > -1) {
+            this._states.splice(index, 1);
+        }
+    }
+
+    /**
+     * Checks if a given state is set on the PageContext
+     * @param state The state to check for
+     * @returns A boolean indicating if the given state is set or not
+     */
+    public IsInState(state: string): boolean {
+        return this._states.indexOf(state) > -1;
     }
 
     private getLanguage(): string {
